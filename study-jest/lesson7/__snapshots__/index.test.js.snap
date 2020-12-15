@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`快照测试含有动态属性的例子 1`] = `
+Object {
+  "data": Any<Date>,
+  "domain": "www.baidu.com",
+  "port": 3000,
+  "url": "sicascia.cn",
+}
+`;
+
+exports[`快照测试基本例子 1`] = `
+Object {
+  "domain": "www.baidu.com",
+  "port": 3000,
+  "url": "sicascia.cn",
+}
+`;

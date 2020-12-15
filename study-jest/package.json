@@ -1,0 +1,18 @@
+{
+  "name": "study-jest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --watchAll"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/core": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "axios": "^0.19.2",
+    "jest": "^26.1.0",
+    "prettier": "^2.0.5"
+  }
+}
