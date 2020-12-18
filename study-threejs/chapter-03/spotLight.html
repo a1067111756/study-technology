@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>聚光源</title>
+  <script type="text/javascript" src="../libs/stats.js"></script>
+  <script type="text/javascript" src="../libs/dat.gui.js"></script>  
+  <script src="https://cdn.bootcdn.net/ajax/libs/three.js/r122/three.min.js"></script>
+  <style>
+    html, body {
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div id="Stats-output"></div>
+  <div id="webgl"></div> 
+  <script>
+    function init () {
+      initStats()
+
+      // 定义场景scene
+      const scene = new THREE.Scene()
+      window.scene = scene
+
+      // 定义摄像机
+      const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000)
+      window.camera = camera
+
+      // 定义渲染器
+      const renderer = new THREE.WebGLRenderer()
+      renderer.setClearColor(new THREE.Color(0xEEEEEE)) // 设置场景背景色
+      renderer.setSize(window.innerWidth, window.innerHeight) // 设置场景大小
+      renderer.shadowMap.enabled = true // 开启阴影
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      window.renderer = renderer
+
+      // 添加平面
+      const planeGeometry = new THREE.PlaneGeometry(60, 20)
+      const planeMaterial = new THREE.MeshLambertMaterial({color: 0xffffff});
+      const plane = new THREE.Mesh(planeGeometry, planeMaterial)
+      plane.receiveShadow = true // 设置阴影
+      plane.rotation.x = -0.5 * Math.PI
+      plane.position.x = 15
+      plane.position.y = 0
+      plane.position.z = 0
+      scene.add(plane)
+
+      // 添加正方体
+      const cubeGeometry = new THREE.BoxGeometry(4, 4, 4)
+      const cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xff0000 })
+      const cube = new THREE.Mesh(cubeGeometry, cubeMaterial)
+      cube.castShadow = true
+      cube.position.x = -4
+      cube.position.y = 3
+      cube.position.z = 0
+      scene.add(cube)
+
+      // 添加圆球
+      const sphereGeometry = new THREE.SphereGeometry(4, 20, 20)
+      const sphereMaterial = new THREE.MeshLambertMaterial({ color: 0x7777ff })
+      const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial)
+      sphere.castShadow = true
+      sphere.position.x = 20
+      sphere.position.y = 4
+      sphere.position.z = 2
+      scene.add(sphere)
+
+      // 设置摄像机位置
+      camera.position.x = -30
+      camera.position.y = 40
+      camera.position.z = 30
+      camera.lookAt(scene.position)
+      scene.add(camera)
+
+      // 添加基本光源
+      const pointColor = 0xccffcc;
+      const pointLight = new THREE.PointLight(pointColor)
+      pointLight.position.set(-10, 10, -5)
+      pointLight.intensity = 2.4 // 光源亮度
+      pointLight.distance = 70 // 光源距离
+      scene.add(pointLight)
+
+      
+      // 光源强度 
+      const gui = new dat.GUI()
+      const controls = new function () { this.intensity = 2.4 }
+      gui.add(controls, 'intensity', 0, 3).onChange(function (e) {
+        pointLight.intensity = e
+      })
+
+      // // 光源距离
+      // const controls1 = new function () { this.distance = 10 }     
+      // gui.add(controls, 'intensity', 10, 50).onChange(function (e) {
+      //   pointLight.distance = e
+      // })      
+
+      document
+        .getElementById('webgl')
+        .appendChild(renderer.domElement)
+      
+      render()
+    }
+
+
+    function render () {
+      const scene = window.scene
+      const renderer = window.renderer
+      const camera = window.camera
+
+      // 帧率监测
+      window.stats.update()
+
+      requestAnimationFrame(render)
+      renderer.render(scene, camera)     
+    }
+
+    function initStats() {
+      const stats = new Stats()
+      stats.setMode(0)
+      stats.domElement.style.position = 'absolute'
+      stats.domElement.style.left = '0px'
+      stats.domElement.style.top = '0px'
+      document.getElementById("Stats-output").appendChild(stats.domElement)
+      window.stats = stats
+    }
+
+    window.onload = init
+  </script> 
+</body>
+</html>

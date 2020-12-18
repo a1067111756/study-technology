@@ -38,4 +38,6 @@ function addCube (scene, planeGeometry) {
   cube.position.y = Math.round(Math.random() * 5)
   cube.position.z = -20 + Math.round(Math.random() * planeGeometry.height)
   scene.add(cube)
+
+  const ambientLight = new THREE.PointLight()
 }
