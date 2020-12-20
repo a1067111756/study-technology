@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+  <title>Echarts GL地球</title>
+  <script src="./js/echarts.min.js"></script>
+  <script src="./js/echarts-gl.js"></script>
+  <script src="./js/world.js"></script>
+  <script src="./js/china.js"></script>
+  <script src="./geojson//mock.json"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;      
+      background: linear-gradient(#343438, #232327);
+    }
+
+    #globe {
+      height: 100%;
+      width: 100%;
+      margin:0;
+      padding:0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="globe"></div>
+
+  <script>
+    function getWorldBaseTexture (el) {
+      const canvas = document.createElement('canvas')
+      const mapChart = echarts.init(canvas, null, { width: 4096, height: 2048 })
+      mapChart.setOption({
+        backgroundColor: '#000', // 背景色， 水域色
+        // blendMode: 'lighter', // 叠加区域高亮
+        zlevel: 0,
+        series : [
+          {
+            type: 'map',
+            map: 'world', //world是html页面引入的地图文件名字
+            top: 0, 
+            left: 0,
+            right: 0, 
+            bottom: 0,
+            silent: true, // 图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。
+            boundingCoords: [[-180, 90], [180, -90]],
+            itemStyle: { // 前景陆地色
+              areaColor: '#1c1b26',
+              borderColor: '#0d0f1a',
+              borderWidth: 1
+            },
+            emphasis: {
+              label: {
+                show: false
+              },
+              itemStyle: {
+                areaColor: '#1c1b26',
+                borderColor: '#0d0f1a'
+              }
+            },            
+          }
+        ]
+      });
+      return mapChart
+    }
+
+    function getLayersofChina () {
+      const canvas = document.createElement('canvas')
+      const mapChart = echarts.init(canvas, null, { width: 4096, height: 2048 })
+      mapChart.setOption({
+        backgroundColor: 'transparent',
+        blendMode: 'lighter',
+        label: {
+          fontSize: 24
+        },
+        emphasis: {
+          label: {
+            show: true
+          }
+        },
+        series: [
+          {
+            type: 'map',
+            map: 'china',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            boundingCoords: [
+              [-180, 90],
+              [180, -90]
+            ],
+            itemStyle: {
+              borderWidth: 0.5,
+              borderColor: '#4F4642',
+              areaColor: 'transparent',
+              borderType: 'dotted'
+            },
+            // 地图块悬浮高亮样式
+            emphasis: {
+              label: {
+                show: false,
+                color: '#BCA27B'
+              },
+              itemStyle: {
+                borderColor: '#4F4642',
+                areaColor: 'rgba(79,70,66, 0.3)'
+              }
+            },
+            regions: [
+              {
+                name: '贵州省',
+                itemStyle: {
+                  areaColor: 'rgba(79,70,66, 0.3)'
+                },
+                label: {
+                  show: true,
+                  color: '#BCA27B',
+                  formatter: '贵州省',
+                  fontSize: 10
+                }
+              }
+            ],
+            silent: false
+          }          
+        ]        
+      })
+
+      return mapChart
+    }
+
+    function init () {
+      const el = document.getElementById('globe')
+      const globe = echarts.init(el, null)
+      window.globe = globe
+
+      console.log(flyStrack.map(item => [...item[0].coord, Math.ceil(item[0].value * Math.random() * 10)]))
+
+      globe.setOption({
+        backgroundColor: 'transparent',
+        globe: {
+          baseTexture: getWorldBaseTexture(),
+          heightTexture: './img/heightTexture.jpg', // 高度纹理
+          displacementScale: 0.02, // 地球顶点位移的大小，实际可以控制对纹理缩放
+          displacementQuality: 'medium', // 地球顶点位移的质量， 纹理质量
+          shading: 'realistic', // 三维图形的着色效果
+          realisticMaterial: { roughness: 0.9 }, // 真实感材质相关的配置项
+          globeRadius: 100, // 地球的外半径
+          globeOuterRadius: 500, // 地球的外半径
+          environment: new echarts.graphic.RadialGradient( // 环境贴图
+            0.18,
+            0.55,
+            0.15,
+            [
+              { offset: 0, color: '#19193a' },
+              { offset: 1, color: '#080817' }
+            ],
+            false
+          ),
+          light: {
+            main: {
+              color: '#fff', // 光照颜色
+              intensity: 0.8, // 光照强度
+              shadow: true, // 投射阴影
+              time: new Date('2019-09-16 12:20:00')
+            },
+            ambient: { // 全局的环境光设置
+              intensity: 0.8
+            },
+            ambientCubemap: { // 会使用纹理作为环境光的光源，会为物体提供漫反射和高光反射
+              exposure: 0.2,
+              diffuseIntensity: 0.8, // 漫反射的强度
+              specularIntensity: 0.5 // 高光反射的强度
+            }
+          },
+          viewControl: { // 视图控制
+            projection: 'perspective', // 透视投影
+            alpha: 30, // 视角绕 x 轴，即上下旋转的角度
+            beta: -160, // 视角绕 y 轴，即左右旋转的角度
+            center: [0, 0, 0], // 视角
+            distance: 140, // 视距
+            minDistance: 50, // 最近视距
+            maxDistance: 200, // 最远视距
+            animation: true, // 动画
+            autoRotateSpeed: 10,
+            zoomSensitivity: 1, // 缩放操作的灵敏度
+            panSensitivity: 2, // 平移操作的灵敏度
+            rotateSensitivity: 2, // 旋转操作的灵敏度
+            autoRotate: false // 自动旋转
+          },      
+          postEffect: { // 后处理特效
+            enable: true,
+            bloom: { // 高光特效
+              enable: true,
+              bloomIntensity: 1
+            }
+          }, 
+          temporalSuperSampling: { // 分帧超采样， 解决postEffect开启后锯齿问题
+            enable: true
+          },
+          layers: [ // 地图表面图层配置
+            {
+              name: 'china',
+              type: 'blend',
+              blendTo: 'albedo',
+              texture: getLayersofChina()
+            }          
+          ]                   
+        },
+        series: [
+          {
+            type: 'scatter3D',
+            coordinateSystem: 'globe',
+            blendMode: 'lighter',
+            symbol: 'circle',
+            silent: true,
+            symbolSize: function (value, params) {
+              const size = flyStrack[params.dataIndex][0].value / 500
+              return size > 5 ? size : 5 
+            },
+            itemStyle: {
+              color: '#4e3e28',
+              opacity: 1            
+            },
+            data: flyStrack.map(item => [...item[0].coord, 0])
+          },  
+          {
+            type: 'lines3D',
+            blendMode: 'lighter',
+            coordinateSystem: 'globe',
+            data: flyStrack.map(item => item.map(child => child.coord)),
+            lineStyle: {
+              width: 0.5,
+              color: '#4e3e28',
+              opacity: 0
+            },
+            effect: {
+              show: true,
+              period: 3, // 箭头指向速度，值越小速度越快
+              trailWidth: 2,
+              trailLength: 0.4,
+              trailOpacity: 1,
+              trailColor: '#4e3e28'
+            }
+          }    
+        ]          
+      })
+    }
+    
+    window.onload = init
+
+    window.addEventListener('resize', () => {
+      if (window.globe && window.globe.resize) {
+        window.globe.resize()
+      }
+    })    
+  </script>
+</body>
+</html>
