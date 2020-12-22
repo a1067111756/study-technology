@@ -19,6 +19,8 @@
   <div id="Stats-output"></div>
   <div id="webgl"></div> 
   <script>
+    var trackControls;
+
     function init () {
       initStats()
 
@@ -30,10 +32,6 @@
       const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000)
       window.camera = camera
 
-      // 添加坐标轴
-      const axes = new THREE.AxesHelper(20)
-      scene.add(axes)
-
       // 定义渲染器
       const renderer = new THREE.WebGLRenderer()
       renderer.setClearColor(new THREE.Color(0x666666)) // 设置场景背景色
@@ -43,24 +41,24 @@
       window.renderer = renderer
 
       // 添加平面
-      const planeGeometry = new THREE.PlaneGeometry(80, 80, 1, 1)
+      const planeGeometry = new THREE.PlaneGeometry(60, 80, 1, 1)
       const meshBasicMaterial = new THREE.MeshLambertMaterial({ color: 0x7E8C61 })
       const plane = new THREE.Mesh(planeGeometry, meshBasicMaterial)
       plane.receiveShadow = true // 设置阴影
       plane.rotation.x = -0.5 * Math.PI
-      plane.position.x = 15
-      plane.position.y = -15
+      plane.position.x = 10
+      plane.position.y = -12
       plane.position.z = -20
       scene.add(plane)
 
       // 添加正方体
       const cubeGeometry = new THREE.BoxGeometry(15, 15, 30)
-      const cubeMaterial = new THREE.MeshLambertMaterial({ color: 0x666666 })
+      const cubeMaterial = new THREE.MeshLambertMaterial({ color: 0x7D7D7D })
       const cube = new THREE.Mesh(cubeGeometry, cubeMaterial)
       cube.castShadow = true
-      cube.position.x = 0
+      cube.position.x = 20
       cube.position.y = 0
-      cube.position.z = 0
+      cube.position.z = -10
       scene.add(cube)
 
       // 添加圆环体
@@ -70,20 +68,20 @@
       const torus2 = new THREE.Mesh(torusGeometry, torusMaterial)
       const torus3 = new THREE.Mesh(torusGeometry, torusMaterial)
       const torus4 = new THREE.Mesh(torusGeometry, torusMaterial)
-      torus1.position.set(-8, -8, -10)
-      torus2.position.set(-8, -8, 10)
-      torus3.position.set(8, -8, -10)
-      torus4.position.set(8, -8, 10)
+      torus1.position.set(12.3, -8, -20)
+      torus2.position.set(12.3, -8, 0)
+      torus3.position.set(27.5, -8, 0)
+      torus4.position.set(27.5, -8, -20)
 
       torus1.castShadow = true
       torus2.castShadow = true
       torus3.castShadow = true
       torus4.castShadow = true
 
-      torus1.rotateY(80)
-      torus2.rotateY(80)
-      torus3.rotateY(80)
-      torus4.rotateY(80)
+      torus1.rotateY(Math.PI / 2)
+      torus2.rotateY(Math.PI / 2)
+      torus3.rotateY(Math.PI / 2)
+      torus4.rotateY(Math.PI / 2)
 
       scene.add(torus1)
       scene.add(torus2)
@@ -97,30 +95,23 @@
       camera.lookAt(scene.position)
       scene.add(camera)
 
-      // 添加聚光源
-      // const spotLight = new THREE.SpotLight(0xFFFFFF)
-      // spotLight.position.set(-40, 25, 10)
-      // spotLight.castShadow = true;
-      // spotLight.angle = Math.PI / 4
-      // spotLight.shadow.mapSize.width = 4096; //设置阴影分辨率
-      // spotLight.shadow.mapSize.height = 4096;
-      // spotLight.intensity = 3
-      // spotLight.target = cube
-      // scene.add(spotLight)
-
       const directionalLight = new THREE.DirectionalLight(0xFFFFFF)
-      directionalLight.left = 15
-      directionalLight.right = 15
-      directionalLight.to = 15
-      directionalLight.bottom = 20
+      directionalLight.position.set(-20, 25, -30)
+      directionalLight.shadowCameraNear = 2;
+      directionalLight.shadowCameraFar = 200;
+      directionalLight.shadowCameraLeft = -50;
+      directionalLight.shadowCameraRight = 50;
+      directionalLight.shadowCameraTop = 50;
+      directionalLight.shadowCameraBottom = -50;
+      directionalLight.shadowMapWidth = 2048
+      directionalLight.shadowMapHeight = 2048
+      directionalLight.target = cube
+      directionalLight.intensity = 1.8
+      directionalLight.castShadow = true
       scene.add(directionalLight)
 
-      // plane.position.x = 15
-      // plane.position.y = -15
-      // plane.position.z = -20
-
-      // const spotLight = new THREE.SpotLight(0xFFFFFF)
-      // spotLight.position.set(-40, 25, 10)
+      // 控制器
+      trackControls = new THREE.OrbitControls(camera, renderer.domElement)
 
       document
         .getElementById('webgl')
@@ -137,6 +128,8 @@
 
       // 帧率监测
       window.stats.update()
+      
+      trackControls.update()
 
       requestAnimationFrame(render)
       renderer.render(scene, camera)     
