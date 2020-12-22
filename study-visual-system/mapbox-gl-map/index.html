@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mapbox-gl练习项目</title>
+  <script src='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css' rel='stylesheet'/>
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    #mapbox-gl-container {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="mapbox-gl-container"></div>
+  <script>
+    function init () {
+      mapboxgl.accessToken = 'pk.eyJ1IjoibGF3cmVuY2UzMyIsImEiOiJjancydGtlY3IwNnczNDlsOWR4eGQ2NjJkIn0.8u4gHkr7Pc-1QqO-N-tKJg'
+      // 初始化map对象
+      const map = new mapboxgl.Map({
+        container: 'mapbox-gl-container',
+        // style: 'mapbox://styles/a1067111756/ckizrlvpd0lyr19vn96jbgn2x',
+        center: [115.46803254, 29.20049809],
+        zoom: 15,
+        pitch: 40,
+        maxBounds: new mapboxgl.LngLatBounds(...[[114.8240346595, 28.9654809983], [115.7453754085, 29.5519540005]])        
+      })   
+
+      // 设置样式自定义资源
+      map.addSource("google.tile", {
+        type: "raster",
+        tiles: [
+          window.location.href.indexOf('10.30.0.238') > -1 ? "http://10.30.0.238/map_big/{z}/{x}/{y}.png" : "http://118.212.38.88:8081/map_big/{z}/{x}/{y}.png"
+        ],
+        tileSize: 256
+      })
+
+      map.addLayer({
+        id: "google",
+        type: "raster",
+        source: "google.tile"
+      });      
+    }
+    window.onload = init
+  </script>
+</body>
+</html>
