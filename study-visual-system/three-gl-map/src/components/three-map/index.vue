@@ -5,10 +5,13 @@
 </template>
 
 <script>
+/* three.js相关对象引入 */
 import * as THREE from 'three'
+import renderMixins from './mixins/_render'
 
 export default {
   name: 'global-three-map',
+  mixins: [renderMixins],
   data() {
     return {
       scene: null,
@@ -21,6 +24,9 @@ export default {
   methods: {
     // 方法 - 初始化
     init () {
+      this.$$bloomLayer()
+      this.$$darkMaterial()
+
       // 定义场景
       this.scene = new THREE.Scene()
       // this.scene.fog = new THREE.Fog('#00060c', 2500, 4500)
@@ -39,6 +45,8 @@ export default {
       this.renderer.toneMappingExposure = 1 // 色调映射的曝光级别
       this.renderer.setSize(window.innerWidth, window.innerHeight) // 设置场景大小
       this.renderer.setPixelRatio(window.devicePixelRatio) // 设置分辨率比
+
+      this.$$render();
 
       // 挂在dom
       document
