@@ -7,11 +7,12 @@
 <script>
 /* three.js相关对象引入 */
 import * as THREE from 'three'
+import drawMixins from './mixins/_draw'
 import renderMixins from './mixins/_render'
 
 export default {
   name: 'global-three-map',
-  mixins: [renderMixins],
+  mixins: [drawMixins, renderMixins],
   data() {
     return {
       scene: null,
@@ -40,7 +41,6 @@ export default {
 
       // 定义渲染器
       this.renderer = new THREE.WebGLRenderer({ antialias: true }) // 开启反锯齿
-      this.renderer.setClearColor(0x091F31) // 设置场景背景色
       // this.renderer.autoClear = false // 在渲染每一帧之前自动清除其输出置为false
       this.renderer.toneMappingExposure = 1 // 色调映射的曝光级别
       this.renderer.setSize(window.innerWidth, window.innerHeight) // 设置场景大小
@@ -55,6 +55,13 @@ export default {
 
       // 渲染
       this.render()
+    },
+
+    // 方法 - 绘制
+    draw () {
+      this.renderer.setClearColor("#091F31", 1); // 设置场景背景色
+      this.renderer.shadowMap.enabled = true;
+      this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;      
     },
 
     // 方法 - 渲染
