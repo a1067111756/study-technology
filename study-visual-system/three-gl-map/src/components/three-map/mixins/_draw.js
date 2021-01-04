@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 export default {
   data() {
@@ -7,64 +8,37 @@ export default {
   methods: {
     async $$draw() {
       //加载模型
-      await this.$$drawModels();
+      await this.$$drawModels()
 
-      this.addActiveCityLabel()
+      // this.addActiveCityLabel()
 
       //灯光
-      this.lights();
+      // this.lights();
 
-      //背景板
-      this.bgPlate(10000);
+      // //背景板
+      // this.bgPlate(10000);
 
-      //场景点缀
-      this.$$addGrids();
+      // //场景点缀
+      // this.$$addGrids();
 
-      this.$store.commit("map/SET_LOADING", false)
-
-      //添加点位，之后删除
-      //this.addMarkerCityLabel()
-      /*let markers = [
-        {
-          lon: '106.713478',
-          lat: '26.578343',
-          type: 'icon',
-          icon: "emergency",
-          contType: "title",
-          data: {
-            title: '我是标题',
-          }
-        }
-      ]
-
-      /!*let markers = [
-        {
-          lon: '106.713478',
-          lat: '26.578343',
-          type: 'label',
-          data: {
-            title: '贵阳市',
-          }
-        }
-      ]*!/
-      this.addMarkers(markers)*/
+      // this.$store.commit("map/SET_LOADING", false)
     },
     $$drawModels() {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         (async () => {
-          let loader = new THREE.GLTFLoader();
+          let loader = new GLTFLoader();
           let mapGroup = new THREE.Group();
           mapGroup.name = '省级模型合集'
 
           let first = await this.$$loadGz(loader)
           this.centreMap = first
           this.centreMap.position.z = -150
-          this.gui.hotmapGuiSwitch && this.hotmapGui()
+          // this.gui.hotmapGuiSwitch && this.hotmapGui()
           mapGroup.add(first)
 
 
-          let second = await this.$$loadBj(loader)
-          mapGroup.add(second)
+          // let second = await this.$$loadBj(loader)
+          // mapGroup.add(second)
 
           /*let around = await this.$$loadAround(loader)
           //around.layers.set(1);
@@ -77,24 +51,18 @@ export default {
       });
     },
     $$loadGz(loader) {
-      return new Promise((resolve, reject) => {
-        //贵州
-        if (this.mapCache.province.inside === null) {
-          loader.load("models/gz.glb", (gltf) => {
-            this.mapCache.province.inside = gltf.scene
-            let mesh = this.$$objGz(gltf.scene)
-            resolve(mesh)
-          }, undefined, (error) => {
-            console.error(error);
-          });
-        } else {
-          let mesh = this.$$objGz(this.mapCache.province.inside)
+      return new Promise((resolve) => {
+        loader.load("/model/gz.glb", (gltf) => {
+          this.mapCache.province.inside = gltf.scene
+          let mesh = this.$$objGz(gltf.scene)
           resolve(mesh)
-        }
+        }, undefined, (error) => {
+          console.error(error);
+        });
       })
     },
     $$loadAround(loader) {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         //贵州
         if (this.mapCache.province.around === null) {
           loader.load("models/around.glb", (gltf) => {
@@ -205,7 +173,7 @@ export default {
             child.layers.enable(1);
           } else {
             //添加接受点击事件对象的仓库
-            this.clickObjects.push(child);
+            // this.clickObjects.push(child);
           }
           //child.receiveShadow = true
         }
@@ -242,7 +210,7 @@ export default {
         depthWrite: false,
       });
 
-      let around = null
+      // let around = null
       mesh.traverse((child) => {
         if (child instanceof THREE.Mesh) {
           child.castShadow = true
@@ -268,7 +236,7 @@ export default {
       return mesh
     },
     $$loadBj(loader) {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         //周边
         if (this.mapCache.province.outside === null) {
           loader.load("models/bj.glb", (gltf) => {
@@ -465,11 +433,11 @@ export default {
       );
     },
     $$loadCity(name) {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         let {url, mesh, params} = this.$$objCitySwitch(name)
         this.coorParams = params.coorParams
 
-        let loader = new THREE.GLTFLoader();
+        let loader = new GLTFLoader();
         //地市
         if (mesh) {
           let item = this.$$objCity(mesh, params)
