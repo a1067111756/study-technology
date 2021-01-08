@@ -10,7 +10,6 @@ import * as THREE from 'three'
 import drawMixins from './mixins/_draw'
 import renderMixins from './mixins/_render'
 import lightMixins from './mixins/_light'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 export default {
   name: 'global-three-map',
@@ -51,7 +50,6 @@ export default {
 
       // 定义摄像机
       this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 2000)
-      // this.camera.up.set(0, 1, 0);
       this.camera.position.set(-30, 40, 1600)
       this.camera.lookAt(this.scene.position)
       this.scene.add(this.camera)
@@ -63,40 +61,39 @@ export default {
       this.renderer.setSize(window.innerWidth, window.innerHeight) // 设置场景大小
       this.renderer.setPixelRatio(window.devicePixelRatio) // 设置分辨率比
 
-      const axisHelper = new THREE.AxisHelper( 500 ); 
-      this.scene.add( axisHelper );
+      // 模型加载
+      this.loaderModel()
+      // const loader = new GLTFLoader()
+      // loader.load('model/gz.glb', (obj) => {
+      //   let group = new THREE.Group()
+      //   group.add(obj.scene)
 
-      // 实力换加载器
-      const loader = new GLTFLoader()
-      loader.load('model/gz.glb', (obj) => {
-        let group = new THREE.Group()
-        group.add(obj.scene)
+      //   // 根据自己模型的大小设置位置
+      //   group.position.set(300, 0, 0)
+      //   group.rotation.x = Math.PI / 2
+      //   group.rotation.y = 0
+      //   group.rotation.z = 0
+      //   this.scene.add(group)
 
-        // 根据自己模型的大小设置位置
-        group.position.set(300, 0, 0)
-        group.rotation.x = Math.PI / 2
-        group.rotation.y = 0
-        group.rotation.z = 0
-        // group.rotation.set(Math.PI / 2, 0, 0)
-        this.scene.add(group)
-
-      },function (xhr) {
-        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-      },function (error) {
-        console.log('load error!, ', error);
-      })
+      // },function (xhr) {
+      //   console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+      // },function (error) {
+      //   console.log('load error!, ', error);
+      // })
 
       // 添加光源
-      // const ambiColor = 0xffffff;
-      // const ambientLight = new THREE.AmbientLight(ambiColor)
-      // this.scene.add(ambientLight)      
-      const spotLight = new THREE.SpotLight(0xffffff)
-      spotLight.position.set(-40, 60, 20)
-      spotLight.castShadow = true;
-      spotLight.intensity = 20
-      spotLight.shadow.mapSize.width = 2048; //设置阴影分辨率
-      spotLight.shadow.mapSize.height = 2048;
-      this.scene.add(spotLight);
+      const directionalLight = new THREE.DirectionalLight(0xffffff)
+      directionalLight.position.set(-40, 60, 20)
+      directionalLight.shadow.camera.near = 20; //产生阴影的最近距离
+      directionalLight.shadow.camera.far = 200; //产生阴影的最远距离
+      directionalLight.shadow.camera.left = -50; //产生阴影距离位置的最左边位置
+      directionalLight.shadow.camera.right = 50; //最右边
+      directionalLight.shadow.camera.top = 50; //最上边
+      directionalLight.shadow.camera.bottom = -50; //最下面
+
+      directionalLight.castShadow = true;
+      directionalLight.intensity = 10
+      this.scene.add(directionalLight);
 
       // 挂在dom
       document
