@@ -1,5 +1,6 @@
 <template>
   <div style="position: fixed; bottom: 0;left: 0; z-index: 1; width: 100vw; height:100vh">
+    <div id="stats"></div>
     <div id="map"></div>
   </div>
 </template>
@@ -10,90 +11,56 @@ import * as THREE from 'three'
 import drawMixins from './mixins/_draw'
 import renderMixins from './mixins/_render'
 import lightMixins from './mixins/_light'
+import Stats from 'three/examples/jsm/libs/stats.module.js'
+
+var scene = null
 
 export default {
   name: 'global-three-map',
   mixins: [drawMixins, renderMixins, lightMixins],
   data() {
     return {
-      scene: null,
+      stats: null,
       camera: null,
-      baseGroup: null,
-      mapCache: {
-        province: {
-          inside: null,
-          around: null,
-          outside: null
-        }
-      },
-      gui: {
-        spotLightGuiSwitch: false,
-        rectLightGuiSwitch: false,
-        faceGuiSwitch: false,
-        baseGroupGuiSwitch: false,
-        cameraGuiSwitch: false,
-        hotmapGuiSwitch: false
-      } 
+      baseGroup: null
     }
   },
   mounted() {
     this.init()
   },
+  beforeDestroy() {
+    this.renderer.forceContextLoss()
+    this.renderer = null
+  },
   methods: {
     // 方法 - 初始化
     init () {
-      this.$$bloomLayer()
-      this.$$darkMaterial()
+      // 初始化性能监测工具
+      this.initStats()
 
       // 定义场景
-      this.scene = new THREE.Scene()
+      scene = new THREE.Scene()
+      scene.fog = new THREE.Fog('#00060c', 2500, 4500);
 
       // 定义摄像机
-      this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 2000)
-      this.camera.position.set(-30, 40, 1600)
-      this.camera.lookAt(this.scene.position)
-      this.scene.add(this.camera)
+      this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 5000)
+      this.camera.up.set(0, 1, 0)
+      this.camera.position.set(0, 1200, 1000)
+      this.camera.lookAt(scene.position)
+      scene.add(this.camera)
 
       // 定义渲染器
       this.renderer = new THREE.WebGLRenderer({ antialias: true }) // 开启反锯齿
-      this.renderer.setClearColor("#091F31", 1)
+      this.renderer.setClearColor(0x000000, 1)
       this.renderer.toneMappingExposure = 1 // 色调映射的曝光级别
       this.renderer.setSize(window.innerWidth, window.innerHeight) // 设置场景大小
       this.renderer.setPixelRatio(window.devicePixelRatio) // 设置分辨率比
 
       // 模型加载
-      this.loaderModel()
-      // const loader = new GLTFLoader()
-      // loader.load('model/gz.glb', (obj) => {
-      //   let group = new THREE.Group()
-      //   group.add(obj.scene)
-
-      //   // 根据自己模型的大小设置位置
-      //   group.position.set(300, 0, 0)
-      //   group.rotation.x = Math.PI / 2
-      //   group.rotation.y = 0
-      //   group.rotation.z = 0
-      //   this.scene.add(group)
-
-      // },function (xhr) {
-      //   console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-      // },function (error) {
-      //   console.log('load error!, ', error);
-      // })
+      this.loaderModel(scene)
 
       // 添加光源
-      const directionalLight = new THREE.DirectionalLight(0xffffff)
-      directionalLight.position.set(-40, 60, 20)
-      directionalLight.shadow.camera.near = 20; //产生阴影的最近距离
-      directionalLight.shadow.camera.far = 200; //产生阴影的最远距离
-      directionalLight.shadow.camera.left = -50; //产生阴影距离位置的最左边位置
-      directionalLight.shadow.camera.right = 50; //最右边
-      directionalLight.shadow.camera.top = 50; //最上边
-      directionalLight.shadow.camera.bottom = -50; //最下面
-
-      directionalLight.castShadow = true;
-      directionalLight.intensity = 10
-      this.scene.add(directionalLight);
+      this.initLinght(scene)
 
       // 挂在dom
       document
@@ -103,34 +70,21 @@ export default {
       // 渲染
       this.render()
     },
-
-    // 方法 - 绘制
-    draw () {
-
-
-
-      // // 渲染器初始化设置
-      // this.renderer.setClearColor("#091F31", 1)
-      // this.renderer.shadowMap.enabled = true
-      // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap 
-
-      //绘画场景
-      // this.$$draw()
-
-      // // 设置背景板
-      // let material = new THREE.MeshLambertMaterial({color: "0x808080", dithering: true});
-      // let geometry = new THREE.PlaneBufferGeometry(10000, 10000);
-      // let mesh = new THREE.Mesh(geometry, material);
-      // mesh.name = '背景板'
-      // mesh.position.set(0, 0, -80);
-      // mesh.receiveShadow = true;
-      // this.baseGroup.add(mesh);
-    },
-
     // 方法 - 渲染
     render () {
+      this.stats.update()
       window.requestAnimationFrame(this.render)
-      this.renderer.render(this.scene, this.camera)  
+      this.renderer.render(scene, this.camera)  
+    },
+    // 方法 - 初始化性能监测工具
+    initStats () {
+      const stats = new Stats()
+      stats.setMode(0)
+      stats.domElement.style.position = 'absolute'
+      stats.domElement.style.left = '0px'
+      stats.domElement.style.top = '0px'
+      document.getElementById("stats").appendChild(stats.domElement)
+      this.stats = stats
     }
   },
 }
