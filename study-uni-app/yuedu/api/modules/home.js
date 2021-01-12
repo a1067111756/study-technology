@@ -11,7 +11,13 @@ export const getArticalList = params => {
 	return request(params)
 }
 
+// 收藏文章列表
+export const like = params => {
+	return request(params)
+}
+
 export default {
+	like,
 	getTabBarLabel,
 	getArticalList
 }

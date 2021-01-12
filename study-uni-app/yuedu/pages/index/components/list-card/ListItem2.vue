@@ -1,5 +1,6 @@
 <template>
 	<view class="list-item__container">
+		<Like class="like" @change="type => $emit('likeChange', type, value.id)"></like>
 		<image class="thumb-pic" :src="getThumbPic" lazy-load></image>
 		<view>
 			<text class="title">{{ value.title }}</text>
@@ -38,6 +39,13 @@
     background-color: #fff;
 		box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
 		margin: 20rpx;
+		position: relative;
+		
+		.like {
+			position: absolute;
+			bottom: -10rpx;
+			right: -4rpx;
+		}
 		
 		> image {
 			width: 100%;
@@ -53,6 +61,13 @@
 				margin-top: 20rpx;
 				color: #000000;
 				font-size: $uni-font-size-base;
+				text-overflow: -o-ellipsis-lastline;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				line-clamp: 2;
+				-webkit-box-orient: vertical;				
 			}
 			
 			.sub-title {
@@ -75,7 +90,8 @@
 				
 				.view {
 					color: $uni-text-color;
-					font-size: $uni-font-size-sm;					
+					font-size: $uni-font-size-sm;
+					margin-right: 48rpx;
 				}
 			}
 		}
