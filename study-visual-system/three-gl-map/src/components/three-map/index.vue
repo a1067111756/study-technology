@@ -29,8 +29,8 @@ export default {
     this.init()
   },
   beforeDestroy() {
-    this.renderer.forceContextLoss()
-    this.renderer = null
+    // this.renderer.forceContextLoss()
+    // this.renderer = null
   },
   methods: {
     // 方法 - 初始化
@@ -40,14 +40,17 @@ export default {
 
       // 定义场景
       scene = new THREE.Scene()
-      scene.fog = new THREE.Fog('#00060c', 2500, 4500);
+      // scene.fog = new THREE.Fog('#00060c', 2500, 4500);
 
       // 定义摄像机
-      this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 5000)
-      this.camera.up.set(0, 1, 0)
-      this.camera.position.set(0, 1200, 1000)
+      this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 3000)
+      // this.camera.up.set(0, 1, 0)
+      this.camera.position.set(0, 1200, 1200)
       this.camera.lookAt(scene.position)
       scene.add(this.camera)
+
+      const axisHelper = new THREE.AxisHelper(50); 
+      scene.add(axisHelper);
 
       // 定义渲染器
       this.renderer = new THREE.WebGLRenderer({ antialias: true }) // 开启反锯齿
@@ -67,7 +70,7 @@ export default {
         .getElementById('map')
         .appendChild(this.renderer.domElement)      
 
-      // 渲染
+      // // 渲染
       this.render()
     },
     // 方法 - 渲染
