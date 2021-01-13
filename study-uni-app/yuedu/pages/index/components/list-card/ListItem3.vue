@@ -1,5 +1,6 @@
 <template>
 	<view class="list-item__container">
+		<Like class="like" @change="type => $emit('likeChange', type, value.id)"></like>
 		<view class="top">
 			<text class="title">{{ value.title }}</text>
 		</view>
@@ -46,6 +47,13 @@
     background-color: #fff;
 		box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
 		margin: 20rpx;
+		position: relative;
+		
+		.like {
+			position: absolute;
+			top: 8rpx;
+			right: -14rpx;
+		}		
 		
 		.top {
 			display: flex;
@@ -54,8 +62,16 @@
 			justify-content: flex-start;
 			.title {
 				margin-top: 20rpx;
+				padding-right: 40rpx;
 				color: #000000;
 				font-size: $uni-font-size-base;
+				text-overflow: -o-ellipsis-lastline;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				line-clamp: 2;
+				-webkit-box-orient: vertical;				
 			}
 			
 			.sub-title {

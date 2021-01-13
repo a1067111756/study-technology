@@ -10,9 +10,9 @@
 		<view class="content">
 			<ListCard>
 				<view v-for="(item, index) in articalList" :key="index">
-					<ListItem1 v-if="item.mode === 'base'" :value="item"></ListItem1>
-					<ListItem2 v-else-if="item.mode === 'image'" :value="item"></ListItem2>
-					<ListItem3 v-else-if="item.mode === 'column'" :value="item"></ListItem3>
+					<ListItem1 v-if="item.mode === 'base'" :value="item" @likeChange="onLikeChange"></ListItem1>
+					<ListItem2 v-else-if="item.mode === 'image'" :value="item" @likeChange="onLikeChange"></ListItem2>
+					<ListItem3 v-else-if="item.mode === 'column'" :value="item" @likeChange="onLikeChange"></ListItem3>
 				</view>
 			</ListCard>
 		</view>
@@ -81,7 +81,22 @@
 					.then(data => {
 						this.articalList = data
 					})
-			}			
+			},
+			// 事件 - 收藏变化
+			onLikeChange (type, articalId) {
+				this
+					.$api
+					.home
+					.like({
+						name: 'like',
+						typ: type,
+						userId: '8010388',
+						articalId: articalId
+					})
+					.then(data => {
+						console.log(data)
+					})				
+			}
 		}
 	}
 </script>

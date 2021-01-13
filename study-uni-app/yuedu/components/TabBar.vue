@@ -10,7 +10,7 @@
 			</scroll-view>
 		</view>
 		<view class="right">
-			<Icon type="&#xe618;" size="20" />
+			<i class="iconfont icon-setting" style="font-size: 40rpx;" />
 		</view>
 	</view>
 </template>
