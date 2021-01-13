@@ -44,8 +44,7 @@ export default {
 
       // 定义摄像机
       this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 3000)
-      // this.camera.up.set(0, 1, 0)
-      this.camera.position.set(0, 1200, 1200)
+      this.camera.position.set(0, 1600, 1200)
       this.camera.lookAt(scene.position)
       scene.add(this.camera)
 

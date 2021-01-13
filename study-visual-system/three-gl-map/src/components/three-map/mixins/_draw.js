@@ -15,11 +15,9 @@ export default {
     // 加载模型
     loaderModel (scene) {
       Promise
-        .all([
-          // this.loadBgModel(), 
-          // this.loadMapModel(),
-          this.loadSvg({ url: 'model/svg/circle-lines.svg' }),
-          this.loadSvg({ url: 'model/svg/direction.svg' })
+        .all([    
+          this.loadBgModel(), 
+          this.loadMapModel()            
         ])
         .then(obj => {
           // 添加网格
@@ -28,8 +26,13 @@ export default {
           // 添加导入的模型
           obj.map(item => { this.mapGroup.add(item) })
 
+          // 添加圆环
+          this.loadSvg({ name: '旋转的点', url: 'model/svg/circle-points.svg' }).then(data => { this.mapGroup.add(data) })
+          this.loadSvg({ name: '周围得点', url: 'model/svg/circle-lines.svg' }).then(data => { this.mapGroup.add(data) })
+          this.loadSvg({ name: '指南针', url: 'model/svg/direction.svg' }).then(data => { this.mapGroup.add(data) })  
+
           // 根据自己模型的大小设置位置
-          this.mapGroup.position.set(0, 0, 0)
+          this.mapGroup.position.set(500, 0, -100)
           scene.add(this.mapGroup)
         })
         .catch(err => {
@@ -100,11 +103,11 @@ export default {
         loader.load(opt.url, function (data) {
           const paths = data.paths;
           const group = new THREE.Group();
-          group.position.x = -1150;
-          group.position.y = 0;
-          group.position.z = 700;
-          group.scale.y *= -1;
-          group.rotation.x = Math.PI / 2
+          group.position.x = -1700;
+          group.position.y = 60;
+          group.position.z = 1000;
+          // group.scale.y *= -1;
+          group.rotation.x = -Math.PI / 2
   
           for ( let i = 0; i < paths.length; i ++ ) {
             const path = paths[i];
