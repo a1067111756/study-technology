@@ -1,14 +1,14 @@
 <template>
-  <p>sssssssssss</p>
+  <p class="title">{{ message }}</p>
 </template>
 
 <script>
 export default {
   name: 'test-component',
   setup (props) {
-    const message = ref('hello rollup')
+    const message = '我是测试组件'
     return {
-      message: message.value
+      message
     }
   }
 }

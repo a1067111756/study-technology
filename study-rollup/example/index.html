@@ -4,8 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>测试</title>
-  <script src="../dist/test.js"></script>
+  <script src="https://unpkg.com/vue@next"></script>
+  <script src="../dist/bundle.min.umd.js"></script>
 </head>
 <body>
+  <div id="app">
+    <p>{{ message }}</p>
+    <test-component></test-component>
+  </div>
+  <script>
+    Vue.createApp({
+      setup () {
+        const message = 'hello rollup'
+        return {
+          message
+        }
+      }
+    }).use(TestLib).mount('#app')
+  </script>
 </body>
 </html>
