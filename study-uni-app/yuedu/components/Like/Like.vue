@@ -1,6 +1,6 @@
 /* 仿Twitter点赞收藏组件 */
 <template>
-	<view class="heart" :class="{ active: active }" :style="{ transform: `scale(${scale})` }" @click="onClick"></view>
+	<view class="heart" :class="{ active: innerValue }" :style="{ transform: `scale(${scale})` }" @click="onClick"></view>
 </template>
 
 <script>
@@ -15,18 +15,29 @@
 			scale: {
 				type: Number,
 				default: 0.8
+			},
+			value: {
+				type: Boolean,
+				default: false				
 			}
 		},
 		data () {
 			return {
-				active: false
+				innerValue: false
 			}
+		},
+		watch: {
+			value: {
+				handler (val) {
+					this.innerValue = this.value
+				}
+			}	
 		},
 		methods: {
 			// 事件 - 点击
 			onClick () {
-				this.active = !this.active
-				this.$emit('change', strategy[this.active])
+				this.innerValue = !this.innerValue
+				this.$emit('change', strategy[this.innerValue])
 			}
 		}
 	}

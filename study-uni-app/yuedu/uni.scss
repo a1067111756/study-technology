@@ -13,7 +13,7 @@
  */
 
 /* iconfont字体文件 */
-@import url('http://at.alicdn.com/t/font_2318808_9s9gt0kns0k.css');
+@import url('http://at.alicdn.com/t/font_2318808_pabymkrn2x.css');
 
 /* 颜色变量 */
 $app-color-base: #f07373;
@@ -91,4 +91,10 @@ $uni-font-size-paragraph:30rpx;
 	flex-flow: column;
 	align-items: center;
 	justify-content: center;
+}
+
+/* icon-font字体相关 */
+.iconfont {
+	font-size: 1.2rem;
+	color: #909399;
 }

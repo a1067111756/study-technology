@@ -1,20 +1,27 @@
-/* 首页导航栏 */
+/* 搜索导航栏 */
 <template>
 	<view class="nav-bar-container">
 		<view class="nav-bar-inner-container">
+			<!-- status状态栏 -->
 			<view :style="{ height: statusBarHeight + 'rpx' }"></view>
+			
+			<!-- 搜索框 -->
 			<view class="search-wrapper flex-row-center">
-				<icon class="search-icon" type="search" size="16"/>
+				<i class="iconfont icon-sousuo" />
+				<i class="iconfont icon-fanhui" @click="onBack" />
 				<input 
 					type="text"
 					placeholder="搜索"
 					class="search-input" 
 					v-model="searchValue" 
 					:style="{ 'margin-right': (menuButtonBoundWidth + 40) + 'rpx' }"
-					@click="onClick" 
+					@confirm="onEnter"
 				/>
+				<i v-if="searchValue" class="iconfont icon-clear" @click="onClear" />
 			</view>					
 		</view>
+		
+		<!-- 占位 -->
 		<view :style="{ height: (90 + statusBarHeight) + 'rpx' }"></view>
 	</view>
 </template>
@@ -41,10 +48,17 @@
 		},
 		methods: {
 			// 事件 - 搜索框点击
-			onClick () {
-				uni.navigateTo({
-					url: '/pages/search/search'
-				})
+			onBack () {
+				uni.navigateBack()
+			},
+			// 事件 - 清除输入框
+			onClear () {
+				this.searchValue = ''
+			},
+			// 事件 - 回车事件
+			onEnter () {
+				this.$emit('confirm', this.searchValue.trim())
+				this.onClear()
 			}
 		}
 	}
@@ -66,16 +80,28 @@
 			position: relative;
 		}	
 		
-		.search-icon {
+		.icon-fanhui {
+			color: #ffffff; 
+			margin-left: 40rpx;
+			margin-right: 20rpx;
+		}
+		
+		.icon-clear {
 			position: absolute;
-			left: 70rpx;
-			top: 30rpx;
+			right: 70rpx;
+			top: 26rpx;
 		}	
+		
+		.icon-sousuo {
+			position: absolute;
+			left: 120rpx;
+			top: 26rpx;
+		}			
 		
 		.search-input {
 			height: 60rpx;
 			width: 100%;
-			margin: 0 40rpx;
+			margin-right: 40rpx;
 			font-size: $uni-font-size-sm;
 			color: $uni-text-color;
 			padding: 0 80rpx;

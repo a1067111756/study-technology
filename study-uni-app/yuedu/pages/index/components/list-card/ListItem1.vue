@@ -1,6 +1,6 @@
 <template>
 	<view class="list-item__container">
-		<Like class="like" @change="type => $emit('likeChange', type, value.id)"></like>
+		<Like class="like" :value="like" @change="type => $emit('likeChange', type, value.id)"></like>
 		<image class="thumb-pic" :src="getThumbPic" lazy-load></image>
 		<view class="right">
 			<text class="title">{{ value.title }}</text>
@@ -20,6 +20,10 @@
 				type: Object,
 				default: () => {}
 			},
+			like: {
+				type: Boolean,
+				default: false		
+			}
 		},
 		computed: {
 			getThumbPic () {

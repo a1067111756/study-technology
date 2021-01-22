@@ -7,7 +7,6 @@ exports.main = async (event, context) => {
 	const collection = db.collection('article')	
 
 	return collection
-		.where(event)
 		.limit(100)
 		.get()
 		.then(res => {

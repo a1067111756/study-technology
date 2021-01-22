@@ -4,7 +4,7 @@ exports.main = async (event, context) => {
 	const articalId = event.articalId
 	const userId = event.userId
 	const type = event.type
-		
+				
 	// 获取数据库
 	const db = uniCloud.database()
 	const dbCmd = db.command
@@ -40,5 +40,5 @@ exports.main = async (event, context) => {
 			code: '000000',
 			msg: `取消收藏成功`
 		}				
-	}
+	}	
 };

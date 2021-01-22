@@ -9,10 +9,10 @@
 		<!-- 主内容 -->
 		<view class="content">
 			<ListCard>
-				<view v-for="(item, index) in articalList" :key="index">
-					<ListItem1 v-if="item.mode === 'base'" :value="item" @likeChange="onLikeChange"></ListItem1>
-					<ListItem2 v-else-if="item.mode === 'image'" :value="item" @likeChange="onLikeChange"></ListItem2>
-					<ListItem3 v-else-if="item.mode === 'column'" :value="item" @likeChange="onLikeChange"></ListItem3>
+				<view v-for="(item, index) in articalListCmp" :key="index">
+					<ListItem1 v-if="item.mode === 'base'" :value="item" :like="articalLikeList.includes(item.id)" @likeChange="onLikeChange"></ListItem1>
+					<ListItem2 v-else-if="item.mode === 'image'" :value="item" :like="articalLikeList.includes(item.id)" @likeChange="onLikeChange"></ListItem2>
+					<ListItem3 v-else-if="item.mode === 'column'" :value="item" :like="articalLikeList.includes(item.id)" @likeChange="onLikeChange"></ListItem3>
 				</view>
 			</ListCard>
 		</view>
@@ -39,24 +39,29 @@
 		data () {
 			return {
 				tabBarLabel: [],
-				articalList: []
+				articalList: [],
+				articalType: '全部',
+				articalLikeList: []
+			}
+		},
+		computed: {
+			// 筛选文章
+			articalListCmp () {
+				return this.articalType === '全部'
+					? this.articalList
+					: this.articalList.filter(item => item.classify === this.articalType)
 			}
 		},
 		onLoad () {
 			this.getTabBarLabel()
 			this.getArticalList()
+			this.getLikeListByUserId()
 		},
 		methods: {
 			// 事件 - tabBar点击
 			onTabBarClick (tabItem) {
-				const data = {}
-				if (tabItem.name !== '全部') {
-					data.classify = tabItem.name
-				}
-				
-				this.getArticalList(data)	
+				this.articalType = tabItem.name
 			},
-			
 			// 请求 - 获取tabBar标签
 			getTabBarLabel () {
 				this
@@ -70,17 +75,31 @@
 					})
 			},
 			// 请求 - 获取文章列表
-			getArticalList (data) {
+			getArticalList () {
 				this
 					.$api
 					.home
 					.getArticalList({
-						name: 'artical-list',
-						data: data
+						name: 'artical-list'
 					})
 					.then(data => {
 						this.articalList = data
 					})
+			},
+			// 请求 - 获取用户的收藏列表
+			getLikeListByUserId () {
+				this
+					.$api
+					.home
+					.getLikeListByUserId({
+						name: 'like-list-by-userId',
+						data: {
+							userId: '8010388'
+						}
+					})
+					.then(data => {
+						this.articalLikeList = data
+					})				
 			},
 			// 事件 - 收藏变化
 			onLikeChange (type, articalId) {
@@ -89,12 +108,16 @@
 					.home
 					.like({
 						name: 'like',
-						typ: type,
-						userId: '8010388',
-						articalId: articalId
+						data: {
+							type: type,
+							userId: '8010388',
+							articalId: articalId							
+						}
 					})
 					.then(data => {
-						console.log(data)
+						uni.showToast({
+							title: type === 'like' ? '收藏成功' : '取消收藏'
+						})
 					})				
 			}
 		}
