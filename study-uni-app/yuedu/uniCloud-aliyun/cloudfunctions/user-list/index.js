@@ -4,15 +4,15 @@ exports.main = async (event, context) => {
 	const db = uniCloud.database()
 	
 	// 获取数据表
-  const collection = db.collection('label')
-  
+	const collection = db.collection('user')
+
   return collection
     .get()
     .then(res => {
       return {
         code: '000000',
         data: res.data,
-        msg: '获取label标签成功'
+        msg: '获取用户列表成功'
       }      
     })
 };

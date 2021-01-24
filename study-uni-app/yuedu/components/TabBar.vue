@@ -10,7 +10,7 @@
 			</scroll-view>
 		</view>
 		<view class="right">
-			<i class="iconfont icon-setting" style="font-size: 40rpx;" />
+			<i class="iconfont icon-setting" style="font-size: 40rpx;" @click="onLabelMagClick" />
 		</view>
 	</view>
 </template>
@@ -33,7 +33,14 @@
 			onItemClick (index, item) {
 				this.activeIndex = index
 				this.$emit('itemClick', item)
-			}
+			},
+      // 事件 - 标签管理页跳转
+      onLabelMagClick () {
+        this.$u.route({
+          type: 'navigateTo',
+          url: '/pages/label-manager/label-manager'
+        })        
+      }
 		},
 	}
 </script>
@@ -46,6 +53,7 @@
 		background-color: $uni-bg-color-grey;
 		border-bottom: 1px solid #f5f5f5;
 		.left {
+      flex: 1;
 			white-space: nowrap;
 			overflow-x: auto;
 			.scroll-view_H {
@@ -57,7 +65,7 @@
 			}			
 		}
 		.right {
-			width: 150rpx;
+			width: 100rpx;
 			display: flex;
 			align-items: center;
 			justify-content: center;

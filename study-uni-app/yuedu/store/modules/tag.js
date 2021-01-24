@@ -20,7 +20,6 @@ const tag = {
 	
   actions: {
     addNewTag ({ commit }, tag) {
-			console.log(tag)
       commit('ADD_NEW_TAG', tag.trim())
     },
     clearHistory ({ commit }) {

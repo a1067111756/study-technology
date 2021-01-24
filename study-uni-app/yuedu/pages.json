@@ -1,4 +1,7 @@
 {
+ 	"easycom": {
+ 		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+ 	}, 
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 			{
 				"path": "pages/index/index",
@@ -32,11 +35,29 @@
             }
             
         }
+        ,{
+            "path" : "pages/label-manager/label-manager",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "标签管理",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/feedback/feedback",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "意见反馈",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
-		"navigationBarTextStyle": "black",
+		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
+		"navigationBarBackgroundColor": "#f07373",
 		"backgroundColor": "#F8F8F8"
 	},
 	"tabBar": {

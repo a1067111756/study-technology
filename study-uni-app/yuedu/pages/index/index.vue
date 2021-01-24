@@ -56,6 +56,7 @@
 			this.getTabBarLabel()
 			this.getArticalList()
 			this.getLikeListByUserId()
+      uni.$on('label-change', () => { this.getTabBarLabel() })
 		},
 		methods: {
 			// 事件 - tabBar点击
@@ -68,7 +69,10 @@
 					.$api
 					.home
 					.getTabBarLabel({
-						name: 'tab-bar-label'
+						name: 'label-of-user',
+            data: {
+              userId: this.$store.getters.getUserInfo._id
+            }
 					})
 					.then(data => {
 						this.tabBarLabel = [{ name: '全部', _id: '000000' }, ...data]
