@@ -12,8 +12,8 @@ Vue.use(uView)
 Vue.config.productionTip = false
 App.mpType = 'app'
 
-new Vue({
-  el: '#app',
-  store,
-  render: h => h(App)
+const app = new Vue({
+	store,
+	...App
 })
+app.$mount()

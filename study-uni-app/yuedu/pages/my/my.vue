@@ -4,16 +4,16 @@
 		<view class="header u-flex u-flex-col u-col-center u-row-center">
       <u-image width="120rpx" height="120rpx" shape="circle" :src="userInfo.avatar"></u-image>
       <text class="u-margin-top-40 u-font-36" style="font-weight: bold;">{{ userInfo.author_name }}</text>
-      <u-grid :col="3" :border="false">
-        <u-grid-item style="background-color: transparent;">
+      <u-grid :col="3" :border="false" style="flex: none">
+        <u-grid-item bg-color="transparent">
           <text>关注</text>
           <view class="grid-text">{{ userInfo.fans_count }}</view>
         </u-grid-item>
-        <u-grid-item style="background-color: transparent;">
+        <u-grid-item bg-color="transparent">
           <text>粉丝</text>
           <view class="grid-text">{{ userInfo.follow_count }}</view>
         </u-grid-item>
-        <u-grid-item style="background-color: transparent;">
+        <u-grid-item bg-color="transparent">
           <text>积分</text>
           <view class="grid-text">0</view>
         </u-grid-item>
