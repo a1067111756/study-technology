@@ -6,7 +6,7 @@
 		</view>
 		
 		<view class="middle">
-			<image v-for="(item, index) in getThumbPic" :key="index" :src="item"></image>
+      <image v-for="(item, index) in getThumbPic" :key="index" :src="item" mode="scaleToFill"></image>
 		</view>
 		
 		<view class="bottom">

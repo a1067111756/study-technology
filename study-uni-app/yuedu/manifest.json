@@ -54,7 +54,8 @@
         "setting" : {
             "urlCheck" : false,
             "es6" : true,
-            "minified" : true
+            "minified" : true,
+            "postcss" : true
         },
         "usingComponents" : true
     },
@@ -69,5 +70,16 @@
     },
     "uniStatistics" : {
         "enable" : false
+    },
+    "h5" : {
+        "router" : {
+            "mode" : "hash"
+        },
+        "title" : "悦读",
+        "optimization" : {
+            "treeShaking" : {
+                "enable" : true
+            }
+        }
     }
 }

@@ -1,6 +1,6 @@
-import FlyBox from './FlyBox.vue'
-import DatavLoading from './DatavLoading.vue'
-import DatavContainer from './DatavContainer.vue'
+import FlyBox from './components/FlyBox.vue'
+import DatavLoading from './components/DatavLoading.vue'
+import DatavContainer from './components/DatavContainer.vue'
 
 export default {
   install: (app, options) => {

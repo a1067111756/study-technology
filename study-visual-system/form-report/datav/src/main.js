@@ -1,6 +1,7 @@
-import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router'
-import store from './store'
+import { createApp } from 'vue'
+import '@/config/style.config'
+import pluginInstall from '@/config/plugin.config'
 
-createApp(App).use(router).use(store).mount('#app')
+const app = createApp(App)
+app.use(pluginInstall).mount('#app')

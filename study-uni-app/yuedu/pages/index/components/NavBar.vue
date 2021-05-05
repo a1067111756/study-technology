@@ -2,8 +2,10 @@
 <template>
 	<view class="nav-bar-container">
 		<view class="nav-bar-inner-container">
+      <!-- 状态栏 -->
 			<view :style="{ height: statusBarHeight + 'rpx' }"></view>
-			<view class="search-wrapper flex-row-center">
+      <!-- 搜索栏 -->
+      <view class="search-wrapper flex-row-center">
 				<icon class="search-icon" type="search" size="16"/>
 				<input 
 					type="text"
@@ -15,6 +17,7 @@
 				/>
 			</view>					
 		</view>
+    <!-- 填充栏, 让绝对定位坍塌的父元素撑开占据位置 -->
 		<view :style="{ height: (90 + statusBarHeight) + 'rpx' }"></view>
 	</view>
 </template>
@@ -29,12 +32,18 @@
 			}
 		},
 		created () {
-			// 获取状态栏高度
+			/*
+        note: 获取状态栏高度, h5是没有statusBarHeight, 主要是将微信小程序
+              的状态栏高度填充防止搜索栏覆盖状态栏, 支付宝小程序的胶囊按钮在
+              搜索栏上方没有必要填充状态栏高度
+      */
+			// #ifdef APP-PLUS || MP-WEIXIN
 			const systemInfo = uni.getSystemInfoSync()
 			this.statusBarHeight = systemInfo.statusBarHeight * 2
+			// #endif     
 			
+      // 获取胶囊菜单程序按钮, 兼容胶囊按钮位置
 			// #ifndef H5 || APP-PLUS || MP-ALIPAY
-			// 获取胶囊菜单程序按钮
 			const menuButtonBoundInfo = uni.getMenuButtonBoundingClientRect()
 			this.menuButtonBoundWidth = menuButtonBoundInfo.width * 2
 			// #endif

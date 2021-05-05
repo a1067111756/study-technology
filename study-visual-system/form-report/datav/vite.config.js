@@ -1,8 +1,12 @@
-const path = require('path')
+import path from 'path'
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
 
-module.exports = {
-  alias: {
-    // 键必须以斜线开始和结束
-    '/@/': path.resolve(__dirname, './src')
-  },  
-}
+export default defineConfig({
+  plugins: [vue()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    }
+  }  
+})
