@@ -1,0 +1,18 @@
+/* 全局浏览器基本样式重置 */
+
+// 去除根元素的padding && margin
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+// 所有元素使用border-box盒模型
+* {
+  box-sizing: border-box;
+}
+
+// 去除p标签的外边距
+p {
+  margin: 0;
+}
+
