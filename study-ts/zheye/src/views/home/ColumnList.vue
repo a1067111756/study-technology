@@ -36,7 +36,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" scoped>
+<style lang="postcss" scoped>
   .clc-title {
     @apply text-black text-18px;
   }
