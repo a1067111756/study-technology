@@ -7,7 +7,7 @@
         <img :src="item.avatar">
         <p>{{ item.title }}</p>
         <p>{{ item.descricption }}</p>
-        <button class="btn-plain hover:(bg-[#0d6efd] text-white)">进入专栏</button>
+        <button class="btn-plain hover:(bg-[#0d6efd] text-white)" @click="$router.push('/column-detail')">进入专栏</button>
       </div>
     </section>
   </div>

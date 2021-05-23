@@ -1,24 +1,38 @@
 <template>
   <div class="components-header__container">
     <!-- 标题 -->
-    <p class="ch-title">{{ title }}</p>
+    <p class="ch-title cursor-pointer" @click="$router.push('/home')">{{ title }}</p>
 
     <!-- 用户登录状态 -->
     <div v-if="userInfo.isLogin" class="flex justify-center items-center">
+      <!-- 头像 -->
       <img :src="userInfo.avatar" class="rounded-full">
-      <p class="ml-15px text-white text-18px">{{ userInfo.name }}</p>
+
+      <!-- 下拉菜单 -->
+      <a-dropdown class="ml-15px">
+        <template #overlay>
+          <a-menu>
+            <a-menu-item key="1"><PlusOutlined/>新建文章</a-menu-item>
+            <a-menu-item key="1"><UserSwitchOutlined/>管理账户</a-menu-item>
+            <a-menu-item key="1"><LogoutOutlined/>退出登陆</a-menu-item>
+          </a-menu>
+        </template>
+        <a-button class="!h-40px !rounded !bg-[#18b566]" type="primary">欢迎你，{{ userInfo.name }}<DownOutlined/></a-button>
+      </a-dropdown>
+      <!-- <p class="ml-15px text-white text-18px">{{ userInfo.name }}</p> -->
     </div>
 
     <!-- 用户未登录状态 -->
     <div v-else>
-      <button class="btn-plain border-white text-white mr-10px hover:(bg-white text-black)">登录</button>
-      <button class="btn-plain border-white text-white hover:(bg-white text-black)">注册</button>
+      <button class="btn-plain border-white text-white mr-10px hover:(bg-white text-black)" @click="$router.push('/login')">登录</button>
+      <button class="btn-plain border-white text-white hover:(bg-white text-black)" @click="$router.push('/register')">注册</button>
     </div>    
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
+import { DownOutlined, PlusOutlined, UserSwitchOutlined, LogoutOutlined } from '@ant-design/icons-vue'
 
 export interface UserProps {
   id?: Number,
@@ -28,6 +42,12 @@ export interface UserProps {
 }
 
 export default defineComponent({
+  components: {
+    DownOutlined,
+    PlusOutlined, 
+    UserSwitchOutlined, 
+    LogoutOutlined
+  },
   props: {
     title: {
       type: String,
