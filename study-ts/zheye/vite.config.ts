@@ -14,4 +14,14 @@ export default defineConfig({
       "@": path.resolve(__dirname, './src'),
     }
   },
+  // 代理设置
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://api.vikingship.xyz',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '/api')
+      },
+    }    
+  }
 })

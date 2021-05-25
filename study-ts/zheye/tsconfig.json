@@ -22,7 +22,8 @@
     // 编译过程中需要引入的库文件的列表。
     "lib": ["esnext", "dom"],
     // 要包含的类型声明文件名列表
-    "types": ["vite/client"]
+    "types": ["vite/client", "node", "webpack-env"],
+    "suppressImplicitAnyIndexErrors": true,
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "exclude": ["node_modules"]

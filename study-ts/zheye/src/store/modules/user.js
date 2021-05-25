@@ -1,3 +1,5 @@
+import { login } from '@/api/modules/auth.ts'
+
 const state = () => {
   return {
     userInfo: {
@@ -9,6 +11,24 @@ const state = () => {
   }
 }
 
+const mutations = {
+  // 账号登陆
+  AUTH_LOGIN (state, loginInfo) {
+    login(loginInfo).then(data => {
+      // 将token存储
+      console.log(data)
+    })
+  }
+}
+
+const actions = {
+  authLogin ({ commit }, loginInfo) {
+    commit('AUTH_LOGIN', loginInfo)
+  }
+}
+
 export default {
-  state
+  state,
+  mutations,
+  actions
 }

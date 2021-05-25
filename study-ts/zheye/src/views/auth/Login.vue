@@ -4,19 +4,19 @@
       <p class="title">Admin Pro</p>
       <a-form
         ref="formRef"
-        :model="loginForm"
-        v-bind="formConfig"
+        :model="data__.loginForm"
+        :rules="config__.formConfig.rules"
       >
-        <a-form-item>
-          <a-input size="large" v-model:value="loginForm.username" placeholder="请输入邮箱地址">
+        <a-form-item name="email">
+          <a-input size="large" v-model:value="data__.loginForm.email" placeholder="请输入邮箱地址">
             <template #prefix>
               <user-outlined />
             </template>
           </a-input>
         </a-form-item>
 
-        <a-form-item>
-          <a-input size="large" v-model:value="loginForm.password" placeholder="请输入密码">
+        <a-form-item name="password">
+          <a-input size="large" v-model:value="data__.loginForm.password" placeholder="请输入密码">
             <template #prefix>
               <lock-outlined />
             </template>
@@ -31,7 +31,7 @@
         </a-form-item>
 
         <a-form-item>
-          <a-button block size="large" type="primary">登 陆</a-button>
+          <a-button block size="large" type="primary" @click="onLogin">登 陆</a-button>
         </a-form-item>
       </a-form>
     </div>
@@ -39,7 +39,8 @@
 </template>
 
 <script lang="ts">
-import { reactive, defineComponent } from 'vue'
+import { useStore } from 'vuex'
+import { ref, reactive, defineComponent } from 'vue'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
 
 export default defineComponent({
@@ -48,18 +49,44 @@ export default defineComponent({
     UserOutlined
   },
   setup () {
-    // 表单数据
-    const loginForm = reactive({
-      username: undefined,
-      password: undefined
+    const formRef = ref(null)
+    const store = useStore()
+
+    // 数据域
+    const data__ = reactive({
+      loginForm: { // 表单数据
+        email: undefined,
+        password: undefined
+      }
     })
 
-    // 表单配置
-    const formConfig = reactive({
-      style: 'width: 100%'
+    // 配置域
+    const config__ = reactive({
+      formConfig: { // 表单配置
+        rules: { // 校验规则
+          email: [
+            { required: true, message: '请输入账号', trigger: 'blur' },
+            { min: 4, max: 16, message: '账号长度应为4 ~ 16位字符', trigger: 'blur' }
+          ],
+          password: [
+            { required: true, message: '请输入密码', trigger: 'blur' },
+            { min: 6, max: 16, message: '密码长度应为6 ~ 16位字符', trigger: 'blur' }
+          ]
+        }
+      }
     })
 
-    return { loginForm, formConfig }
+    // 事件 - 登陆
+    const onLogin = () => {
+      console.log(formRef.value)
+      formRef.value
+        .validate()
+        .then(() => {
+          store.dispatch('authLogin', data__.loginForm)
+        })
+    }
+
+    return { formRef, data__, config__, onLogin }
   }
 })
 </script>
@@ -68,11 +95,15 @@ export default defineComponent({
   .page-login__container {
     @apply flex justify-center items-center;
     .plc-login-box__wrapper{
-      @apply w-450px mt-140px px-40px py-70px flex flex-col items-center shadow-lg;
+      @apply w-450px mt-140px px-60px py-70px flex flex-col items-center shadow-lg;
     }
     .title {
       @apply text-24px font-bold mb-40px;
     }
+  }
+
+  ::v-deep .ant-form {
+    width: 100%;
   }
 
   ::v-deep .ant-form-item-control-wrapper {
