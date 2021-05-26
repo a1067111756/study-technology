@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getToken } from '@/utils/auth'
 
 // 创建axios实例
 const service = axios.create({
@@ -10,6 +11,11 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
+    // 携带token
+    if (getToken()) {
+      config.headers['Authorization'] = 'Bearer ' + getToken()
+    }
+
     return config
   },
   error => {
@@ -26,7 +32,7 @@ service.interceptors.response.use(
     if (res.code !== 0) {
       return Promise.reject(new Error(res.message || 'Error'))
     } else {
-      return res
+      return res.data
     }
   },
   error => {

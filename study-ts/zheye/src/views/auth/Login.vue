@@ -40,8 +40,10 @@
 
 <script lang="ts">
 import { useStore } from 'vuex'
-import { ref, reactive, defineComponent } from 'vue'
+import { message } from 'ant-design-vue'
+import { useRouter } from 'vue-router'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
+import { ref, reactive, defineComponent } from 'vue'
 
 export default defineComponent({
   components: {
@@ -51,6 +53,7 @@ export default defineComponent({
   setup () {
     const formRef = ref(null)
     const store = useStore()
+    const router = useRouter()
 
     // 数据域
     const data__ = reactive({
@@ -78,11 +81,14 @@ export default defineComponent({
 
     // 事件 - 登陆
     const onLogin = () => {
-      console.log(formRef.value)
       formRef.value
         .validate()
         .then(() => {
-          store.dispatch('authLogin', data__.loginForm)
+          return store.dispatch('authLogin', data__.loginForm)
+        })
+        .then(_ => {
+          router.push('/home')
+          message.success('登陆成功，欢迎回来!')
         })
     }
 

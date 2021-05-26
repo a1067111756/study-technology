@@ -4,7 +4,7 @@
     <p class="ch-title cursor-pointer" @click="$router.push('/home')">{{ title }}</p>
 
     <!-- 用户登录状态 -->
-    <div v-if="userInfo.isLogin" class="flex justify-center items-center">
+    <div v-if="isLogin" class="flex justify-center items-center">
       <!-- 头像 -->
       <img :src="userInfo.avatar" class="rounded-full">
 
@@ -26,37 +26,37 @@
     <div v-else>
       <button class="btn-plain border-white text-white mr-10px hover:(bg-white text-black)" @click="$router.push('/login')">登录</button>
       <button class="btn-plain border-white text-white hover:(bg-white text-black)" @click="$router.push('/register')">注册</button>
-    </div>    
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { computed, defineComponent } from 'vue'
+import { useStore } from 'vuex'
 import { DownOutlined, PlusOutlined, UserSwitchOutlined, LogoutOutlined } from '@ant-design/icons-vue'
-
-export interface UserProps {
-  id?: Number,
-  name?: String,
-  avatar?: String,
-  isLogin: Boolean
-}
 
 export default defineComponent({
   components: {
     DownOutlined,
-    PlusOutlined, 
-    UserSwitchOutlined, 
+    PlusOutlined,
+    UserSwitchOutlined,
     LogoutOutlined
   },
   props: {
     title: {
       type: String,
       default: '者也专栏'
-    },
-    userInfo: {
-      type: Object as PropType<UserProps>,
-      required: true
     }
+  },
+  setup () {
+    const store = useStore()
+    const isLogin = computed(() => store.getters.isLogin)
+    const userInfo = computed(() => store.state.user.userInfo)
+
+    // 事件 - 退出登陆
+    const onLoginOut = () => {}
+
+    return { isLogin, userInfo, onLoginOut }
   }
 })
 </script>
