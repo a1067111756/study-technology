@@ -7,6 +7,7 @@ module.exports = {
     'plugin:vue/vue3-essential',
     'standard'
   ],
+  parser: 'babel-eslint',
   parserOptions: {
     ecmaVersion: 2020
   },

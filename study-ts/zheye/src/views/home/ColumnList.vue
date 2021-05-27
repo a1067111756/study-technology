@@ -3,10 +3,10 @@
   <div class="components-column-list__container">
     <p class="ccl-title">发现精彩</p>
     <section class="clc-list__wrapper">
-      <div v-for="item in value" :key="item.id" class="clc-list-item">
-        <img :src="item.avatar">
+      <div v-for="item in value" :key="item._id" class="clc-list-item">
+        <img :src="item.avatar.url">
         <p>{{ item.title }}</p>
-        <p>{{ item.descricption }}</p>
+        <p>{{ item.description }}</p>
         <button class="btn-plain hover:(bg-[#0d6efd] text-white)" @click="$router.push('/column-detail')">进入专栏</button>
       </div>
     </section>
@@ -14,21 +14,14 @@
 </template>
 
 <script lang="ts">
+import { IColumnEntity } from '../../types/model'
 import { defineComponent, PropType } from 'vue'
-
-export interface ColumnListProps {
-  id: number,
-  title: String,
-  link: String,
-  avatar: String,
-  descricption: String
-}
 
 export default defineComponent({
   name: 'ColumnList',
   props: {
     value: {
-      type: Array as PropType<ColumnListProps[]>,
+      type: Array as PropType<IColumnEntity[]>,
       required: true
     }
   },

@@ -1,6 +1,6 @@
 import { login, getUserInfo } from '@/api/modules/auth.ts'
-import { ILoginForm, ILoginResponseData, IGetUserInfoRes } from '@/api/apiTypes'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { ILoginDTO, ILoginResDTO, IGetUserInfoResDTO } from '@/types/dto'
+import { getCookie, setCookie, removeCookie, getCookieJSON } from '@/utils/cookieUtils'
 
 interface IStateModel {
   token: string | undefined,
@@ -12,47 +12,55 @@ interface IStateModel {
   }
 }
 
+const COOKIE_KEY_TOKEN: string = 'zheye-token'
+const COOKIE_KEY_USERINFO: string = 'zheye-userinfo'
+
 const state: IStateModel = {
-  token: getToken(),
-  userInfo: {
-    id: undefined,
-    name: undefined,
-    column: undefined,
-    avatar: 'http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5f3e41a8b7d9c60b68cdd1ec.jpg?x-oss-process=image/resize,m_pad,h_50,w_50',
-  }
+  token: getCookie(COOKIE_KEY_TOKEN),
+  userInfo: getCookieJSON(COOKIE_KEY_USERINFO) || {}
 }
 
 const mutations = {
   // 设置token
   SET_TOKEN: (state: IStateModel, token: string) => {
     state.token = token
-    setToken(token)
+    setCookie(COOKIE_KEY_TOKEN, token)
   },
   // 设置用户信息
-  SET_USERINFO: (state: IStateModel, userInfo: IGetUserInfoRes) => {
+  SET_USERINFO: (state: IStateModel, userInfo: IGetUserInfoResDTO) => {
     state.userInfo.id = userInfo._id
     state.userInfo.name = userInfo.nickName
     state.userInfo.column = userInfo.column
+    setCookie(COOKIE_KEY_USERINFO, JSON.stringify(state.userInfo))
   },  
   // 移除token
   REMOVE_TOKEN: () => {
     state.token = undefined
-    removeToken()
-  }  
+    removeCookie(COOKIE_KEY_TOKEN)
+  },  
+  // 移除userInfo
+  REMOVE_USERINFO: () => {
+    state.userInfo = {} as any
+    removeCookie(COOKIE_KEY_USERINFO)
+  }    
 }
 
 const actions = {
-  authLogin (context: any, loginForm: ILoginForm) {
+  authLogin (context: any, loginForm: ILoginDTO) {
     return login(loginForm)
-      .then((data: any) => { // 将token存储cookie
+      .then((data: ILoginResDTO) => { // 将token存储cookie
         context.commit('SET_TOKEN', data.token)
         return getUserInfo()
       })
-      .then((data: any) => { // 获取用户信息
+      .then((data: IGetUserInfoResDTO) => { // 获取用户信息
         context.commit('SET_USERINFO', data)
         return data
       })
-  }
+  },
+  authLoginOut (context: any) {
+    context.commit('REMOVE_TOKEN')
+    context.commit('REMOVE_USERINFO')
+  }  
 }
 
 export default {

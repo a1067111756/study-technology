@@ -7,7 +7,7 @@ const install = (app: any) => {
   let apiList: any = {}
 
   // 查找文件
-  const modules = import.meta.globEager('./modules/*.js')
+  const modules = import.meta.globEager('./modules/*.ts')
   // const requirContext: __WebpackModuleApi.RequireContext = require.context(
   //   // 指令目录
   //   './modules',
