@@ -2,6 +2,9 @@ import { login, getUserInfo } from '@/api/modules/auth.ts'
 import { ILoginDTO, ILoginResDTO, IGetUserInfoResDTO } from '@/types/dto'
 import { getCookie, setCookie, removeCookie, getCookieJSON } from '@/utils/cookieUtils'
 
+const COOKIE_KEY_TOKEN: string = 'zheye-token'
+const COOKIE_KEY_USERINFO: string = 'zheye-userinfo'
+
 interface IStateModel {
   token: string | undefined,
   userInfo: {
@@ -9,11 +12,8 @@ interface IStateModel {
     name: string | undefined,
     avatar: string | undefined,
     column: string | undefined
-  }
+  } | any
 }
-
-const COOKIE_KEY_TOKEN: string = 'zheye-token'
-const COOKIE_KEY_USERINFO: string = 'zheye-userinfo'
 
 const state: IStateModel = {
   token: getCookie(COOKIE_KEY_TOKEN),
@@ -32,17 +32,17 @@ const mutations = {
     state.userInfo.name = userInfo.nickName
     state.userInfo.column = userInfo.column
     setCookie(COOKIE_KEY_USERINFO, JSON.stringify(state.userInfo))
-  },  
+  },
   // 移除token
   REMOVE_TOKEN: () => {
     state.token = undefined
     removeCookie(COOKIE_KEY_TOKEN)
-  },  
+  },
   // 移除userInfo
   REMOVE_USERINFO: () => {
-    state.userInfo = {} as any
+    state.userInfo = {}
     removeCookie(COOKIE_KEY_USERINFO)
-  }    
+  }
 }
 
 const actions = {
@@ -60,7 +60,7 @@ const actions = {
   authLoginOut (context: any) {
     context.commit('REMOVE_TOKEN')
     context.commit('REMOVE_USERINFO')
-  }  
+  }
 }
 
 export default {

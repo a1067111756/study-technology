@@ -1,4 +1,4 @@
-import { getToken } from '@/utils/auth'
+import { getCookie } from '@/utils/cookieUtils'
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 
 // 创建axios实例
@@ -8,12 +8,12 @@ const service: AxiosInstance = axios.create({
 })
 
 // request拦截器
-service.interceptors.request.use((config: AxiosRequestConfig) => {
+service.interceptors.request.use(
+  (config: AxiosRequestConfig) => {
     // 携带token
-    if (getToken()) { 
-      config.headers['Authorization'] = 'Bearer ' + getToken()
+    if (getCookie('zheye-token')) {
+      config.headers.Authorization = 'Bearer ' + getCookie('zheye-token')
     }
-
     return config
   },
   error => {
@@ -23,7 +23,8 @@ service.interceptors.request.use((config: AxiosRequestConfig) => {
 )
 
 // response拦截器
-service.interceptors.response.use((response) => {
+service.interceptors.response.use(
+  (response) => {
     // 错误码判断 - 正确
     if (response.data.code !== 0) {
       return Promise.reject(new Error(response.data.message || 'Error'))
