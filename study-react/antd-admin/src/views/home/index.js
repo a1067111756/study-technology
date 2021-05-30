@@ -1,39 +1,33 @@
 import './index.css';
 import React from 'react'
 import { Layout, Menu } from 'antd';
-import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  UserOutlined
-} from '@ant-design/icons';
-
+import * as Icon from "@ant-design/icons"
 import menuConfig from '../../config/menuConfig'
 
-const { SubMenu } = Menu;
-const { Header, Sider, Content } = Layout;
+const { SubMenu } = Menu
+const { Header, Sider, Content } = Layout
 
 class HomePage extends React.Component {
   state = {
     collapsed: false,
     menuTreeNode: []
-  };
+  }
 
   toggle = () => {
     this.setState({
-      collapsed: !this.state.collapsed,
-    });
-  };
+      collapsed: !this.state.collapsed
+    })
+  }
 
   renderMenu = (data) => {
     return data.map(item => {
+      console.log(item.icon)
       return !item.children
-        ? (<Menu.Item key={item.key} icon={<UserOutlined />}>
-            {item.title}
+        ? (<Menu.Item key={item.key} icon={React.createElement(Icon[item.icon])}>
+            <span>{item.title}</span>
           </Menu.Item>)
-        : (<SubMenu key={item.key} icon={<UserOutlined />} title={item.title}>
-            {
-              this.renderMenu(item.children)
-            }
+        : (<SubMenu key={item.key} icon={React.createElement(Icon[item.icon])} title={item.title}>
+            { this.renderMenu(item.children) }
           </SubMenu>)
       }
     )
@@ -55,7 +49,7 @@ class HomePage extends React.Component {
         </Sider>
         <Layout className="site-layout">
           <Header className="site-layout-background" style={{ padding: 0 }}>
-            {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+            {React.createElement(this.state.collapsed ? Icon['MenuUnfoldOutlined'] : Icon['MenuFoldOutlined'], {
               className: 'trigger',
               onClick: this.toggle,
             })}
