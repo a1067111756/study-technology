@@ -1,12 +1,12 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './views/home/index.js';
-import reportWebVitals from './reportWebVitals';
+import './index.css'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import IRouter from './router/index'
+import reportWebVitals from './reportWebVitals'
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <IRouter />
   </React.StrictMode>,
   document.getElementById('root')
 );
