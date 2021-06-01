@@ -12,7 +12,7 @@ const menuList = [
       {
         title: '按钮',
         key: '/ui/buttons',
-        icon: 'DashboardOutlined'
+        icon: 'AlertOutlined'
       },
       {
         title: '弹框',
