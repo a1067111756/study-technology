@@ -1,0 +1,52 @@
+.page-login__container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  .plc-left__wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .plc-login-box__wrapper {
+      width: 444px;
+      height: 550px;
+      border-radius: 8px;
+      box-shadow: 0 4px 14px 0 rgb(206 207 209 / 28%);
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+      padding:80px 60px 40px 60px;
+      .title {
+        font-size: 33px;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.85);
+      }
+      .subTitle {
+        font-size: 14px;
+        margin-top: 12px;
+        margin-bottom: 40px;
+        color: rgba(0,0,0,.45);
+      }   
+      .input {
+        margin-bottom: 34px;
+      }
+    }
+  }
+  .plc-right__wrapper {
+    width: 520px;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-image: url('../../assets/images/bg_login.svg');
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    .intro {
+      width: 350px;
+      color: #ffffff;
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 40px;
+    }
+  }
+}

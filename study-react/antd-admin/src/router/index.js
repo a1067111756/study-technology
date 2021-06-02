@@ -2,6 +2,7 @@
 import React from 'react'
 import App from '../App'
 import Admin from '../views/admin'
+import CityPage from '../views/city'
 import HomePage from '../views/home'
 import LoginPage from '../views/login'
 import ButtonPage from '../views/ui/button'
@@ -33,6 +34,10 @@ class IRouter extends React.Component {
                   <Route path="/ui">
                     <Redirect to="/ui/button"></Redirect>
                     <Route component={ButtonPage}></Route>
+                  </Route>
+
+                  <Route path="/city">
+                    <CityPage />
                   </Route>
 
                   <Route component={Page404}></Route>
