@@ -327,14 +327,14 @@ module.exports = function (webpackEnv) {
         .map(ext => `.${ext}`)
         .filter(ext => useTypeScript || !ext.includes('ts')),
       alias: {
+        '@': path.resolve(__dirname, '../src'),
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
         'react-native': 'react-native-web',
         // Allows for better profiling with ReactDevTools
         ...(isEnvProductionProfile && {
           'react-dom$': 'react-dom/profiling',
-          'scheduler/tracing': 'scheduler/tracing-profiling',
-          '@': path.resolve(__dirname, '../src')
+          'scheduler/tracing': 'scheduler/tracing-profiling'
         }),
         ...(modules.webpackAliases || {}),
       },
@@ -786,5 +786,14 @@ module.exports = function (webpackEnv) {
     // Turn off performance processing because we utilize
     // our own hints via the FileSizeReporter
     performance: false,
+    devServer: {
+      // 前缀名，表示/api开头的都会被代理
+      '/api':{
+        // 代理的基础路径
+        target:'https://www.easy-mock.com/mock/5a7278e28d0c633b9c4adbd7/api',
+        // 路径重写，会把路径上的 /api 替换成空
+        pathRewrite:{'^/api': ''}
+      }      
+    }
   };
 };
