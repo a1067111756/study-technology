@@ -2,11 +2,15 @@ import './index.css'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import IRouter from './router/index'
+import { Provider } from 'react-redux'
+import createStore from './redux/store/index'
 import reportWebVitals from './reportWebVitals'
 
 ReactDOM.render(
   <React.StrictMode>
-    <IRouter />
+    <Provider store={ createStore() }>
+      <IRouter />
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

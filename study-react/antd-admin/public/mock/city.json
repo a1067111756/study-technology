@@ -1,145 +1,148 @@
 {
   "code": "00000",
-  "data": [
-    {
-      "id": "1",
-      "name": "成都",
-      "mode": 0,
-      "op_mode": 0,
-      "franchisee_name": "张亮麻辣烫",
-      "city_admins": [
-        { "user_name": "张三" },
-        { "user_name": "李四" }
-      ],
-      "open_time": "2021-06-01 12:00:00",
-      "update_time": "2021-06-01 23:00:00",
-      "sys_user_name": "王五"
-    },
-    {
-      "id": "2",
-      "name": "成都",
-      "mode": 0,
-      "op_mode": 0,
-      "franchisee_name": "张亮麻辣烫",
-      "city_admins": [
-        { "user_name": "张三" },
-        { "user_name": "李四" }
-      ],
-      "open_time": "2021-06-01 12:00:00",
-      "update_time": "2021-06-01 23:00:00",
-      "sys_user_name": "王五"
-    },
-    {
-      "id": "3",
-      "name": "成都",
-      "mode": 0,
-      "op_mode": 0,
-      "franchisee_name": "张亮麻辣烫",
-      "city_admins": [
-        { "user_name": "张三" },
-        { "user_name": "李四" }
-      ],
-      "open_time": "2021-06-01 12:00:00",
-      "update_time": "2021-06-01 23:00:00",
-      "sys_user_name": "王五"
-    },
-    {
-      "id": "4",
-      "name": "成都",
-      "mode": 0,
-      "op_mode": 0,
-      "franchisee_name": "张亮麻辣烫",
-      "city_admins": [
-        { "user_name": "张三" },
-        { "user_name": "李四" }
-      ],
-      "open_time": "2021-06-01 12:00:00",
-      "update_time": "2021-06-01 23:00:00",
-      "sys_user_name": "王五"
-    },
-    {
-      "id": "5",
-      "name": "成都",
-      "mode": 0,
-      "op_mode": 0,
-      "franchisee_name": "张亮麻辣烫",
-      "city_admins": [
-        { "user_name": "张三" },
-        { "user_name": "李四" }
-      ],
-      "open_time": "2021-06-01 12:00:00",
-      "update_time": "2021-06-01 23:00:00",
-      "sys_user_name": "王五"
-    },
-    {
-      "id": "6",
-      "name": "成都",
-      "mode": 0,
-      "op_mode": 0,
-      "franchisee_name": "张亮麻辣烫",
-      "city_admins": [
-        { "user_name": "张三" },
-        { "user_name": "李四" }
-      ],
-      "open_time": "2021-06-01 12:00:00",
-      "update_time": "2021-06-01 23:00:00",
-      "sys_user_name": "王五"
-    },
-    {
-      "id": "7",
-      "name": "成都",
-      "mode": 0,
-      "op_mode": 0,
-      "franchisee_name": "张亮麻辣烫",
-      "city_admins": [
-        { "user_name": "张三" },
-        { "user_name": "李四" }
-      ],
-      "open_time": "2021-06-01 12:00:00",
-      "update_time": "2021-06-01 23:00:00",
-      "sys_user_name": "王五"
-    },
-    {
-      "id": "8",
-      "name": "成都",
-      "mode": 0,
-      "op_mode": 0,
-      "franchisee_name": "张亮麻辣烫",
-      "city_admins": [
-        { "user_name": "张三" },
-        { "user_name": "李四" }
-      ],
-      "open_time": "2021-06-01 12:00:00",
-      "update_time": "2021-06-01 23:00:00",
-      "sys_user_name": "王五"
-    },
-    {
-      "id": "9",
-      "name": "成都",
-      "mode": 0,
-      "op_mode": 0,
-      "franchisee_name": "张亮麻辣烫",
-      "city_admins": [
-        { "user_name": "张三" },
-        { "user_name": "李四" }
-      ],
-      "open_time": "2021-06-01 12:00:00",
-      "update_time": "2021-06-01 23:00:00",
-      "sys_user_name": "王五"
-    },
-    {
-      "id": "10",
-      "name": "成都",
-      "mode": 0,
-      "op_mode": 0,
-      "franchisee_name": "张亮麻辣烫",
-      "city_admins": [
-        { "user_name": "张三" },
-        { "user_name": "李四" }
-      ],
-      "open_time": "2021-06-01 12:00:00",
-      "update_time": "2021-06-01 23:00:00",
-      "sys_user_name": "王五"
-    }                 
-  ]
+  "data": {
+    "total": 50,
+    "records": [
+      {
+        "id": "1",
+        "name": "成都",
+        "mode": 0,
+        "op_mode": 0,
+        "franchisee_name": "张亮麻辣烫",
+        "city_admins": [
+          { "user_name": "张三" },
+          { "user_name": "李四" }
+        ],
+        "open_time": "2021-06-01 12:00:00",
+        "update_time": "2021-06-01 23:00:00",
+        "sys_user_name": "王五"
+      },
+      {
+        "id": "2",
+        "name": "成都",
+        "mode": 0,
+        "op_mode": 0,
+        "franchisee_name": "张亮麻辣烫",
+        "city_admins": [
+          { "user_name": "张三" },
+          { "user_name": "李四" }
+        ],
+        "open_time": "2021-06-01 12:00:00",
+        "update_time": "2021-06-01 23:00:00",
+        "sys_user_name": "王五"
+      },
+      {
+        "id": "3",
+        "name": "成都",
+        "mode": 0,
+        "op_mode": 0,
+        "franchisee_name": "张亮麻辣烫",
+        "city_admins": [
+          { "user_name": "张三" },
+          { "user_name": "李四" }
+        ],
+        "open_time": "2021-06-01 12:00:00",
+        "update_time": "2021-06-01 23:00:00",
+        "sys_user_name": "王五"
+      },
+      {
+        "id": "4",
+        "name": "成都",
+        "mode": 0,
+        "op_mode": 0,
+        "franchisee_name": "张亮麻辣烫",
+        "city_admins": [
+          { "user_name": "张三" },
+          { "user_name": "李四" }
+        ],
+        "open_time": "2021-06-01 12:00:00",
+        "update_time": "2021-06-01 23:00:00",
+        "sys_user_name": "王五"
+      },
+      {
+        "id": "5",
+        "name": "成都",
+        "mode": 0,
+        "op_mode": 0,
+        "franchisee_name": "张亮麻辣烫",
+        "city_admins": [
+          { "user_name": "张三" },
+          { "user_name": "李四" }
+        ],
+        "open_time": "2021-06-01 12:00:00",
+        "update_time": "2021-06-01 23:00:00",
+        "sys_user_name": "王五"
+      },
+      {
+        "id": "6",
+        "name": "成都",
+        "mode": 0,
+        "op_mode": 0,
+        "franchisee_name": "张亮麻辣烫",
+        "city_admins": [
+          { "user_name": "张三" },
+          { "user_name": "李四" }
+        ],
+        "open_time": "2021-06-01 12:00:00",
+        "update_time": "2021-06-01 23:00:00",
+        "sys_user_name": "王五"
+      },
+      {
+        "id": "7",
+        "name": "成都",
+        "mode": 0,
+        "op_mode": 0,
+        "franchisee_name": "张亮麻辣烫",
+        "city_admins": [
+          { "user_name": "张三" },
+          { "user_name": "李四" }
+        ],
+        "open_time": "2021-06-01 12:00:00",
+        "update_time": "2021-06-01 23:00:00",
+        "sys_user_name": "王五"
+      },
+      {
+        "id": "8",
+        "name": "成都",
+        "mode": 0,
+        "op_mode": 0,
+        "franchisee_name": "张亮麻辣烫",
+        "city_admins": [
+          { "user_name": "张三" },
+          { "user_name": "李四" }
+        ],
+        "open_time": "2021-06-01 12:00:00",
+        "update_time": "2021-06-01 23:00:00",
+        "sys_user_name": "王五"
+      },
+      {
+        "id": "9",
+        "name": "成都",
+        "mode": 0,
+        "op_mode": 0,
+        "franchisee_name": "张亮麻辣烫",
+        "city_admins": [
+          { "user_name": "张三" },
+          { "user_name": "李四" }
+        ],
+        "open_time": "2021-06-01 12:00:00",
+        "update_time": "2021-06-01 23:00:00",
+        "sys_user_name": "王五"
+      },
+      {
+        "id": "10",
+        "name": "成都",
+        "mode": 0,
+        "op_mode": 0,
+        "franchisee_name": "张亮麻辣烫",
+        "city_admins": [
+          { "user_name": "张三" },
+          { "user_name": "李四" }
+        ],
+        "open_time": "2021-06-01 12:00:00",
+        "update_time": "2021-06-01 23:00:00",
+        "sys_user_name": "王五"
+      }                 
+    ]
+  }
 }

@@ -77,6 +77,11 @@ class CityPage extends React.Component {
       franchiseeStatus: undefined,
       businessMode: undefined
     },
+    pagination: {
+      total: 0,
+      current: 1,
+      pageSize: 10
+    },
     dataSource: []
   }
 
@@ -90,17 +95,51 @@ class CityPage extends React.Component {
 
   // 事件 - 重置
   onReset = () => {
-    this.formRef.current.resetFields()
-    this.getCityList()
+    this.setState({
+      searchValue: {
+        cityCode: undefined,
+        useCarMode: undefined,
+        franchiseeStatus: undefined,
+        businessMode: undefined
+      }      
+    }, () => {
+      this.formRef.current.resetFields()
+      this.getCityList()
+    })
+  }
+
+  // 事件 - 分页切换事件
+  onTableChange = (pagination, filters, sorter, extra) => {
+    if (extra.action === 'paginate') {
+      this.setState({
+        pagination: {
+          ...this.state.pagination,
+          current: pagination.current
+        }
+      }, () => {
+        this.getCityList()
+      })
+    }
+    console.log(pagination, filters, sorter, extra)
   }
 
   // 请求 - 获取城市列表数据
   getCityList = () => {
     request
-      .get('/mock/city.json')
+      .get('/mock/city.json', {
+        params: {
+          ...this.state.searchValue,
+          pageNo: this.state.pagination.current,
+          pageSize: this.state.pagination.pageSize
+        }
+      })
       .then(data => {
         this.setState({
-          dataSource: data
+          pagination: {
+            ...this.state.pagination,
+            total: data.total
+          },
+          dataSource: data.records
         })
       })
   }
@@ -165,7 +204,7 @@ class CityPage extends React.Component {
               </Col>
 
               <Col span={4}>
-                <Button type="primary" size="default">查询</Button>
+                <Button type="primary" size="default" onClick={this.getCityList}>查询</Button>
                 <Button type="default" size="default" onClick={this.onReset}>重置</Button>
               </Col>
             </Row>
@@ -179,7 +218,14 @@ class CityPage extends React.Component {
         
         {/* 表格栏 */}
         <Card className="pcc-table-section__container">
-          <Table size="middle" dataSource={this.state.dataSource} columns={columns} rowKey={(record) => record.id} />
+          <Table 
+            size="middle" 
+            columns={columns} 
+            rowKey={(record) => record.id} 
+            pagination={this.state.pagination} 
+            dataSource={this.state.dataSource}
+            onChange={this.onTableChange}
+          />
         </Card>
       </div>
     )

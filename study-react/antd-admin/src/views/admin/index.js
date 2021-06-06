@@ -3,6 +3,8 @@ import React from 'react'
 import { Layout, Menu } from 'antd'
 import * as Icon from '@ant-design/icons'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { swicthMenu } from '../../redux/action'
 import menuConfig from '../../config/menuConfig'
 
 const { SubMenu } = Menu
@@ -20,11 +22,16 @@ class HomePage extends React.Component {
     })
   }
 
+  onMenuSelect = ({ item, key }) => {
+    const title = item.props.title
+    this.props.dispatch(swicthMenu(title))
+  }
+
   renderMenu = (data) => {
     return data.map(item => {
       return !item.children
         ? (
-            <Menu.Item key={item.key} icon={React.createElement(Icon[item.icon])} onClick="onMenuItemClick">
+            <Menu.Item key={item.key} title={item.title} icon={React.createElement(Icon[item.icon])}>
               <Link to={item.key}>
                 <span>{item.title}</span>
               </Link>
@@ -49,7 +56,7 @@ class HomePage extends React.Component {
       <Layout className="components-layout__container">
         <Sider trigger={null} collapsible collapsed={this.state.collapsed} width={'256px'}>
           <div className="logo" />
-          <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+          <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} onSelect={this.onMenuSelect}>
             { this.state.menuTreeNode }
           </Menu>
         </Sider>
@@ -60,6 +67,9 @@ class HomePage extends React.Component {
               onClick: this.toggle,
             })}
           </Header>
+          <div style={{ backgroundColor: '#ffffff', padding: '0 20px 10px 20px' }}>
+            {this.props.menuName}
+          </div>
           <Content
             className="site-layout-background"
             style={{
@@ -76,4 +86,10 @@ class HomePage extends React.Component {
   }
 }
 
-export default HomePage
+const mapStateToProps = state => {
+  return {
+    menuName: state.menuName
+  }
+}
+
+export default connect(mapStateToProps)(HomePage)
