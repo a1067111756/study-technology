@@ -1,34 +1,20 @@
-import './App.css';
-import React from 'react'
+import './App.css'
+import { connect } from 'react-redux'
+import NavigationBar from '@/components/NavigationBar'
+import React, { useCallback } from 'react'
 
-// class App extends React.Component {
-//   state = {
-//     count: 0
-//   }
-
-//   onCountClick = () => {
-//     this.setState({
-//       count: this.state.count + 1
-//     })
-//   }
-
-//   render () {
-//     return(
-//       <div>
-//         <button onClick={this.onCountClick}>{ this.state.count }</button>
-//       </div>
-//     )  
-//   }
-// }
-
-function App () {
-  const [count, setCount] = React.useState(0)
+function App (props) {
+  // 事件 - 回退
+  const onBack = useCallback(() => {
+    window.history.back()
+  }, [])
 
   return(
-    <div>
-      <button onClick={() => { setCount(count + 1) }}>{ count }</button>
-    </div>
+    <NavigationBar title="火车票" onBack={onBack} ></NavigationBar>
   )
 }
 
-export default App;
+export default connect(
+  function mapStateToProps (state) {},
+  function mapDispatchToProps (dispatch) {}
+)(App)

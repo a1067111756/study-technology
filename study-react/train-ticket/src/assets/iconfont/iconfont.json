@@ -1,0 +1,16 @@
+{
+  "id": "2612922",
+  "name": "去哪儿PWA重构",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "8842186",
+      "name": "返回",
+      "font_class": "back",
+      "unicode": "e641",
+      "unicode_decimal": 58945
+    }
+  ]
+}
