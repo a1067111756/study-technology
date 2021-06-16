@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "5466017",
+      "name": "check",
+      "font_class": "check",
+      "unicode": "e70f",
+      "unicode_decimal": 59151
+    },
+    {
+      "icon_id": "18921043",
+      "name": "check",
+      "font_class": "check1",
+      "unicode": "e710",
+      "unicode_decimal": 59152
+    },
+    {
+      "icon_id": "1929153",
+      "name": "切换",
+      "font_class": "qiehuan",
+      "unicode": "e622",
+      "unicode_decimal": 58914
+    },
+    {
       "icon_id": "8842186",
       "name": "返回",
       "font_class": "back",
