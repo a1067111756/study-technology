@@ -6,7 +6,7 @@ import { Link, SelectLang, useIntl, connect, FormattedMessage } from 'umi';
 import React from 'react';
 import type { ConnectState } from '@/models/connect';
 import logo from '../assets/logo.svg';
-import styles from './UserLayout.less';
+import styles from './UserLayout.less'
 
 export type UserLayoutProps = {
   breadcrumbNameMap: Record<string, MenuDataItem>;
@@ -49,13 +49,13 @@ const UserLayout: React.FC<UserLayoutProps> = (props) => {
             <div className={styles.header}>
               <Link to="/">
                 <img alt="logo" className={styles.logo} src={logo} />
-                <span className={styles.title}>Ant Design</span>
+                <span className={styles.title}>Mi Shop</span>
               </Link>
             </div>
             <div className={styles.desc}>
               <FormattedMessage
                 id="pages.layouts.userLayout.title"
-                defaultMessage="Ant Design 是西湖区最具影响力的 Web 设计规范"
+                defaultMessage="Mi Shop 只为更简单"
               />
             </div>
           </div>

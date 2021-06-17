@@ -6,9 +6,10 @@ import {
   TaobaoCircleOutlined,
   UserOutlined,
   WeiboCircleOutlined,
+  PropertySafetyOutlined,
 } from '@ant-design/icons';
 import { Alert, Space, message, Tabs } from 'antd';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProForm, { ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { useIntl, connect, FormattedMessage } from 'umi';
 import { getFakeCaptcha } from '@/services/login';
@@ -16,7 +17,6 @@ import type { Dispatch } from 'umi';
 import type { StateType } from '@/models/login';
 import type { LoginParamsType } from '@/services/login';
 import type { ConnectState } from '@/models/connect';
-
 import styles from './index.less';
 
 export type LoginProps = {
@@ -40,9 +40,16 @@ const LoginMessage: React.FC<{
 
 const Login: React.FC<LoginProps> = (props) => {
   const { userLogin = {}, submitting } = props;
+  const [captcha, setCaptcha] = useState('')
   const { status, type: loginType } = userLogin;
   const [type, setType] = useState<string>('account');
   const intl = useIntl();
+
+  // mounted挂载
+  useEffect(() => { 
+    getFakeCaptcha().then(res => setCaptcha(res.data))
+  }, [])
+
 
   const handleSubmit = (values: LoginParamsType) => {
     const { dispatch } = props;
@@ -51,11 +58,15 @@ const Login: React.FC<LoginProps> = (props) => {
       payload: { ...values, type },
     });
   };
+
   return (
     <div className={styles.main}>
       <ProForm
         initialValues={{
           autoLogin: true,
+          username: 'admin',
+          password: 'admin123',
+          captcha: ''
         }}
         submitter={{
           render: (_, dom) => dom.pop(),
@@ -72,6 +83,7 @@ const Login: React.FC<LoginProps> = (props) => {
           return Promise.resolve();
         }}
       >
+        {/* 登录方式切换栏 */}
         <Tabs activeKey={type} onChange={setType}>
           <Tabs.TabPane
             key="account"
@@ -89,6 +101,7 @@ const Login: React.FC<LoginProps> = (props) => {
           />
         </Tabs>
 
+        {/* 账号密码登录形式 */}
         {status === 'error' && loginType === 'account' && !submitting && (
           <LoginMessage
             content={intl.formatMessage({
@@ -100,7 +113,7 @@ const Login: React.FC<LoginProps> = (props) => {
         {type === 'account' && (
           <>
             <ProFormText
-              name="userName"
+              name="username"
               fieldProps={{
                 size: 'large',
                 prefix: <UserOutlined className={styles.prefixIcon} />,
@@ -143,9 +156,46 @@ const Login: React.FC<LoginProps> = (props) => {
                 },
               ]}
             />
+            <div style={{ display: 'flex' }}>
+              <ProFormText
+                name="captcha"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <PropertySafetyOutlined className={styles.prefixIcon} />,
+                  onInput: (event: React.ChangeEvent<HTMLInputElement>) => {
+                    // eslint-disable-next-line no-param-reassign
+                    event.target.value = event.target.value.toUpperCase()
+                  }
+                }}
+                placeholder={intl.formatMessage({
+                  id: 'pages.login.captcha.placeholder',
+                  defaultMessage: '验证码',
+                })}
+                rules={[
+                  {
+                    required: true,
+                    message: (
+                      <FormattedMessage
+                        id="pages.login.captcha.required"
+                        defaultMessage="请输入密码！"
+                      />
+                    ),
+                  },
+                ]}
+              />    
+              <img 
+                src={captcha} 
+                alt="加载失败，点击刷新" 
+                style={{ height: '40px', marginLeft: '15px', cursor: "pointer" }}
+                onClick={() => {
+                  getFakeCaptcha().then(res => setCaptcha(res.data))
+                }}
+              />          
+            </div>           
           </>
         )}
 
+        {/* 手机号登录形式 */}
         {status === 'error' && loginType === 'mobile' && !submitting && (
           <LoginMessage content="验证码错误" />
         )}
@@ -218,8 +268,8 @@ const Login: React.FC<LoginProps> = (props) => {
                   ),
                 },
               ]}
-              onGetCaptcha={async (mobile) => {
-                const result = await getFakeCaptcha(mobile);
+              onGetCaptcha={async () => {
+                const result = await getFakeCaptcha();
                 if (result === false) {
                   return;
                 }
@@ -245,6 +295,8 @@ const Login: React.FC<LoginProps> = (props) => {
           </a>
         </div>
       </ProForm>
+
+      {/* 三方登录快捷入口 */}
       <Space className={styles.other}>
         <FormattedMessage id="pages.login.loginWith" defaultMessage="其他登录方式" />
         <AlipayCircleOutlined className={styles.icon} />

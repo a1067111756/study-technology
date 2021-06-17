@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, Request, Response } from '@nestjs/common';
 import { ToolsService } from 'src/common/service/tools.service';
 
 @Controller('auth')
@@ -7,7 +7,37 @@ export class AuthController {
 
   /* 获取验证码 */
   @Get('captcha')
-  getCaptcha() {
-    return this.toolsService.createCaptcha();
+  async getCaptcha(@Request() req, @Response() res) {
+    // 获取svgCaptcha实例
+    const svgCaptcha = await this.toolsService.createCaptcha();
+
+    // 将svgCaptcha信息保存到cookie
+    req.session.captcha = svgCaptcha.text;
+
+    // 返回svg格式验证嘛
+    res.send({
+      code: '00000',
+      data: svgCaptcha['base64'],
+    });
+  }
+
+  /* 登录 */
+  @Post('login')
+  async login(@Request() req, @Response() res) {
+    // 返回svg格式验证嘛
+    res.send({
+      code: '00000',
+      data: '',
+    });
+  }
+
+  /* 注册 */
+  @Post('register')
+  async register(@Request() req, @Response() res) {
+    // 返回svg格式验证嘛
+    res.send({
+      code: '00000',
+      data: '',
+    });
   }
 }

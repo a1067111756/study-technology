@@ -20,6 +20,10 @@ const codeMessage: Record<number, string> = {
   504: '网关超时。',
 };
 
+const backCodeMessage: Record<string, string> = {
+  '00001': '获取验证码失败，请重试'
+};
+
 /** 异常处理程序 */
 const errorHandler = (error: { response: Response }): Response => {
   const { response } = error;
@@ -40,10 +44,27 @@ const errorHandler = (error: { response: Response }): Response => {
   return response;
 };
 
+/* 响应拦截器 */
+const responseInterceptor = async (response: Response, options: any): Promise<Response> => {
+  const { code, message } = await response.clone().json();
+  const errorText = backCodeMessage[code] || message;
+
+  // 请求响应码错误统一处理
+  if (code !== '00000') {
+    notification.error({
+      message: errorText,
+      description: `code - ${code}, url- ${options.url}`,
+    });
+  }
+
+  return response
+}
+
 /** 配置request请求时的默认参数 */
 const request = extend({
   errorHandler, // 默认错误处理
   credentials: 'include', // 默认请求是否带上cookie
 });
+request.interceptors.response.use(responseInterceptor);
 
 export default request;

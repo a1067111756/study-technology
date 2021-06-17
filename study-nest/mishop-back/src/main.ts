@@ -3,8 +3,8 @@ import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
-import session from 'express-session';
-import cookieParser from 'cookie-parser';
+import session = require('express-session');
+import cookieParser = require('cookie-parser');
 
 async function bootstrap() {
   // 注册应用
@@ -14,7 +14,7 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, '..', 'public'));
 
   // 配置cookie
-  app.use(cookieParser('this signed cookies'));
+  app.use(cookieParser('mishop-cookie'));
 
   // 配置session
   app.use(

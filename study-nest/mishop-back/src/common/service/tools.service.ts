@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import SvgCaptcha from 'svg-captcha';
+import SvgCaptcha = require('svg-captcha');
 
 @Injectable()
 export class ToolsService {
@@ -12,6 +12,10 @@ export class ToolsService {
       height: 40,
       background: '#cc9966',
     });
+
+    svgCaptcha['base64'] =
+      'data:image/svg+xml;base64,' +
+      Buffer.from(svgCaptcha.data).toString('base64');
 
     return svgCaptcha;
   }
