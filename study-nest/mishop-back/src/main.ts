@@ -8,7 +8,10 @@ import cookieParser = require('cookie-parser');
 
 async function bootstrap() {
   // 注册应用
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    logger: ['log', 'error', 'warn', 'debug'], // 日志配置
+    cors: true, // 跨域配置
+  });
 
   // 配置静态资源目录
   app.useStaticAssets(join(__dirname, '..', 'public'));

@@ -12,7 +12,7 @@ export class AuthController {
     const svgCaptcha = await this.toolsService.createCaptcha();
 
     // 将svgCaptcha信息保存到cookie
-    req.session.captcha = svgCaptcha.text;
+    req.session.captcha = svgCaptcha.text.toUpperCase();
 
     // 返回svg格式验证嘛
     res.send({
@@ -24,10 +24,26 @@ export class AuthController {
   /* 登录 */
   @Post('login')
   async login(@Request() req, @Response() res) {
+    const { username, password, captcha } = req.body;
+
+    if (username !== 'admin' || password !== 'admin123') {
+      return res.send({
+        code: '00002',
+        message: '账号或密码错误',
+      });
+    }
+
+    if (req.session.captcha !== captcha) {
+      return res.send({
+        code: '00003',
+        message: '验证码错误',
+      });
+    }
+
     // 返回svg格式验证嘛
-    res.send({
+    return res.send({
       code: '00000',
-      data: '',
+      data: 'asndasndasndkoasdplmasd',
     });
   }
 
