@@ -56,7 +56,7 @@ const Login: React.FC<LoginProps> = (props) => {
     dispatch({
       type: 'login/login',
       payload: { ...values, type },
-    });
+    })
   };
 
   return (

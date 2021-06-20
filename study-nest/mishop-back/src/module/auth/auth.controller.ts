@@ -1,13 +1,20 @@
-import { Controller, Get, Post, Request, Response } from '@nestjs/common';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
+import { AuthService } from './auth.service';
 import { ToolsService } from 'src/common/service/tools.service';
+import { Body, Controller, Get, Post, Request, Response } from '@nestjs/common';
+import { CommonRequestException } from 'src/common/exception/common-request.exception';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly toolsService: ToolsService) {}
+  constructor(
+    private readonly toolsService: ToolsService,
+    private readonly authService: AuthService,
+  ) {}
 
   /* 获取验证码 */
   @Get('captcha')
-  async getCaptcha(@Request() req, @Response() res) {
+  async getCaptcha(@Request() req) {
     // 获取svgCaptcha实例
     const svgCaptcha = await this.toolsService.createCaptcha();
 
@@ -15,45 +22,24 @@ export class AuthController {
     req.session.captcha = svgCaptcha.text.toUpperCase();
 
     // 返回svg格式验证嘛
-    res.send({
-      code: '00000',
-      data: svgCaptcha['base64'],
-    });
+    return svgCaptcha['base64'];
   }
 
   /* 登录 */
   @Post('login')
-  async login(@Request() req, @Response() res) {
-    const { username, password, captcha } = req.body;
-
-    if (username !== 'admin' || password !== 'admin123') {
-      return res.send({
-        code: '00002',
-        message: '账号或密码错误',
-      });
+  async login(@Body() loginDto: LoginDto, @Request() req) {
+    // 验证验证码正确性
+    if (loginDto.captcha !== req.session.captcha) {
+      throw new CommonRequestException('00002', '验证码错误');
     }
 
-    if (req.session.captcha !== captcha) {
-      return res.send({
-        code: '00003',
-        message: '验证码错误',
-      });
-    }
-
-    // 返回svg格式验证嘛
-    return res.send({
-      code: '00000',
-      data: 'asndasndasndkoasdplmasd',
-    });
+    // 验证账号信息正确性
+    return await this.authService.login(loginDto);
   }
 
   /* 注册 */
   @Post('register')
-  async register(@Request() req, @Response() res) {
-    // 返回svg格式验证嘛
-    res.send({
-      code: '00000',
-      data: '',
-    });
+  async register(@Body() registerDto: RegisterDto) {
+    return await this.authService.register(registerDto);
   }
 }

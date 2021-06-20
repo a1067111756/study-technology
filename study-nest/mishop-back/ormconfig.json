@@ -1,0 +1,10 @@
+{
+  "type": "mysql",
+  "host": "1.117.228.111",
+  "port": 3306,
+  "username": "root",
+  "password": "rootX@1221",
+  "database": "mishop",
+  "entities": ["dist/**/*.entity{.ts,.js}"],
+  "synchronize": true
+}
