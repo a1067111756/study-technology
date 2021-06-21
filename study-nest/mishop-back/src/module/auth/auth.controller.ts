@@ -1,8 +1,8 @@
-import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 import { AuthService } from './auth.service';
 import { ToolsService } from 'src/common/service/tools.service';
-import { Body, Controller, Get, Post, Request, Response } from '@nestjs/common';
+import { Body, Controller, Get, Post, Request } from '@nestjs/common';
 import { CommonRequestException } from 'src/common/exception/common-request.exception';
 
 @Controller('auth')

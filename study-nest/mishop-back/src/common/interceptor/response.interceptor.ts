@@ -13,13 +13,13 @@ export class ResponseInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((data) => {
         const response = context.switchToHttp().getResponse();
+        console.log('ssssss10', data);
         response.send({
           data,
           code: '00000',
           message: '请求成功',
         });
-
-        return data;
+        // return data;
       }),
     );
   }

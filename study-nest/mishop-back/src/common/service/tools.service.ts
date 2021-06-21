@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import SvgCaptcha = require('svg-captcha');
+import CryptoJS = require('crypto-js');
 
 @Injectable()
 export class ToolsService {
@@ -18,5 +19,10 @@ export class ToolsService {
       Buffer.from(svgCaptcha.data).toString('base64');
 
     return svgCaptcha;
+  }
+
+  /* md5加密 */
+  md5Encrypt(plaintext: string): string {
+    return CryptoJS.MD5(plaintext).toString();
   }
 }

@@ -16,7 +16,6 @@ export class ValidatePipe implements PipeTransform {
 
     // 使用class-validator进行参数验证
     const errors = await validate(object);
-    console.log(errors);
     if (errors.length > 0) {
       const errorText = Object.values(errors[0].constraints);
       throw new CommonRequestException('40001', `参数不合法 - [${errorText}]`);

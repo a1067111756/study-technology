@@ -5,21 +5,18 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: number;
 
-  @Column({ length: 20 })
+  @Column()
   username: string;
 
-  @Column({ length: 20 })
+  @Column()
   password: string;
 
-  @Column()
+  @Column({ nullable: true })
   mobile: number;
 
-  @Column({ length: 50 })
+  @Column({ nullable: true })
   emial: string;
 
   @Column({ default: true })
   status: boolean;
-
-  @Column()
-  role_id: number;
 }
