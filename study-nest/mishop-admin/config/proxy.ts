@@ -12,6 +12,11 @@ export default {
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },
+    '/mock-api/': {
+      target: 'http://localhost:3000',
+      changeOrigin: true,
+      pathRewrite: { '^/mock-api': '' },
+    },    
   },
   test: {
     '/api/': {

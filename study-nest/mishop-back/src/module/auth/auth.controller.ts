@@ -29,7 +29,7 @@ export class AuthController {
   @Post('login')
   async login(@Body() loginDto: LoginDto, @Request() req) {
     // 验证验证码正确性
-    if (loginDto.captcha !== req.session.captcha) {
+    if (loginDto.captcha.toUpperCase() !== req.session.captcha) {
       throw new CommonRequestException('00002', '验证码错误');
     }
 
@@ -39,7 +39,12 @@ export class AuthController {
 
   /* 注册 */
   @Post('register')
-  async register(@Body() registerDto: RegisterDto) {
+  async register(@Body() registerDto: RegisterDto, @Request() req) {
+    // 验证验证码正确性
+    if (registerDto.captcha.toUpperCase() !== req.session.captcha) {
+      throw new CommonRequestException('00002', '验证码错误');
+    }
+
     return await this.authService.register(registerDto);
   }
 }

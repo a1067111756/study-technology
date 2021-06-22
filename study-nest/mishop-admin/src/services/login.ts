@@ -7,13 +7,26 @@ export type LoginParamsType = {
   captcha: string;
 };
 
+export type RegisterParamsType = {
+  username: string;
+  password: string;
+  captcha: string;
+}
+
 export async function fakeAccountLogin(params: LoginParamsType) {
-  return request('/api/auth/login', {
+  return request('/mock-api/auth/login', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+export async function fakeAccountRegister(params: RegisterParamsType) {
+  return request('/mock-api/auth/register', {
     method: 'POST',
     data: params,
   });
 }
 
 export async function getFakeCaptcha() {
-  return request(`/api/auth/captcha`);
+  return request(`/mock-api/auth/captcha`);
 }

@@ -40,7 +40,7 @@ export default {
   'userandregister.form.optional': '（选填）',
   'userandregister.form.submit': '提交',
   'userandregister.form.save': '保存',
-  'userandregister.email.placeholder': '邮箱',
+  'userandregister.email.placeholder': '账号 / 用户名',
   'userandregister.password.placeholder': '至少6位密码，区分大小写',
   'userandregister.confirm-password.placeholder': '确认密码',
   'userandregister.phone-number.placeholder': '手机号',

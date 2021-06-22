@@ -11,7 +11,7 @@ import {
 import { Alert, Space, message, Tabs } from 'antd';
 import React, { useState, useEffect } from 'react';
 import ProForm, { ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
-import { useIntl, connect, FormattedMessage } from 'umi';
+import { useIntl, connect, FormattedMessage, Link } from 'umi';
 import { getFakeCaptcha } from '@/services/login';
 import type { Dispatch } from 'umi';
 import type { StateType } from '@/models/login';
@@ -291,7 +291,9 @@ const Login: React.FC<LoginProps> = (props) => {
               float: 'right',
             }}
           >
-            <FormattedMessage id="pages.login.forgotPassword" defaultMessage="忘记密码" />
+            <Link to="/user/register">
+              <FormattedMessage id="pages.login.forgotPassword" defaultMessage="注册" />
+            </Link>
           </a>
         </div>
       </ProForm>

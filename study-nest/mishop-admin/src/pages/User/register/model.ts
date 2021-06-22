@@ -1,6 +1,7 @@
 import type { Effect, Reducer } from 'umi';
 
-import { fakeRegister } from './service';
+// import { fakeRegister } from './service';
+import { fakeAccountRegister } from '@/services/login'
 
 export interface StateType {
   status?: 'ok' | 'error';
@@ -27,7 +28,7 @@ const Model: ModelType = {
 
   effects: {
     *submit({ payload }, { call, put }) {
-      const response = yield call(fakeRegister, payload);
+      const response = yield call(fakeAccountRegister, payload);
       yield put({
         type: 'registerHandle',
         payload: response,
