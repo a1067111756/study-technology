@@ -1,7 +1,10 @@
 import './index.css'
 import React from 'react'
+import { connect } from 'react-redux'
 
-function InfoQueryCard () {
+function InfoQueryCard (props) {
+  const { fromCity, toCity, switchFromAndToCity } = props
+
   return(
     <div className="component-info-query-card__container">
       {/* 标题 */}
@@ -11,9 +14,9 @@ function InfoQueryCard () {
 
       {/* 地址选择框 */}
       <div className="ciqc-address__wrapper">
-        <span>北京</span>
-        <span className="iconfont icon-qiehuan" style={{ color: '#C0C4CC', transform: 'rotate(90deg)' }}></span>
-        <span>上海</span>
+        <span>{ fromCity }</span>
+        <span className="iconfont icon-qiehuan" style={{ color: '#C0C4CC', transform: 'rotate(90deg)' }} onClick={ switchFromAndToCity }></span>
+        <span>{ toCity }</span>
       </div>
 
       {/* 时间选择框 */}
@@ -45,4 +48,22 @@ function InfoQueryCard () {
   )
 }
 
-export default InfoQueryCard
+// 映射状态
+const mapStateToProps = state => {
+  return {
+    toCity: state.citySelectReducer.toCity,
+    fromCity: state.citySelectReducer.fromCity
+  };
+};
+
+// 映射action
+const mapDispatchToProps = dispatch => {
+  return {
+    switchFromAndToCity: () => {
+      console.log(dispatch)
+      dispatch({ type: 'ACTION_SWITCH_FROM_AND_TO_CITY' })
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(InfoQueryCard)
