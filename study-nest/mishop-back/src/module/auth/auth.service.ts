@@ -6,12 +6,14 @@ import { User } from '../../entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommonRequestException } from 'src/common/exception/common-request.exception';
 import { ToolsService } from 'src/common/service/tools.service';
+import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly toolsService: ToolsService,
+    private readonly jwtService: JwtService,
   ) {}
 
   /* 登陆 */
@@ -30,7 +32,7 @@ export class AuthService {
     }
 
     // 返回token
-    return 'token123test123';
+    return this.jwtService.sign({ username, sub: matchUser.id });
   }
 
   /* 注册 */
