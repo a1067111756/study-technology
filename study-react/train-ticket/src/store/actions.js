@@ -20,7 +20,6 @@ export function setToCity (toCity) {
 
 // 对换来哪里和去哪里城市
 export function switchFromAndToCity () {
-  console.log('ssssssssss1')
   return {
     type: ACTION_SWITCH_FROM_AND_TO_CITY
   }

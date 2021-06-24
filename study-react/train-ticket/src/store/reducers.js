@@ -21,7 +21,6 @@ const citySelectReducer = (state = { fromCity: '北京', toCity: '上海' }, act
         toCity: payload
       }
     case ACTION_SWITCH_FROM_AND_TO_CITY:
-      console.log('ssssssssss2')
       const {toCity, fromCity} = state
       return {
         ...state,

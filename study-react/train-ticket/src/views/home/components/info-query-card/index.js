@@ -1,6 +1,8 @@
 import './index.css'
 import React from 'react'
 import { connect } from 'react-redux'
+import { bindActionCreators } from "redux";
+import { switchFromAndToCity } from '@/store/actions'
 
 function InfoQueryCard (props) {
   const { fromCity, toCity, switchFromAndToCity } = props
@@ -59,10 +61,7 @@ const mapStateToProps = state => {
 // 映射action
 const mapDispatchToProps = dispatch => {
   return {
-    switchFromAndToCity: () => {
-      console.log(dispatch)
-      dispatch({ type: 'ACTION_SWITCH_FROM_AND_TO_CITY' })
-    }
+    switchFromAndToCity: bindActionCreators(switchFromAndToCity, dispatch)
   }
 }
 
