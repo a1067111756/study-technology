@@ -1,11 +1,14 @@
 import './App.css'
 import React from 'react'
-import HomePage from './views/home/index'
 
-function App () {
+function App (props) {
   return(
-    <HomePage></HomePage>
+    <div className="app-page__container" style={{ height: '100%' }}>
+      {props.children}
+    </div> 
   )
 }
 
 export default App
+
+

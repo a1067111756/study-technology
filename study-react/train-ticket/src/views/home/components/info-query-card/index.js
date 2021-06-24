@@ -1,7 +1,8 @@
 import './index.css'
 import React from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from "redux";
+import { NavLink } from 'react-router-dom'
+import { bindActionCreators } from "redux"
 import { switchFromAndToCity } from '@/store/actions'
 
 function InfoQueryCard (props) {
@@ -16,9 +17,13 @@ function InfoQueryCard (props) {
 
       {/* 地址选择框 */}
       <div className="ciqc-address__wrapper">
-        <span>{ fromCity }</span>
+        <NavLink to='/city-selector'>
+          <span>{ fromCity }</span>
+        </NavLink>
         <span className="iconfont icon-qiehuan" style={{ color: '#C0C4CC', transform: 'rotate(90deg)' }} onClick={ switchFromAndToCity }></span>
-        <span>{ toCity }</span>
+        <NavLink to='/city-selector'>
+          <span>{ toCity }</span>
+        </NavLink>        
       </div>
 
       {/* 时间选择框 */}

@@ -28,7 +28,11 @@
   justify-content: space-between;
 }
 
-.ciqc-address__wrapper > span {
+.ciqc-address__wrapper a {
+  text-decoration: none;
+}
+
+.ciqc-address__wrapper span {
   color: #333;
   font-size: 26px;
 }
