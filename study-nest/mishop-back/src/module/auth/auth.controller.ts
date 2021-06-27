@@ -2,9 +2,16 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { AuthService } from './auth.service';
 import { ToolsService } from 'src/common/service/tools.service';
-import { Body, Controller, Get, Post, Request } from '@nestjs/common';
 import { CommonRequestException } from 'src/common/exception/common-request.exception';
-
+import { AuthGuard } from '@nestjs/passport';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -29,9 +36,9 @@ export class AuthController {
   @Post('login')
   async login(@Body() loginDto: LoginDto, @Request() req) {
     // 验证验证码正确性
-    if (loginDto.captcha.toUpperCase() !== req.session.captcha) {
-      throw new CommonRequestException('00002', '验证码错误');
-    }
+    // if (loginDto.captcha.toUpperCase() !== req.session.captcha) {
+    //   throw new CommonRequestException('00002', '验证码错误');
+    // }
 
     // 验证账号信息正确性
     return await this.authService.login(loginDto);
@@ -46,5 +53,15 @@ export class AuthController {
     }
 
     return await this.authService.register(registerDto);
+  }
+
+  /* 获取用户信息 */
+  @Get('userInfo')
+  @UseGuards(AuthGuard('jwt'))
+  async getUserInfo(@Request() req) {
+    return {
+      code: '00000',
+      data: {},
+    };
   }
 }

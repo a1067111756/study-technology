@@ -12,8 +12,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   imports: [
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
-      secret: 'mishop-jwt-secret-key',
-      signOptions: { expiresIn: '1200s' },
+      secret: 'mishop-jwt-secret-key', // 加密的key
+      signOptions: { expiresIn: '1200s' }, // token过期时间
     }),
   ],
   controllers: [AuthController],
