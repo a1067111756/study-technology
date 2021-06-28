@@ -7,6 +7,7 @@ import { ResponseInterceptor } from './common/interceptor/response.interceptor';
 
 import session = require('express-session');
 import cookieParser = require('cookie-parser');
+import { JwtAuthGuard } from './module/auth/jwt.auth.guard';
 
 async function bootstrap() {
   // 注册应用
@@ -37,6 +38,9 @@ async function bootstrap() {
 
   // 全局管道注册
   app.useGlobalPipes(new ValidatePipe());
+
+  // 全局导航守卫注册
+  // app.useGlobalGuards(new JwtAuthGuard(undefined));
 
   // 启动应用
   await app.listen(3000);

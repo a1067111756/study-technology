@@ -1,15 +1,17 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AuthModule } from './module/auth/auth.module';
-import { AuthMiddleware } from './middleware/auth.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './module/auth/jwt.auth.guard';
 
 @Module({
   imports: [AuthModule, TypeOrmModule.forRoot()],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    // consumer.apply(AuthMiddleware).forRoutes('*');
-  }
-}
+export class AppModule {}
