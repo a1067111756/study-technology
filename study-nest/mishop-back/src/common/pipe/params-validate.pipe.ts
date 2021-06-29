@@ -4,7 +4,7 @@ import { PipeTransform, Injectable, ArgumentMetadata } from '@nestjs/common';
 import { CommonRequestException } from 'src/common/exception/common-request.exception';
 
 @Injectable()
-export class ValidatePipe implements PipeTransform {
+export class ParamsValidatePipe implements PipeTransform {
   async transform(value: any, metaData: ArgumentMetadata) {
     // 检查参数是否是支持的检查类型
     if (!metaData.metatype || !this.toValidate(metaData.metatype)) {

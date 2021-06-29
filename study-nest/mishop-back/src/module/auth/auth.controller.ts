@@ -3,15 +3,7 @@ import { RegisterDto } from './dto/register.dto';
 import { AuthService } from './auth.service';
 import { ToolsService } from 'src/common/service/tools.service';
 import { CommonRequestException } from 'src/common/exception/common-request.exception';
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Request,
-  SetMetadata,
-} from '@nestjs/common';
-import { NoAuth } from './auth.decorator';
+import { Body, Controller, Get, Post, Request } from '@nestjs/common';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -20,7 +12,6 @@ export class AuthController {
   ) {}
 
   /* 获取验证码 */
-  @NoAuth()
   @Get('captcha')
   async getCaptcha(@Request() req) {
     // 获取svgCaptcha实例
@@ -34,7 +25,6 @@ export class AuthController {
   }
 
   /* 登录 */
-  @NoAuth()
   @Post('login')
   async login(@Body() loginDto: LoginDto, @Request() req) {
     // 验证验证码正确性

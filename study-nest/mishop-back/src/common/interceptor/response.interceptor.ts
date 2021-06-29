@@ -18,7 +18,6 @@ export class ResponseInterceptor implements NestInterceptor {
           code: '00000',
           message: '请求成功',
         });
-        // return data;
       }),
     );
   }

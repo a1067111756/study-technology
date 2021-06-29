@@ -1,16 +1,15 @@
 import { Module } from '@nestjs/common';
-import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { AuthController } from './auth.controller';
 import { ToolsService } from 'src/common/service/tools.service';
-import { JwtStrategy } from './jwt.strategy';
-
-import { User } from '../../entity/user.entity';
 import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from 'src/common/guard/auth-guard/jwt.strategy';
+import { User } from 'src/entity/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User]), // 注入UserEntity
     JwtModule.register({
       secret: 'mishop-jwt-secret-key', // 加密的key
       signOptions: { expiresIn: '1200s' }, // token过期时间
