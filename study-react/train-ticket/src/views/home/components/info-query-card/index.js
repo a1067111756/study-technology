@@ -17,11 +17,11 @@ function InfoQueryCard (props) {
 
       {/* 地址选择框 */}
       <div className="ciqc-address__wrapper">
-        <NavLink to='/city-selector'>
+        <NavLink to={{ pathname: '/city-selector', query: { type: 'fromCity' } }}>
           <span>{ fromCity }</span>
         </NavLink>
         <span className="iconfont icon-qiehuan" style={{ color: '#C0C4CC', transform: 'rotate(90deg)' }} onClick={ switchFromAndToCity }></span>
-        <NavLink to='/city-selector'>
+        <NavLink to={{ pathname: '/city-selector', query: { type: 'toCity' } }}>
           <span>{ toCity }</span>
         </NavLink>        
       </div>

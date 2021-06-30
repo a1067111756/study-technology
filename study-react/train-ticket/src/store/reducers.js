@@ -13,12 +13,12 @@ const citySelectReducer = (state = { fromCity: '北京', toCity: '上海' }, act
     case ACTION_SET_TO_CITY:
       return {
         ...state,
-        fromCity: payload
+        toCity: payload
       }
     case ACTION_SET_FROM_CITY:
       return {
         ...state,
-        toCity: payload
+        fromCity: payload
       }
     case ACTION_SWITCH_FROM_AND_TO_CITY:
       const {toCity, fromCity} = state
