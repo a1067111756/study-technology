@@ -1,6 +1,7 @@
 export const ACTION_SET_TO_CITY = 'SET_TO_CITY'
 export const ACTION_SET_FROM_CITY = 'SET_FROM_CITY'
 export const ACTION_SWITCH_FROM_AND_TO_CITY = 'SWITCH_FROM_AND_TO_CITY'
+export const ACTION_SET_TRAIN_NUMBER_DATE = 'ACTION_SET_TRAIN_NUMBER_DATE'
 
 // 设置来自哪里城市
 export function setFromCity (fromCity) {
@@ -22,5 +23,13 @@ export function setToCity (toCity) {
 export function switchFromAndToCity () {
   return {
     type: ACTION_SWITCH_FROM_AND_TO_CITY
+  }
+}
+
+// 设置车次日期
+export function setTrainNumberDate (date) {
+  return {
+    type: ACTION_SWITCH_FROM_AND_TO_CITY,
+    payload: date
   }
 }

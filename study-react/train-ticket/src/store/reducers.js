@@ -2,7 +2,8 @@
 import {
   ACTION_SET_TO_CITY,
   ACTION_SET_FROM_CITY,
-  ACTION_SWITCH_FROM_AND_TO_CITY
+  ACTION_SWITCH_FROM_AND_TO_CITY,
+  ACTION_SET_TRAIN_NUMBER_DATE
 } from './actions'
 
 // 城市选择的reducer
@@ -36,6 +37,26 @@ const citySelectReducer = (state = { fromCity: '北京', toCity: '上海' }, act
   }
 }
 
+// 车次信息
+const trainNumberReducer = (state = { date: '', toCity: '' }, action) => {
+  const { type, payload } = action
+
+  switch (type) {
+    case ACTION_SET_TRAIN_NUMBER_DATE:
+      return {
+        ...state,
+        date: payload
+      }
+    default:
+      break
+  }
+
+  return {
+    ...state
+  }
+}
+
 export default {
-  citySelectReducer
+  citySelectReducer,
+  trainNumberReducer
 }

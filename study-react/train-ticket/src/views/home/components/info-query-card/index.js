@@ -1,12 +1,27 @@
 import './index.css'
 import React from 'react'
+import dayjs from 'dayjs'
 import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import { bindActionCreators } from "redux"
 import { switchFromAndToCity } from '@/store/actions'
 
 function InfoQueryCard (props) {
-  const { fromCity, toCity, switchFromAndToCity } = props
+  const { fromCity, toCity, switchFromAndToCity, showCalendar } = props
+
+  const today = () => {
+    const stragery = {
+      0: '周日',
+      1: '周一',
+      2: '周二',
+      3: '周三',
+      4: '周四',
+      5: '周五',
+      6: '周六'
+    }
+    const week = stragery[dayjs().day()]
+    return week
+  }
 
   return(
     <div className="component-info-query-card__container">
@@ -28,9 +43,9 @@ function InfoQueryCard (props) {
 
       {/* 时间选择框 */}
       <div style={{ padding: '0 20px' }}>
-        <div className="ciqc-time__wrapper">
-          <span className="date">6月16日</span>
-          <span className="week">周三 (今天)</span>
+        <div className="ciqc-time__wrapper" onClick={showCalendar}>
+          <span className="date">{ dayjs().format('M月DD日') }</span>
+          <span className="week">{today()} (今天)</span>
         </div>
       </div>
 
