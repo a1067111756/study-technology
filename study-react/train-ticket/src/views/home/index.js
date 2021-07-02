@@ -57,7 +57,7 @@ function HomePage () {
 
       {/* 日期选择浮层 */}
       {
-        showCalendar && <Calendar hideCalendar={onHideCalendar} />
+        showCalendar && <Calendar hideCalendar={onHideCalendar} date="2021-07-02" />
       }
     </div>
   )  

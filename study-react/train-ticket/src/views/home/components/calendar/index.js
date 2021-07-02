@@ -4,7 +4,7 @@ import React from 'react'
 import NavigationBar from '@/components/NavigationBar'
 
 function Calendar (props) {
-  const { hideCalendar } = props
+  const { hideCalendar, date } = props
 
   // 周期
   const weekList = ['一', '二', '三', '四', '五', '六', '日'] 
@@ -24,7 +24,7 @@ function Calendar (props) {
       </div>
 
       {/* 日历栏 */}
-      <MonthCalendar date="2021-07" />
+      <MonthCalendar date={date} />
     </div>
   )
 }
@@ -51,7 +51,9 @@ function MonthCalendar (props) {
       <p className="title">2021年7月</p>
       <div className="day-list">
         {
-          monthDayBet.map((item, index) => <span key={index}>{item}</span>)
+          monthDayBet.map(
+            (item, index) => <span key={index} className={`${item === dayjs(props.date).format('D') ? 'today' : '' }`}>{item}</span>
+          )
         }
       </div>
     </div>
