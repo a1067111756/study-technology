@@ -1,6 +1,5 @@
 .component-calendar__container {
   width: 100%;
-  height: 100%;
   background-color: #eeeeee;
 }
 
@@ -30,11 +29,28 @@
   .day-list {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
+    padding: 10px;
     > span {
-      height: 54px;
+      width: 45px;
+      height: 50px;
       display: flex;
+      font-size: 13px;
+      color: #616161;
       align-items: center;
       justify-content: center;
+      &.today {
+        color: #ffffff;
+        border-radius: 5px;
+        background-color: #00c9e2;
+      }
+      &.active {
+        color: #ffffff;
+        border-radius: 5px;
+        background-color:#0da532;
+      }      
+      &.disable {
+        color: #bdbdbd;
+      }      
     }
   }
 }

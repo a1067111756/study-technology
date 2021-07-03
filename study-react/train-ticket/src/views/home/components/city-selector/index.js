@@ -7,13 +7,13 @@ import { MockCityData } from '@/assets/mock/city'
 import { setFromCity, setToCity } from '@/store/actions'
 
 function CitySelectPage (props) {
-  const { history, setToCity, setFromCity } = props
+  const { setToCity, setFromCity, showCitySelector, setShowCitySelector } = props
   const [searchKey, setSearchKey] = useState('')
 
   // 事件 - 回退页面
   const onBack = useCallback(() => {
-    history.goBack()
-  }, [history])
+    setShowCitySelector(false)
+  }, [setShowCitySelector])
 
   // 事件 - 清除输入框
   const onClear = useCallback(() => {
@@ -22,11 +22,9 @@ function CitySelectPage (props) {
 
   // 事件 - 点击选择城市
   const onSelectCity = useCallback((name) => {
-    const type = history.location.query.type
-    console.log(type === 'fromCity')
-    type === 'fromCity' ? setFromCity(name) : setToCity(name)
-    history.goBack()
-  }, [history, setFromCity, setToCity])
+    showCitySelector === 'fromCity' ? setFromCity(name) : setToCity(name)
+    onBack()
+  }, [onBack, setFromCity, setToCity, showCitySelector])
 
   return(
     <div className="page-city-selector__container">

@@ -1,0 +1,20 @@
+.page-query__container {
+  width: 100%;
+  background-color:#f5f5f5;
+}
+
+.pqc-time-bar {
+  display: flex;
+  color: #ffffff;
+  padding: 15px 20px;
+  font-size: 14px;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #00c9e2;
+
+  .date-time {
+    padding: 5px 20px;
+    border-radius: 20px;
+    border: 1px solid #ffffff;
+  }
+}

@@ -41,6 +41,11 @@
   padding: 20px 20px 20px 0;
   border-top: 1px solid#e5e5e5;
   border-bottom: 1px solid#e5e5e5;
+  text-decoration: none;
+}
+
+.ciqc-time__wrapper a {
+  text-decoration: none;
 }
 
 .ciqc-time__wrapper .date {

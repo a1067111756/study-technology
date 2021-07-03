@@ -1,4 +1,5 @@
 /* eslint-disable import/no-anonymous-default-export */
+import dayjs from 'dayjs'
 import {
   ACTION_SET_TO_CITY,
   ACTION_SET_FROM_CITY,
@@ -38,14 +39,14 @@ const citySelectReducer = (state = { fromCity: '北京', toCity: '上海' }, act
 }
 
 // 车次信息
-const trainNumberReducer = (state = { date: '', toCity: '' }, action) => {
+const trainNumberReducer = (state = { trainNumberDate: dayjs().format('YYYY-MM-D') }, action) => {
   const { type, payload } = action
 
   switch (type) {
     case ACTION_SET_TRAIN_NUMBER_DATE:
       return {
         ...state,
-        date: payload
+        trainNumberDate: payload
       }
     default:
       break

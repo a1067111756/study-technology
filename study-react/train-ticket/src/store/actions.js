@@ -29,7 +29,7 @@ export function switchFromAndToCity () {
 // 设置车次日期
 export function setTrainNumberDate (date) {
   return {
-    type: ACTION_SWITCH_FROM_AND_TO_CITY,
+    type: ACTION_SET_TRAIN_NUMBER_DATE,
     payload: date
   }
 }
