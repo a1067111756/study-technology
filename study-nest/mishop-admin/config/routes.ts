@@ -16,6 +16,22 @@
     ],
   },
   {
+    path: '/auth',
+    layout: false,
+    routes: [
+      {
+        path: '/auth',
+        routes: [
+          {
+            name: 'login',
+            path: '/auth/login',
+            component: './auth/Login',
+          },
+        ],
+      },
+    ],
+  },  
+  {
     path: '/welcome',
     name: 'welcome',
     icon: 'smile',
