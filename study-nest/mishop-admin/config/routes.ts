@@ -20,15 +20,15 @@
     layout: false,
     routes: [
       {
-        path: '/auth',
-        routes: [
-          {
-            name: 'login',
-            path: '/auth/login',
-            component: './auth/Login',
-          },
-        ],
+        name: 'login',
+        path: '/auth/login',
+        component: './auth/Login',
       },
+      {
+        name: 'register',
+        path: '/auth/register',
+        component: './auth/Register',
+      }   
     ],
   },  
   {

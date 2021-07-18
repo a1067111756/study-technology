@@ -15,7 +15,7 @@ const LoginPage: React.FC = () => {
           >
             {/* 标题 */}
             <Form.Item>
-              <p className={styles.title}>登录</p>
+              <p className={styles.title}>注册</p>
             </Form.Item>
 
             {/* 账号 */}
