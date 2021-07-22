@@ -1,7 +1,8 @@
 import React from 'react'
 import styles from './index.less'
+import { history } from 'umi'
 import { Card, Form, Input, Button } from 'antd'
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { UserOutlined, LockOutlined, SafetyOutlined } from '@ant-design/icons'
 
 const LoginPage: React.FC = () => {
   return(
@@ -45,10 +46,23 @@ const LoginPage: React.FC = () => {
               />
             </Form.Item>
 
+            {/* 确认密码 */}
+            <Form.Item
+              name="repassword"
+              rules={[{ required: true, message: '请输入密码' }]}
+            >
+              <Input.Password 
+                className={styles.login_box__input}
+                size="large"
+                type="repassword"
+                placeholder="确认密码"
+                prefix={<SafetyOutlined className="site-form-item-icon" />}
+              />
+            </Form.Item>
+
             <Form.Item>
               <div className={styles.login_box_redrict}>
-                <a>记住密码</a>
-                <a>没有账号?注册</a>
+                <a onClick={e => history.push('/auth/login')}>已有账号?登录</a>
               </div>
             </Form.Item>
 

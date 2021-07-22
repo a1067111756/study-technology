@@ -1,7 +1,8 @@
 import React from 'react'
 import styles from './index.less'
-import { Card, Form, Input, Button } from 'antd'
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { history } from 'umi'
+import { Card, Form, Input, Button, Checkbox } from 'antd'
+import { UserOutlined, LockOutlined } from '@ant-design/icons'
 
 const LoginPage: React.FC = () => {
   return(
@@ -47,8 +48,8 @@ const LoginPage: React.FC = () => {
 
             <Form.Item>
               <div className={styles.login_box_redrict}>
-                <a>记住密码</a>
-                <a>没有账号?注册</a>
+                <Checkbox>记住密码</Checkbox>
+                <a onClick={ e => history.push('/auth/register') }>没有账号?注册</a>
               </div>
             </Form.Item>
 
