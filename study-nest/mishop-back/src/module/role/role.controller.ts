@@ -1,34 +1,50 @@
-import { Post, Controller, Body } from '@nestjs/common';
-import { CreateRoleDto } from './dto/createRole.dto';
 import { RoleService } from './role.service';
+import { Post, Controller, Body } from '@nestjs/common';
+import { CreateAndUpdateRoleDto } from './dto/createAndUpdateRole.dto';
 
 @Controller('role')
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
-  // 增
+  // create
   @Post('create')
-  create(@Body() createRoleDto: CreateRoleDto) {
-    return this.roleService.create(createRoleDto);
+  async create(@Body() createRoleDto: CreateAndUpdateRoleDto) {
+    return await this.roleService.create(createRoleDto);
   }
 
-  // 删
-  // @Post('role/delete')
-  // async delete() {}
+  // removeByName
+  @Post('removeByName')
+  async removeByName(@Body() name: string) {
+    return await this.roleService.removeByName(name);
+  }
 
-  // // 改
-  // @Post('role/update')
-  // async update() {}
+  // removeById
+  @Post('removeByName')
+  async removeById(@Body() id: string) {
+    return await this.roleService.removeById(id);
+  }
 
-  // // ById
-  // @Post('role/getById')
-  // async getById() {}
+  // updateById
+  @Post('updateById')
+  async updateById(@Body() id: string, createRoleDto: CreateAndUpdateRoleDto) {
+    return await this.roleService.updateById(id, createRoleDto);
+  }
 
-  // // 列表
-  // @Get('role/getList')
-  // async getList() {}
+  // getById
+  @Post('getById')
+  async getById(@Body() id: string) {
+    return await this.roleService.getById(id);
+  }
 
-  // // 分页
-  // @Post('role/getPage')
-  // async getList() {}
+  // getList
+  @Post('getList')
+  async getList() {
+    return await this.roleService.getList();
+  }
+
+  // getList
+  @Post('getPage')
+  async getPage(@Body() pageNo: number, pageSize: number) {
+    return await this.roleService.getPage(pageNo, pageSize);
+  }
 }

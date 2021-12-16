@@ -13,8 +13,8 @@ export class AuthController {
   ) {}
 
   /* 获取验证码 */
-  @Get('captcha')
   @NoAuth()
+  @Get('captcha')
   async getCaptcha(@Request() req) {
     // 获取svgCaptcha实例
     const svgCaptcha = await this.toolsService.createCaptcha();
@@ -27,8 +27,8 @@ export class AuthController {
   }
 
   /* 登录 */
-  @Post('login')
   @NoAuth()
+  @Post('login')
   async login(@Body() loginDto: LoginDto, @Request() req) {
     // 验证验证码正确性
     if (loginDto.captcha.toUpperCase() !== req.session.captcha) {
@@ -40,8 +40,8 @@ export class AuthController {
   }
 
   /* 注册 */
-  @Post('register')
   @NoAuth()
+  @Post('register')
   async register(@Body() registerDto: RegisterDto, @Request() req) {
     // 验证验证码正确性
     if (registerDto.captcha.toUpperCase() !== req.session.captcha) {

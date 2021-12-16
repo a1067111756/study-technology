@@ -1,6 +1,6 @@
 import { IsNotEmpty, Length, MaxLength } from 'class-validator';
 
-export class CreateRoleDto {
+export class CreateAndUpdateRoleDto {
   @IsNotEmpty({ message: '用户名不能为空' })
   @Length(2, 12, { message: '用户名长度应为2 ~ 12位字符' })
   public readonly name: string;

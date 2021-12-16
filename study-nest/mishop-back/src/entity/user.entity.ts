@@ -15,7 +15,7 @@ export class User {
   mobile: number;
 
   @Column({ nullable: true })
-  emial: string;
+  email: string;
 
   @Column({ default: true })
   status: boolean;
