@@ -1,53 +1,57 @@
 @import '~antd/es/style/themes/default.less';
 
 .container {
+  display: flex;
   width: 100%;
   height: 100%;
-  display: flex;
   background: @body-background;
 }
 
 .rightBanner {
-  width: 520px;
-  height: 100%;
   display: flex;
   flex-flow: column;
   align-items: center;
   justify-content: center;
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
+  width: 520px;
+  height: 100%;
   background-image: url('../../../assets/images/bg-login-banner.svg');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 
   .title {
-    font-size: 34px;
-    font-weight: bold;
-    color: @text-color-inverse;
     margin-top: 10px;
+    color: @text-color-inverse;
+    font-weight: bold;
+    font-size: 34px;
   }
 
   .subTitle {
-    font-size: 28px;
     color: @text-color-inverse;
+    font-size: 28px;
     letter-spacing: 5px;
   }
 }
 
 .leftContent {
-  flex: 1;
-  height: 100%;
   display: flex;
+  flex: 1;
   align-items: center;
   justify-content: center;
+  height: 100%;
+
+  .hover {
+    box-shadow: 0 1px 2px -2px rgba(0, 0, 0, 0.16), 0 3px 6px 0 rgba(0, 0, 0, 0.12), 0 5px 12px 4px rgba(0, 0, 0, 0.09);
+  }
 
   .title {
-    font-size: 28px;
-    font-weight: bold;
     color: @text-color;
-  }  
+    font-weight: bold;
+    font-size: 28px;
+  }
 
   .login_box__input {
     border-radius: 5px;
-  }  
+  }
 
   .login_box_redrict {
     display: flex;
@@ -55,3 +59,5 @@
     justify-content: space-between;
   }
 }
+
+

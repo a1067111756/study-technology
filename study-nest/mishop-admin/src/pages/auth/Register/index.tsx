@@ -1,10 +1,43 @@
 import React from 'react'
 import styles from './index.less'
 import { history } from 'umi'
-import { Card, Form, Input, Button } from 'antd'
+import { useState } from 'react'
+import { Card, Form, Input, Button, notification } from 'antd'
 import { UserOutlined, LockOutlined, SafetyOutlined } from '@ant-design/icons'
+import * as authApi from '@/services/api/auth'
 
-const LoginPage: React.FC = () => {
+const RegisterPage: React.FC = () => {
+  const [loading, setLoading] = useState(false)
+
+  // 事件 - 注册
+  const onRegister = (registerForm: API.IRegisterReq) => {
+    setLoading(true)
+
+    // 简单校验
+    if (registerForm.password !== registerForm.repassword) {
+      notification.error({
+        message: '注册出错',
+        description: '两次密码输入不一致,请检查!'
+      })
+      setTimeout(() => setLoading(false), 300)
+      return
+    }
+
+    // 提交请求
+    authApi
+      .register(registerForm)
+      .then(() => {
+        notification.success({
+          message: '注册成功',
+          description: '请重新登录新账号'
+        })
+        history.push('/auth/login')
+      })
+      .finally(() => {
+        setTimeout(() => setLoading(false), 300)
+      })
+  }
+
   return(
     <div className={styles.container}>
       {/* 左侧 */}
@@ -13,6 +46,7 @@ const LoginPage: React.FC = () => {
           <Form
             name="normal_login"
             className="login-form"
+            onFinish={onRegister}
           >
             {/* 标题 */}
             <Form.Item>
@@ -25,10 +59,11 @@ const LoginPage: React.FC = () => {
               rules={[{ required: true, message: '请输入用户名' }]}
             >
               <Input
+                allowClear
                 className={styles.login_box__input}
                 size="large"
-                placeholder="用户名" 
-                prefix={<UserOutlined className="site-form-item-icon" />} 
+                placeholder="用户名"
+                prefix={<UserOutlined className="site-form-item-icon" />}
               />
             </Form.Item>
 
@@ -37,7 +72,8 @@ const LoginPage: React.FC = () => {
               name="password"
               rules={[{ required: true, message: '请输入密码' }]}
             >
-              <Input.Password 
+              <Input.Password
+                allowClear
                 className={styles.login_box__input}
                 size="large"
                 type="password"
@@ -51,7 +87,8 @@ const LoginPage: React.FC = () => {
               name="repassword"
               rules={[{ required: true, message: '请输入密码' }]}
             >
-              <Input.Password 
+              <Input.Password
+                allowClear
                 className={styles.login_box__input}
                 size="large"
                 type="repassword"
@@ -62,13 +99,19 @@ const LoginPage: React.FC = () => {
 
             <Form.Item>
               <div className={styles.login_box_redrict}>
-                <a onClick={e => history.push('/auth/login')}>已有账号?登录</a>
+                <a onClick={() => history.push('/auth/login')}>已有账号?登录</a>
               </div>
             </Form.Item>
 
             <Form.Item>
-              <Button block type="primary" size="large" htmlType="submit">
-                登录
+              <Button
+                block
+                size="large"
+                type="primary"
+                htmlType="submit"
+                loading={loading}
+              >
+                注册
               </Button>
             </Form.Item>
           </Form>
@@ -85,4 +128,4 @@ const LoginPage: React.FC = () => {
   )
 }
 
-export default LoginPage
+export default RegisterPage

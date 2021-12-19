@@ -23,7 +23,10 @@ export class AuthController {
     req.session.captcha = svgCaptcha.text.toUpperCase();
 
     // 返回svg格式验证嘛
-    return svgCaptcha['base64'];
+    return {
+      base64: svgCaptcha['base64'],
+      uuid: 'xxxxx',
+    };
   }
 
   /* 登录 */
@@ -42,12 +45,7 @@ export class AuthController {
   /* 注册 */
   @NoAuth()
   @Post('register')
-  async register(@Body() registerDto: RegisterDto, @Request() req) {
-    // 验证验证码正确性
-    if (registerDto.captcha.toUpperCase() !== req.session.captcha) {
-      throw new CommonRequestException('00002', '验证码错误');
-    }
-
+  async register(@Body() registerDto: RegisterDto) {
     return await this.authService.register(registerDto);
   }
 

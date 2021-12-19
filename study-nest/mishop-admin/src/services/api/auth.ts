@@ -1,18 +1,25 @@
 /* 认证相关 */
-import { request } from 'umi'
+import request from '@/utils/request'
 
 // 登录
-export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
-  return request<API.LoginResult>('/api/login/account', {
+export async function login(loginReq: API.ILoginReq) {
+  return request('/api/auth/login', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
+    data: loginReq
+  })
 }
 
 // 注册
+export async function register(registerReq: API.IRegisterReq) {
+  return request('/api/auth/register', {
+    method: 'Post',
+    data: registerReq
+  })
+}
 
 // 验证码
+export async function getFakeCaptcha() {
+  return request<API.IFakeCaptchaRes>('/api/auth/captcha', {
+    method: 'GET'
+  })
+}

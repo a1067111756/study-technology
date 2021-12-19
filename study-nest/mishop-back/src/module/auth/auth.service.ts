@@ -46,6 +46,12 @@ export class AuthService {
     }
 
     // 检查密码强度
+    if (username.length < 4 || username.length > 16) {
+      throw new CommonRequestException('00021', '账号应为4~16位字符');
+    }
+    if (password.length < 4 || password.length > 16) {
+      throw new CommonRequestException('00022', '密码应为4~16位字符');
+    }
 
     // 添加新的账号到数据库
     await this.userRepository.insert({
@@ -53,7 +59,7 @@ export class AuthService {
       password: this.toolsService.md5Encrypt(password),
     });
 
-    // 返回token
-    return 'token123test123';
+    // 返回结果
+    return null;
   }
 }

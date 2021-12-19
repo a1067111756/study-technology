@@ -6,7 +6,4 @@ export class RegisterDto {
 
   @IsNotEmpty({ message: '密码不能为空' })
   public readonly password: string;
-
-  @IsNotEmpty({ message: '验证码不能为空' })
-  public readonly captcha: string;
 }
