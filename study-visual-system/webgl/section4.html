@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>点线面绘制</title>
+  <style>
+      html, body {
+          margin: 0;
+          padding: 0;
+      }
+  </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+
+<!-- 顶点着色器 -->
+<script id="vertexShared" type="x-shader/x-vertex">
+      attribute vec4 a_Position;
+      void main () {
+        // 将变量赋值给gl
+        gl_Position = a_Position;
+        // 点位大小
+        gl_PointSize = 20.0;
+      }
+  </script>
+
+<!--  片元着色器-->
+<script id="fragmentShared" type="x-shader/x-fragment">
+      void main () {
+        gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0);
+      }
+</script>
+
+<script>
+    // 初始化画布
+    const canvas = document.getElementById('canvas')
+    canvas.width = 800
+    canvas.height = 600
+    const gl = canvas.getContext('webgl')
+
+    // 获取着色器文本
+    const vsSource = document.getElementById('vertexShared').innerText
+    const fsSource = document.getElementById('fragmentShared').innerText
+
+    // 初始化着色器
+    initShaders(gl, vsSource, fsSource)
+
+    // 设置顶点点位
+    const vertices = new Float32Array([
+        -0.2,  0.2,
+        -0.2, -0.2,
+        0.2, 0.2,
+        0.2, -0.2
+    ])
+    // 创建缓冲区
+    const vertexBuffer = gl.createBuffer()
+    // 将缓冲区绑定到gl上下文
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
+    // 将数据写入缓冲区
+    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
+    // 将缓冲区对象分配给attribute 变量
+    const a_Position = gl.getAttribLocation(gl.program, 'a_Position')
+    gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0)
+    // 开启顶点数据的批处理功能
+    gl.enableVertexAttribArray(a_Position)
+
+    // 清理画布
+    gl.clearColor(0.0, 0.0, 0.0, 1.0)
+    gl.clear(gl.COLOR_BUFFER_BIT)
+
+    // 绘图
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
+
+    // 方法 - 初始化着色器
+    function initShaders(gl, vsSource, fsSource){
+        // 创建程序对象
+        const program = gl.createProgram()
+        // 建立着色对象
+        const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource)
+        const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource)
+        //把顶点着色对象装进程序对象中
+        gl.attachShader(program, vertexShader)
+        //把片元着色对象装进程序对象中
+        gl.attachShader(program, fragmentShader)
+        //连接webgl上下文对象和程序对象
+        gl.linkProgram(program)
+        //启动程序对象
+        gl.useProgram(program)
+        //将程序对象挂到上下文对象上
+        gl.program = program
+        return true;
+    }
+
+    // 方法 - 加载着色器对象
+    function loadShader(gl, type, source) {
+        //根据着色类型，建立着色器对象
+        const shader = gl.createShader(type)
+        //将着色器源文件传入着色器对象中
+        gl.shaderSource(shader, source)
+        //编译着色器对象
+        gl.compileShader(shader)
+        //返回着色器对象
+        return shader
+    }
+</script>
+</body>
+</html>
