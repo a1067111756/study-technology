@@ -1,35 +1,41 @@
 import React from 'react'
-import { history } from 'umi'
+import { useIntl, history } from 'umi'
 import styles from './index.less'
+import { useModel } from 'umi';
 import { useState, useEffect } from 'react'
 import {Card, Form, Input, Button, Checkbox, notification} from 'antd'
-import loginBanner from '@/assets/images/img-login-banner.svg'
+import loginBanner from '@/assets/images/img_auth_banner.svg'
 import { UserOutlined, LockOutlined, SafetyOutlined  } from '@ant-design/icons'
 import * as authApi from '@/services/api/auth'
 
 const LoginPage: React.FC = () => {
+  // 国际化
+  const intl = useIntl()
   // loading
   const [loading, setLoading] = useState(false)
   // 验证码
   const [fakerCaptcha, setFakerCaptcha] = useState('')
+  // 数据流
+  const { setAuthInfo } = useModel('auth')
 
   // 请求 - 获取验证码
   const requestFakerCaptcha = () => {
-    authApi.getFakeCaptcha().then((fakeCaptchaRes: API.IFakeCaptchaRes) => setFakerCaptcha(fakeCaptchaRes.base64))
+    authApi.getFakeCaptcha().then((fakeCaptchaRes: APIS.IFakeCaptchaRes) => setFakerCaptcha(fakeCaptchaRes.base64))
   }
 
   // 事件 - 登录
-  const onLogin = (loginForm: API.ILoginReq) => {
+  const onLogin = (loginForm: APIS.ILoginReq) => {
     setLoading(true)
 
     authApi
       .login(loginForm)
-      .then(data => {
-        console.log(data)
+      .then((loginRes: APIS.ILoginRes) => {
         notification.success({
           message: '登录成功',
           description: '欢迎回来'
         })
+        setAuthInfo(loginRes)
+        history.push('/welcome')
       })
       .finally(() => {
         setTimeout(() => setLoading(false), 300)
@@ -53,7 +59,7 @@ const LoginPage: React.FC = () => {
           >
             {/* 标题 */}
             <Form.Item>
-              <p className={styles.title}>登录</p>
+              <p className={styles.title}>{intl.formatMessage({ id: 'pages.login.submit' })}</p>
             </Form.Item>
 
             {/* 账号 */}
@@ -131,7 +137,7 @@ const LoginPage: React.FC = () => {
 
       {/* 右侧 */}
       <div className={styles.rightBanner}>
-        <img src={loginBanner} />
+        <img src={loginBanner}  alt="banner"/>
         <p className={styles.title}>Mi Shop</p>
         <p className={styles.subTitle}>后台管理系统</p>
       </div>

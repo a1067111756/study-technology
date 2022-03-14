@@ -9,14 +9,14 @@
 export default {
   dev: {
     '/api/': {
-      target: 'http://192.168.43.35:3000',
+      target: 'http://localhost:3000',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },
   },
   test: {
     '/api/': {
-      target: 'https://preview.pro.ant.design',
+      target: 'https://proapi.azurewebsites.net',
       changeOrigin: true,
       pathRewrite: { '^': '' },
     },

@@ -56,6 +56,18 @@ declare namespace API {
     success?: boolean;
   };
 
+  type FakeCaptcha = {
+    code?: number;
+    status?: string;
+  };
+
+  type LoginParams = {
+    username?: string;
+    password?: string;
+    autoLogin?: boolean;
+    type?: string;
+  };
+
   type ErrorResponse = {
     /** 业务约定的错误码 */
     errorCode: string;
@@ -85,29 +97,5 @@ declare namespace API {
     datetime?: string;
     description?: string;
     type?: NoticeIconItemType;
-  };
-
-  /* 认证相关 */
-  // token
-  type IToken = string;
-
-  // 验证码
-  type IFakeCaptchaRes = {
-    base64: string;
-    uuid: string;
-  };
-
-  // 注册
-  type IRegisterReq = {
-    username: string;
-    password: string;
-    repassword: string;
-  };
-
-  // 登录
-  type ILoginReq = {
-    username: string;
-    password: string;
-    captcha: boolean;
   };
 }

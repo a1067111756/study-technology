@@ -2,15 +2,15 @@
 import request from '@/utils/request'
 
 // 登录
-export async function login(loginReq: API.ILoginReq) {
-  return request('/api/auth/login', {
+export async function login(loginReq: APIS.ILoginReq) {
+  return request<APIS.ILoginRes>('/api/auth/login', {
     method: 'POST',
     data: loginReq
-  })
+  }                  )
 }
 
 // 注册
-export async function register(registerReq: API.IRegisterReq) {
+export async function register(registerReq: APIS.IRegisterReq) {
   return request('/api/auth/register', {
     method: 'Post',
     data: registerReq
@@ -19,7 +19,7 @@ export async function register(registerReq: API.IRegisterReq) {
 
 // 验证码
 export async function getFakeCaptcha() {
-  return request<API.IFakeCaptchaRes>('/api/auth/captcha', {
+  return request<APIS.IFakeCaptchaRes>('/api/auth/captcha', {
     method: 'GET'
   })
 }

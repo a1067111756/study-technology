@@ -5,12 +5,13 @@ import { useState } from 'react'
 import { Card, Form, Input, Button, notification } from 'antd'
 import { UserOutlined, LockOutlined, SafetyOutlined } from '@ant-design/icons'
 import * as authApi from '@/services/api/auth'
+import imgAuthBanner from '@/assets/images/img_auth_banner.svg'
 
 const RegisterPage: React.FC = () => {
   const [loading, setLoading] = useState(false)
 
   // 事件 - 注册
-  const onRegister = (registerForm: API.IRegisterReq) => {
+  const onRegister = (registerForm: APIS.IRegisterReq) => {
     setLoading(true)
 
     // 简单校验
@@ -120,7 +121,7 @@ const RegisterPage: React.FC = () => {
 
       {/* 右侧 */}
       <div className={styles.rightBanner}>
-        <img src={require('@/assets/images/img-login-banner.svg')} />
+        <img src={imgAuthBanner} alt="banner" />
         <p className={styles.title}>Mi Shop</p>
         <p className={styles.subTitle}>后台管理系统</p>
       </div>

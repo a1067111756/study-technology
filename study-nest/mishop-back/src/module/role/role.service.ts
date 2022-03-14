@@ -1,9 +1,11 @@
-import { Repository } from 'typeorm';
+import { Like, Repository, MoreThanOrEqual } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { Role } from 'src/entity/role.entity';
+import { Role } from './entity/role.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateAndUpdateRoleDto } from './dto/createAndUpdateRole.dto';
+import { CreateRoleDto } from './entity/dto/createRole.dto';
+import { UpdateRoleDto } from './entity/dto/updateRole.dto';
 import { CommonRequestException } from 'src/common/exception/common-request.exception';
+import { GetPageReqDto } from './entity/dto/getPageReq.dto';
 
 @Injectable()
 export class RoleService {
@@ -13,119 +15,103 @@ export class RoleService {
   ) {}
 
   // create
-  async create(createAndUpdateRoleDto: CreateAndUpdateRoleDto) {
+  async create(createRoleDto: CreateRoleDto) {
     // 查询角色是否存在
     const matchRole = await this.roleRepository.findOne({
-      name: createAndUpdateRoleDto.name,
+      name: createRoleDto.name,
     });
+
     if (matchRole) {
-      throw new CommonRequestException('10001', '角色已存在');
+      throw new CommonRequestException('10001', '创建角色失败，角色已存在');
     }
 
-    // 创建新角色
-    const newRole = await this.roleRepository.create(createAndUpdateRoleDto);
-
-    // 返回结果
-    return {
-      code: '00000',
-      data: newRole,
-    };
+    // 创建角色
+    return this.roleRepository.insert(createRoleDto);
   }
 
   // removeByName
   async removeByName(roleName: string) {
     // 查询角色是否存在
     const matchRole = await this.roleRepository.findOne({ name: roleName });
+
     if (!matchRole) {
-      throw new CommonRequestException('10002', '角色不存在');
+      throw new CommonRequestException('10002', '删除角色失败，角色不存在');
     }
 
     // 删除角色
-    const removeRole = await this.roleRepository.remove(matchRole);
-
-    // 返回结果
-    return {
-      code: '00000',
-      data: removeRole,
-    };
+    return this.roleRepository.remove(matchRole);
   }
 
   // removeById
   async removeById(roleId: string) {
     // 查询角色是否存在
     const matchRole = await this.roleRepository.findOne({ id: roleId });
+
     if (!matchRole) {
-      throw new CommonRequestException('10002', '角色不存在');
+      throw new CommonRequestException('10002', '删除角色失败，角色不存在');
     }
 
     // 删除角色
-    const removeRole = await this.roleRepository.remove(matchRole);
-
-    // 返回结果
-    return {
-      code: '00000',
-      data: removeRole,
-    };
+    return this.roleRepository.remove(matchRole);
   }
 
   // updateById
-  async updateById(
-    roleId: string,
-    createAndUpdateRoleDto: CreateAndUpdateRoleDto,
-  ) {
+  async updateById(updateRoleDto: UpdateRoleDto) {
     // 查询角色是否存在
-    const matchRole = await this.roleRepository.findOne({ id: roleId });
+    const matchRole = await this.roleRepository.findOne({
+      id: updateRoleDto.id,
+    });
+
     if (!matchRole) {
-      throw new CommonRequestException('10002', '角色不存在');
+      throw new CommonRequestException('10003', '更新角色失败，角色不存在');
     }
 
     // 更新角色
-    const updateRole = await this.roleRepository.save(createAndUpdateRoleDto);
-
-    // 返回结果
-    return {
-      code: '00000',
-      data: updateRole,
-    };
+    return this.roleRepository.save(updateRoleDto);
   }
 
   // getById
   async getById(roleId: string) {
     // 查询角色是否存在
     const matchRole = await this.roleRepository.findOne({ id: roleId });
+
     if (!matchRole) {
-      throw new CommonRequestException('10002', '角色不存在');
+      throw new CommonRequestException('10004', '查询角色失败，角色不存在');
     }
 
     // 返回结果
-    return {
-      code: '00000',
-      data: matchRole,
-    };
+    return matchRole;
   }
 
   // getList
   async getList() {
-    const roleList = await this.roleRepository.find();
-
     // 返回结果
-    return {
-      code: '00000',
-      data: roleList,
-    };
+    return this.roleRepository.find();
   }
 
   // getPage
-  async getPage(pageNo: number, pageSize: number) {
-    const roleList = await this.roleRepository.find({
+  async getPage(getPageReqDto: GetPageReqDto) {
+    const { pageNo, pageSize, name, status, create_time } = getPageReqDto;
+
+    const records = await this.roleRepository.find({
       skip: pageSize * (pageNo - 1),
       take: pageSize,
+      where: {
+        ...(name && { name: Like(`%${name}%`) }),
+        ...(status && { status: Like(`%${status}%`) }),
+        ...(create_time && { create_time: MoreThanOrEqual(create_time) }),
+      },
+      order: {
+        create_time: 'ASC',
+      },
     });
 
     // 返回结果
     return {
-      code: '00000',
-      data: roleList,
+      records: records,
+      total: records.length,
+      pageNo: getPageReqDto.pageNo,
+      pageSize: getPageReqDto.pageSize,
     };
   }
 }

@@ -1,5 +1,5 @@
 import { Repository } from 'typeorm';
-import { User } from 'src/entity/user.entity';
+import { User } from 'src/module/user/entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PassportStrategy } from '@nestjs/passport';
 import { IStrategyOptions, Strategy } from 'passport-local';
@@ -21,7 +21,7 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
 
   // validate实现验证逻辑
   async validate(username: string, password: string) {
-    const matchUser = await this.userRepository.findOne({ username });
+    const matchUser = await this.userRepository.findOne({ userName: username });
     if (!matchUser) {
       throw new CommonRequestException('00010', '账号不存在');
     }

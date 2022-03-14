@@ -1,6 +1,8 @@
 import { RoleService } from './role.service';
 import { Post, Controller, Body } from '@nestjs/common';
-import { CreateAndUpdateRoleDto } from './dto/createAndUpdateRole.dto';
+import { CreateRoleDto } from './entity/dto/createRole.dto';
+import { UpdateRoleDto } from './entity/dto/updateRole.dto';
+import { GetPageReqDto } from './entity/dto/getPageReq.dto';
 
 @Controller('role')
 export class RoleController {
@@ -8,8 +10,9 @@ export class RoleController {
 
   // create
   @Post('create')
-  async create(@Body() createRoleDto: CreateAndUpdateRoleDto) {
-    return await this.roleService.create(createRoleDto);
+  async create(@Body() createRoleDto: CreateRoleDto) {
+    const res = await this.roleService.create(createRoleDto);
+    return res;
   }
 
   // removeByName
@@ -19,15 +22,15 @@ export class RoleController {
   }
 
   // removeById
-  @Post('removeByName')
+  @Post('removeById')
   async removeById(@Body() id: string) {
     return await this.roleService.removeById(id);
   }
 
   // updateById
   @Post('updateById')
-  async updateById(@Body() id: string, createRoleDto: CreateAndUpdateRoleDto) {
-    return await this.roleService.updateById(id, createRoleDto);
+  async updateById(@Body() updateRoleDto: UpdateRoleDto) {
+    return await this.roleService.updateById(updateRoleDto);
   }
 
   // getById
@@ -42,9 +45,9 @@ export class RoleController {
     return await this.roleService.getList();
   }
 
-  // getList
+  // getPage
   @Post('getPage')
-  async getPage(@Body() pageNo: number, pageSize: number) {
-    return await this.roleService.getPage(pageNo, pageSize);
+  async getPage(@Body() getPageReqDto: GetPageReqDto) {
+    return await this.roleService.getPage(getPageReqDto);
   }
 }
