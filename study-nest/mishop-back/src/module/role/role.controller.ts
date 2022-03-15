@@ -1,6 +1,7 @@
 import { RoleService } from './role.service';
 import { Post, Controller, Body } from '@nestjs/common';
 import { CreateRoleDto } from './entity/dto/createRole.dto';
+import { RemoveRoleDto } from './entity/dto/removeRole.dto';
 import { UpdateRoleDto } from './entity/dto/updateRole.dto';
 import { GetPageReqDto } from './entity/dto/getPageReq.dto';
 
@@ -15,16 +16,10 @@ export class RoleController {
     return res;
   }
 
-  // removeByName
-  @Post('removeByName')
-  async removeByName(@Body() name: string) {
-    return await this.roleService.removeByName(name);
-  }
-
   // removeById
   @Post('removeById')
-  async removeById(@Body() id: string) {
-    return await this.roleService.removeById(id);
+  async removeById(@Body() body: RemoveRoleDto) {
+    return await this.roleService.removeById(body.id);
   }
 
   // updateById

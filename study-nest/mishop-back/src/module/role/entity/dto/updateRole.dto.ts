@@ -1,8 +1,9 @@
-import { IsNotEmpty, Length } from 'class-validator';
+import { IsNotEmpty, IsString, Length } from 'class-validator';
 
 export class UpdateRoleDto {
   // 角色id
-  @IsNotEmpty({ message: '角色Id不能为空' })
+  @IsString({ message: 'id字段类型应为string' })
+  @IsNotEmpty({ message: 'id字段不能为空' })
   public readonly id: string;
 
   // 角色名

@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsDate, IsEnum } from 'class-validator';
+import { IsOptional, IsString, IsEnum } from 'class-validator';
 import { PaginationDto } from 'src/common/entity/dto/pagination.dto';
 
 export class GetPageReqDto extends PaginationDto {
@@ -11,9 +11,4 @@ export class GetPageReqDto extends PaginationDto {
   @IsOptional()
   @IsEnum([0, 1], { message: 'status类型应为0或1的状态枚举' })
   public readonly status?: number;
-
-  // 创建事件
-  @IsOptional()
-  @IsDate({ message: 'create_time类型应为date' })
-  public readonly create_time?: string;
 }

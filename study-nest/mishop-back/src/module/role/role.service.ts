@@ -29,19 +29,6 @@ export class RoleService {
     return this.roleRepository.insert(createRoleDto);
   }
 
-  // removeByName
-  async removeByName(roleName: string) {
-    // 查询角色是否存在
-    const matchRole = await this.roleRepository.findOne({ name: roleName });
-
-    if (!matchRole) {
-      throw new CommonRequestException('10002', '删除角色失败，角色不存在');
-    }
-
-    // 删除角色
-    return this.roleRepository.remove(matchRole);
-  }
-
   // removeById
   async removeById(roleId: string) {
     // 查询角色是否存在
@@ -91,7 +78,7 @@ export class RoleService {
 
   // getPage
   async getPage(getPageReqDto: GetPageReqDto) {
-    const { pageNo, pageSize, name, status, create_time } = getPageReqDto;
+    const { pageNo, pageSize, name, status } = getPageReqDto;
 
     const records = await this.roleRepository.find({
       skip: pageSize * (pageNo - 1),
@@ -99,7 +86,6 @@ export class RoleService {
       where: {
         ...(name && { name: Like(`%${name}%`) }),
         ...(status && { status: Like(`%${status}%`) }),
-        ...(create_time && { create_time: MoreThanOrEqual(create_time) }),
       },
       order: {
         create_time: 'ASC',
