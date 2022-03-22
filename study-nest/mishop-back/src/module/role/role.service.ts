@@ -2,10 +2,8 @@ import { Like, Repository, MoreThanOrEqual } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { Role } from './entity/role.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateRoleDto } from './entity/dto/createRole.dto';
-import { UpdateRoleDto } from './entity/dto/updateRole.dto';
 import { CommonRequestException } from 'src/common/exception/common-request.exception';
-import { GetPageReqDto } from './entity/dto/getPageReq.dto';
+import * as RoleDto from './entity/role.dto';
 
 @Injectable()
 export class RoleService {
@@ -15,7 +13,7 @@ export class RoleService {
   ) {}
 
   // create
-  async create(createRoleDto: CreateRoleDto) {
+  async create(createRoleDto: RoleDto.CreateDto) {
     // 查询角色是否存在
     const matchRole = await this.roleRepository.findOne({
       name: createRoleDto.name,
@@ -26,7 +24,8 @@ export class RoleService {
     }
 
     // 创建角色
-    return this.roleRepository.insert(createRoleDto);
+    const res = await this.roleRepository.insert(createRoleDto);
+    return res.identifiers[0];
   }
 
   // removeById
@@ -43,7 +42,7 @@ export class RoleService {
   }
 
   // updateById
-  async updateById(updateRoleDto: UpdateRoleDto) {
+  async updateById(updateRoleDto: RoleDto.UpdateByIdDto) {
     // 查询角色是否存在
     const matchRole = await this.roleRepository.findOne({
       id: updateRoleDto.id,
@@ -77,7 +76,7 @@ export class RoleService {
   }
 
   // getPage
-  async getPage(getPageReqDto: GetPageReqDto) {
+  async getPage(getPageReqDto: RoleDto.GetPageDto) {
     const { pageNo, pageSize, name, status } = getPageReqDto;
 
     const records = await this.roleRepository.find({

@@ -114,6 +114,7 @@ const MainTable: React.FC = () => {
       valueType: 'dateTime',
       dataIndex: 'create_time',
       align: 'center',
+      hideInSearch: true,
       sorter: (a, b): any => a.create_time > b.create_time,
     },
     {

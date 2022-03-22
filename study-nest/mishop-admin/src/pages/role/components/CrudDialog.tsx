@@ -5,7 +5,7 @@ import * as roleApi from "@/services/api/role";
 import {message} from "antd";
 import {useMemo, useState } from "react";
 import {MODEL_TYPE} from "@/services/enum/modal";
-import {ModalForm, ProFormText, ProFormTextArea} from "@ant-design/pro-form";
+import {ModalForm, ProFormText, ProFormTextArea, ProFormRadio} from "@ant-design/pro-form";
 
 const CrudDialog: React.FC= () => {
   // modal类型
@@ -29,7 +29,7 @@ const CrudDialog: React.FC= () => {
 
   // 事件 - 创建打开Dialog
   const onCreateOpen = () => {
-    setModalData({})
+    setModalData({ status: 1 })
     setModalType(MODEL_TYPE.CREATE)
     setModalVisible(true)
   }
@@ -122,14 +122,32 @@ const CrudDialog: React.FC= () => {
         width="xl"
         label="角色名："
         placeholder="请填写角色名称"
-        fieldProps={{
-          maxLength: 15,
+        hasFeedback
+      fieldProps={{
+          maxLength: 20,
           showCount: true,
         }}
         rules={[
+          { required: true, message: "必填项" },
+          { type: 'string', min: 2, max: 20, message: "角色名应为2 ~ 20个字符" }
+        ]}
+      />
+
+      <ProFormRadio.Group
+        name="status"
+        label="状态："
+        radioType="button"
+        fieldProps={{
+          buttonStyle: "solid"
+        }}
+        options={[
           {
-            required: true,
-            message: "必填项",
+            label: '启用',
+            value: 1,
+          },
+          {
+            label: '停用',
+            value: 0,
           }
         ]}
       />
