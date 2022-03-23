@@ -18,31 +18,31 @@ export class Menu {
 
   // 菜单父节点id
   @Column({ length: 36 })
-  parentId: string;
+  pid: string;
 
   // 菜单名
   @Column({ length: 30 })
   name: string;
 
   // 菜单图标
-  @Column({ length: 30 })
+  @Column({ length: 30, nullable: true })
   icon: string;
 
   //  菜单状态
-  @Column({ default: true })
+  @Column({ default: 1 })
   status: number;
 
   //  菜单备注
   @Column({ length: 500, nullable: true })
   remark: string;
 
-  // 在菜单中不展示这个路由
-  @Column({ default: false })
-  hideInMenu: boolean;
+  // 在菜单中隐藏这个路由
+  @Column({ default: 0 })
+  hideInMenu: number;
 
-  // 在面包屑中不展示这个路由
-  @Column({ default: false })
-  hideInBreadcrumb: boolean;
+  // 在面包屑中隐藏这个路由
+  @Column({ default: 0 })
+  hideInBreadcrumb: number;
 
   //  菜单创建时间
   @CreateDateColumn()
@@ -51,10 +51,7 @@ export class Menu {
   //  菜单更新时间
   @UpdateDateColumn()
   update_time: Date;
-  //
-  // @ManyToOne(() => Menu, (menu) => menu.children)
-  // parent: Menu;
-  //
-  // @OneToMany(() => Menu, (menu) => menu.parent)
-  // children: Menu[];
+
+  // 子节点
+  children: Menu[];
 }
