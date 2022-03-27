@@ -27,6 +27,12 @@
     component: './role'
   },
   {
+    name: 'menu',
+    path: '/menu',
+    icon: 'profile',
+    component: './menu'
+  },
+  {
     path: '/',
     redirect: '/auth/login',
   },

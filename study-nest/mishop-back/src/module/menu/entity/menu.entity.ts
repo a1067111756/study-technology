@@ -28,6 +28,18 @@ export class Menu {
   @Column({ length: 30, nullable: true })
   icon: string;
 
+  // 国际化
+  @Column({ length: 50, nullable: true })
+  local: string;
+
+  // 路由地址
+  @Column({ length: 100 })
+  path: string;
+
+  // 组件路径
+  @Column({ length: 100, default: 'Layout' })
+  component: string;
+
   //  菜单状态
   @Column({ default: 1 })
   status: number;
@@ -36,7 +48,7 @@ export class Menu {
   @Column({ length: 500, nullable: true })
   remark: string;
 
-  // 在菜单中隐藏这个路由
+  // 在菜单中隐藏这个路由03
   @Column({ default: 0 })
   hideInMenu: number;
 

@@ -65,4 +65,26 @@ declare namespace APIS {
     name: string,
     remark?: string
   }
+
+  /* 菜单相关 */
+  type IMenuCreateReq = {
+    pid: string;
+    name: string;
+    icon?: string;
+    status?: number;
+    remark?: string;
+    hideInMenu?: number;
+    hideInBreadcrumb?: number;
+  }
+
+  type IMenuUpdateReq = {
+    id: string;
+    pid: string;
+    name?: string;
+    icon?: string;
+    status?: number;
+    remark?: string;
+    hideInMenu?: number;
+    hideInBreadcrumb?: number;
+  }
 }

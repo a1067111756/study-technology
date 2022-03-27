@@ -11,6 +11,7 @@ export default {
   'menu.user-detail': '用户详情',
   'menu.role': '角色管理',
   'menu.role-detail': '角色详情',
+  'menu.menu': '菜单管理',
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',
   'menu.dashboard.monitor': '监控页',

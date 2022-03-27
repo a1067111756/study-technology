@@ -1,11 +1,10 @@
 /* 表格主内容 */
-import {useRef} from "react";
-import {PlusOutlined} from "@ant-design/icons";
-import {Button, Popconfirm} from "antd";
-import React from "react";
+import React, {useRef} from "react";
 import mittBus from '@/utils/mittBus'
 import ProTable from "@ant-design/pro-table";
-import * as userHook from '@/pages/user/userHook';
+import * as menuApi from "@/services/api/menu";
+import {PlusOutlined} from "@ant-design/icons";
+import {Button, message, Popconfirm, Switch} from "antd";
 import type {ActionType, ProColumns} from "@ant-design/pro-table";
 
 const MainTable: React.FC = () => {
@@ -17,6 +16,44 @@ const MainTable: React.FC = () => {
     if (tableRef.current) {
       tableRef.current.reload()
     }
+  }
+
+  // 请求 - 删除角色
+  const onDeleteRole = (roleId: string) => {
+    return menuApi
+      .removeById(roleId)
+      .then(() => {
+        message.success('删除角色成功')
+        reloadTable()
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  // 请求 - 更新角色状态
+  const onUpdateStatus = (record: MODEL.IMenu, status: boolean) => {
+    return menuApi
+      .updateById({
+        ...record,
+        status: status ? 1 : 0
+      })
+      .then(() => {
+        message.success('更新成功')
+        reloadTable()
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  // 请求 - 获取树形菜单
+  const onGetTree = () => {
+    return menuApi.getTree().then((menuTree: MODEL.IMenu[]) => ({
+      data: menuTree,
+      total: 0,
+      success: true
+    }))
   }
 
   // 生命周期 - 挂载
@@ -32,43 +69,27 @@ const MainTable: React.FC = () => {
   },[]);
 
   // 表结构定义
-  const columns: ProColumns[] = [
+  const columns: ProColumns<MODEL.IMenu>[] = [
     {
-      title: '用户名',
-      dataIndex: 'userName',
-      align: 'center'
+      title: '菜单名称',
+      dataIndex: 'name',
+      align: 'center',
+      width: 240
     },
     {
-      title: '用户昵称',
-      dataIndex: 'nickName',
+      title: '图标',
+      dataIndex: 'icon',
       align: 'center',
       hideInSearch: true
     },
     {
-      title: '联系电话',
-      dataIndex: 'phone',
-      align: 'center',
-    },
-    {
-      title: '联系地址',
-      dataIndex: 'address',
-      align: 'center'
-    },
-    {
-      title: '邮箱',
-      dataIndex: 'email',
+      title: '路由地址',
+      dataIndex: 'path',
       align: 'center',
       hideInSearch: true
     },
     {
-      title: '所属角色',
-      dataIndex: 'role',
-      align: 'center',
-      valueType: "select",
-      request: userHook.getPage
-    },
-    {
-      title: '用户状态',
+      title: '状态',
       dataIndex: 'status',
       align: 'center',
       filters: true,
@@ -77,13 +98,21 @@ const MainTable: React.FC = () => {
         0: { text: '停用', status: 'Error' },
         1: { text: '启用', status: 'Success' }
       },
+      render: (text, record) => [
+        <Switch
+          key={record.id}
+          checkedChildren="启用"
+          unCheckedChildren="停用"
+          defaultChecked={!!record.status}
+          onChange={(checked) => onUpdateStatus(record, checked)}
+        />
+      ]
     },
     {
-      title: '创建时间',
-      valueType: 'dateTime',
-      dataIndex: 'create_time',
+      title: '备注',
+      dataIndex: 'remark',
       align: 'center',
-      sorter: (a, b): any => a.create_time > b.create_time,
+      hideInSearch: true
     },
     {
       title: '操作',
@@ -109,7 +138,7 @@ const MainTable: React.FC = () => {
         <Popconfirm
           key="delete"
           title="确定删除该角色？"
-          onConfirm={() => userHook.remove(record.id)}
+          onConfirm={() => onDeleteRole(record.id)}
         >
           <a target="_blank">删除</a>
         </Popconfirm>
@@ -118,13 +147,13 @@ const MainTable: React.FC = () => {
   ]
 
   return(
-    <ProTable
-      headerTitle="角色列表"
-      rowKey={record => record.id}
+    <ProTable<MODEL.IMenu>
+      headerTitle="菜单列表"
+      rowKey={record => record.name}
       columns={columns}
       actionRef={tableRef}
       search={{ labelWidth: 100 }}
-      request={userHook.getPage}
+      request={onGetTree}
       toolBarRender={() => [
         <Button
           key="button"
@@ -132,7 +161,7 @@ const MainTable: React.FC = () => {
           icon={<PlusOutlined />}
           onClick={() => mittBus.emit('page:crud-dialog:create')}
         >
-          创建新用户
+          新增角色
         </Button>,
       ]}
     />
