@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>绘制多线</title>
+  <style>
+      html, body {
+          margin: 0;
+          padding: 0;
+      }
+  </style>
+  <script type="text/javascript" src="./draw.js"></script>
+  <script type="text/javascript" src="./convert.js"></script>
+  <script type="text/javascript" src="./sky.js"></script>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+
+<!-- 顶点着色器 -->
+<script id="vertexShared" type="x-shader/x-vertex">
+      attribute vec4 a_Position;
+      void main () {
+        // 将变量赋值给gl
+        gl_Position = a_Position;
+        // 点位大小
+        gl_PointSize = 10.0;
+      }
+  </script>
+
+<!--  片元着色器-->
+<script id="fragmentShared" type="x-shader/x-fragment">
+      precision mediump float;
+      void main () {
+        float distance = distance(gl_PointCoord, vec2(0.5, 0.5));
+
+        if (distance < 0.5) {
+          // 片元颜色
+          gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0);
+        } else {
+          // 内置函数，表示放弃该片元渲染
+          discard;
+        }
+      }
+</script>
+
+<script>
+    // 方法 - 初始化着色器
+    function initShaders(gl, vsSource, fsSource){
+        // 创建程序对象
+        const program = gl.createProgram()
+        // 建立着色对象
+        const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource)
+        const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource)
+        //把顶点着色对象装进程序对象中
+        gl.attachShader(program, vertexShader)
+        //把片元着色对象装进程序对象中
+        gl.attachShader(program, fragmentShader)
+        //连接webgl上下文对象和程序对象
+        gl.linkProgram(program)
+        //启动程序对象
+        gl.useProgram(program)
+        //将程序对象挂到上下文对象上
+        gl.program = program
+        return true;
+    }
+
+    // 方法 - 加载着色器对象
+    function loadShader(gl, type, source) {
+        //根据着色类型，建立着色器对象
+        const shader = gl.createShader(type)
+        //将着色器源文件传入着色器对象中
+        gl.shaderSource(shader, source)
+        //编译着色器对象
+        gl.compileShader(shader)
+        //返回着色器对象
+        return shader
+    }
+
+    // 初始化画布
+    const canvas = document.getElementById('canvas')
+    canvas.width = 800
+    canvas.height = 600
+    const gl = canvas.getContext('webgl')
+
+    // 获取着色器文本
+    const vsSource = document.getElementById('vertexShared').innerText
+    const fsSource = document.getElementById('fragmentShared').innerText
+
+    // 初始化着色器
+    initShaders(gl, vsSource, fsSource)
+
+    // 清理画布
+    gl.clearColor(0.0, 0.0, 0.0, 1.0)
+    gl.clear(gl.COLOR_BUFFER_BIT)
+
+    //夜空
+    const sky=new Sky(gl)
+    //当前正在绘制的多边形
+    let poly=null
+
+    //取消右击提示
+    canvas.oncontextmenu = function(){
+        return false;
+    }
+    // 鼠标点击事件
+    canvas.addEventListener("mousedown", (event) => {
+        if(event.button===2){
+            popVertice()
+        }else{
+            const [x,y]=convertCoordToWebGl(canvas, event.clientX, event.clientY)
+            if(poly){
+                poly.addVertice(x,y)
+            }else{
+                crtPoly(x,y)
+            }
+        }
+        render()
+    });
+    //鼠标移动
+    canvas.addEventListener("mousemove", (event) => {
+        if(poly){
+            const [x,y]=convertCoordToWebGl(canvas, event.clientX, event.clientY)
+            poly.setVertice(poly.count-1,x,y)
+            render()
+        }
+    });
+
+    //删除最后一个顶点
+    function popVertice(){
+        poly.popVertice()
+        poly=null
+    }
+    //创建多边形
+    function crtPoly(x,y){
+        poly=new Poly({
+            vertices:[x,y,x,y],
+            types:['POINTS','LINE_STRIP']
+        })
+        sky.add(poly)
+    }
+    // 渲染方法
+    function render(){
+        gl.clear(gl.COLOR_BUFFER_BIT)
+        sky.draw()
+    }
+</script>
+</body>
+</html>
