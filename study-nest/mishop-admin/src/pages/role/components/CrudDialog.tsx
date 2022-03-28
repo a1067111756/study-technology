@@ -3,7 +3,7 @@ import React from "react";
 import mittBus from '@/utils/mittBus'
 import * as roleApi from "@/services/api/role";
 import {message} from "antd";
-import {useCrudModal} from '@/hooks/CrudHook';
+import {useCrudModal} from '@/hooks/useCrudModal';
 import {ModalForm, ProFormText, ProFormTextArea, ProFormRadio} from "@ant-design/pro-form";
 
 const CrudDialog: React.FC= () => {

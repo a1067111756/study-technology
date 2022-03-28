@@ -1,7 +1,7 @@
 import { nextTick } from 'vue';
 import { useCrudForm } from './useCrudForm';
 import { useCrudModal } from './useCrudModal';
-import { ModalTypeEnum } from '/@/service/enums/modalEnum';
+import { ModalTypeEnum } from '/@/service/enums/modal';
 import type { IModalProps } from './useCrudModal';
 
 type ICrudPageProps = IModalProps;
