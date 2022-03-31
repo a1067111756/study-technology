@@ -4,10 +4,13 @@ import mittBus from '@/utils/mittBus'
 import * as roleApi from "@/services/api/role";
 import {message} from "antd";
 import {useCrudModal} from '@/hooks/useCrudModal';
+import {ModalTypeEnum} from "@/services/enum/modal";
 import {ModalForm, ProFormText, ProFormTextArea, ProFormRadio} from "@ant-design/pro-form";
 
 const CrudDialog: React.FC= () => {
-  const {modalData, modalType, modalConfig, modalVisible, setModalVisible} = useCrudModal()
+  const {formRef, modalType, modalConfig, modalVisible, setModalVisible} = useCrudModal({
+    formData: { status: 0 }
+  })
 
   // 请求 - 添加角色
   const onAddRole = (record: APIS.IRoleCreateReq) => {
@@ -44,6 +47,7 @@ const CrudDialog: React.FC= () => {
     <ModalForm
       title={modalConfig.title}
       width="500px"
+      formRef={formRef}
       visible={modalVisible}
       onVisibleChange={setModalVisible}
       modalProps={{
@@ -51,11 +55,10 @@ const CrudDialog: React.FC= () => {
         okText: modalConfig.okText
       }}
       onFinish={async (record: APIS.IRoleCreateReq) => {
-        return modalType === 'create'
+        return modalType === ModalTypeEnum.CREATE
           ? onAddRole(record)
           : onUpdateRole(record)
       }}
-      initialValues={modalData}
     >
       <ProFormText
         name="name"

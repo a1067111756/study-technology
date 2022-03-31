@@ -2,6 +2,7 @@
 import mittBus from "@/utils/mittBus";
 import {useEffect, useMemo, useState, useRef} from "react";
 import {ModalTypeEnum} from "@/services/enum/modal";
+import {ProFormInstance} from "@ant-design/pro-form";
 
 export interface IModalProps {
   createProps?: Record<string, any>;
@@ -16,9 +17,15 @@ export interface IModalEvents<T> {
   onCancel?: (type: ModalTypeEnum) => void;
 }
 
-export function useCrudModal<T>(modalProps?: IModalProps, modalEvents?: IModalEvents<T>) {
+export interface ICrudPageOptions<T> {
+  formData?: T;
+  props?: IModalProps;
+  events?: IModalEvents<T>;
+}
+
+export function useCrudModal<T>(options: ICrudPageOptions<T>) {
   // form引用
-  const formRef = useRef()
+  const formRef = useRef<ProFormInstance<T>>()
 
   // form数据
   const [formData, setFormData] = useState({})
@@ -40,22 +47,22 @@ export function useCrudModal<T>(modalProps?: IModalProps, modalEvents?: IModalEv
         title: '新增',
         okText: '创建',
         ...defaultProps,
-        ...(modalProps?.createProps && modalProps.createProps),
-        ...(modalProps?.commonProps && modalProps.commonProps),
+        ...(options?.props?.createProps && options.props.createProps),
+        ...(options?.props?.commonProps && options.props.commonProps),
       },
       [ModalTypeEnum.UPDATE]: {
         title: '编辑',
         okText: '更新',
         ...defaultProps,
-        ...(modalProps?.updateProps && modalProps.updateProps),
-        ...(modalProps?.commonProps && modalProps.commonProps),
+        ...(options?.props?.updateProps && options.props.updateProps),
+        ...(options?.props?.commonProps && options.props.commonProps),
       },
       [ModalTypeEnum.DETAIL]: {
         title: '详情',
         showOkBtn: false,
         ...defaultProps,
-        ...(modalProps?.detailProps && modalProps.detailProps),
-        ...(modalProps?.commonProps && modalProps.commonProps),
+        ...(options?.props?.detailProps && options.props.detailProps),
+        ...(options?.props?.commonProps && options.props.commonProps),
       },
     };
     return strategy[modalType];
@@ -65,45 +72,30 @@ export function useCrudModal<T>(modalProps?: IModalProps, modalEvents?: IModalEv
   const onCreateOpen = () => {
     setModalType(ModalTypeEnum.CREATE)
     setModalVisible(true)
-    modalEvents?.onOpen && modalEvents.onOpen(modalType);
+    setTimeout(() => formRef.current && formRef.current.setFieldsValue(options.formData || {}), 0)
+    options?.events?.onOpen && options.events.onOpen(modalType)
   }
 
   // 事件 - 详情打开Dialog
   const onDetailOpen = (record: T) => {
     setModalType(ModalTypeEnum.DETAIL)
     setModalVisible(true)
-    modalEvents?.onOpen && modalEvents.onOpen(modalType  , record);
+    setTimeout(() => formRef.current && formRef.current.setFieldsValue(record), 0)
+    options?.events?.onOpen && options.events.onOpen(modalType, record);
   }
 
   // 事件 - 更新打开Dialog
   const onUpdateOpen = (record: T) => {
     setModalType(ModalTypeEnum.UPDATE)
     setModalVisible(true)
-    modalEvents?.onOpen && modalEvents.onOpen(modalType  , record);
+    setTimeout(() => formRef.current && formRef.current.setFieldsValue(record), 0)
+    options?.events?.onOpen && options.events.onOpen(modalType, record);
   }
 
   // 事件 - 关闭
   const onModalCancel = () => {
     setModalVisible(false)
-  };
-
-  // 事件 - 确定
-  const onModalOk = () => {
-    modalEvents?.onOk && modalEvents.onOk(modalType);
-  };
-
-  // open钩子
-  const onModalOpen = (type: ModalTypeEnum, record: T) => {
-    // 详情 && 编辑更新数据
-    if (type === ModalTypeEnum.UPDATE || type === ModalTypeEnum.DETAIL) {
-      nextTick(() => {
-        crudFormHook.setFormData(JSON.parse(JSON.stringify(record)));
-      });
-    }
-
-    if (options?.events?.onOpen) {
-      options.events.onOpen(type, record);
-    }
+    options?.events?.onCancel && options.events.onCancel(modalType);
   };
 
   // 生命周期 - 挂载
@@ -125,7 +117,9 @@ export function useCrudModal<T>(modalProps?: IModalProps, modalEvents?: IModalEv
   },[]);
 
   return {
+    formRef,
     formData,
+    setFormData,
     modalType,
     setModalType,
     modalVisible,

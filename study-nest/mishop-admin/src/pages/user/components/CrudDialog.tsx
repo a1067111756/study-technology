@@ -4,7 +4,7 @@ import mittBus from '@/utils/mittBus'
 import ProForm, {ProFormInstance} from "@ant-design/pro-form";
 import {Mentions, message} from 'antd';
 import {useMemo, useState, useRef } from "react";
-import {MODEL_TYPE} from "@/services/enum/modal";
+import {ModalTypeEnum} from "@/services/enum/modal";
 import {ModalForm, ProFormText, ProFormSelect, ProFormSwitch, ProFormTextArea} from "@ant-design/pro-form";
 import * as roleApi from "@/services/api/role";
 import * as userApi from "@/services/api/user";
@@ -15,7 +15,7 @@ const CrudDialog: React.FC= () => {
   const modalRef = useRef<ProFormInstance<any>>();
 
   // modal类型
-  const [modalType, setModalType] = useState<MODEL_TYPE>(MODEL_TYPE.CREATE)
+  const [modalType, setModalType] = useState<ModalTypeEnum>(ModalTypeEnum.CREATE)
 
   // modal显示 / 隐藏
   const [modalVisible, setModalVisible] = useState<boolean>(false)
@@ -27,9 +27,9 @@ const CrudDialog: React.FC= () => {
   // 计算属性 - modalConfig
   const modalConfig = useMemo(() => {
     const strategy = {
-      [MODEL_TYPE.CREATE]: { title: '新增用户', okText: '创建' },
-      [MODEL_TYPE.UPDATE]: { title: '编辑用户', okText: '更新' },
-      [MODEL_TYPE.DETAIL]: { title: '用户详情', okText: '退出' }
+      [ModalTypeEnum.CREATE]: { title: '新增用户', okText: '创建' },
+      [ModalTypeEnum.UPDATE]: { title: '编辑用户', okText: '更新' },
+      [ModalTypeEnum.DETAIL]: { title: '用户详情', okText: '退出' }
     }
     return strategy[modalType]
   }, [modalType])
@@ -37,21 +37,21 @@ const CrudDialog: React.FC= () => {
   // 事件 - 创建打开Dialog
   const onCreateOpen = () => {
     modalRef.current!.setFieldsValue({})
-    setModalType(MODEL_TYPE.CREATE)
+    setModalType(ModalTypeEnum.CREATE)
     setModalVisible(true)
   }
 
   // 事件 - 详情打开Dialog
   const onDetailOpen = (record: MODEL.IUser) => {
     modalRef.current!.setFieldsValue(record)
-    setModalType(MODEL_TYPE.DETAIL)
+    setModalType(ModalTypeEnum.DETAIL)
     setModalVisible(true)
   }
 
   // 事件 - 更新打开Dialog
   const onUpdateOpen = (record: MODEL.IUser) => {
     modalRef.current!.setFieldsValue(record)
-    setModalType(MODEL_TYPE.UPDATE)
+    setModalType(ModalTypeEnum.UPDATE)
     setModalVisible(true)
   }
 
@@ -132,7 +132,7 @@ const CrudDialog: React.FC= () => {
       onVisibleChange={setModalVisible}
       modalProps={{okText: modalConfig.okText}}
       onFinish={async (record: APIS.IUserCreateReq) => {
-        return modalType === 'create'
+        return modalType === ModalTypeEnum.CREATE
           ? onAddUser(record)
           : onUpdateUser(record)
       }}
