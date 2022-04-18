@@ -8,8 +8,12 @@ import {ModalTypeEnum} from "@/services/enum/modal";
 import {ModalForm, ProFormText, ProFormTextArea, ProFormRadio} from "@ant-design/pro-form";
 
 const CrudDialog: React.FC= () => {
-  const {formRef, modalType, modalConfig, modalVisible, setModalVisible} = useCrudModal({
-    formData: { status: 0 }
+  const {formRef, modalType, modalConfig, modalVisible, setModalVisible} = useCrudModal<MODEL.IRole>({
+    formData: {
+      name: '',
+      status: 1,
+      remark: ''
+    }
   })
 
   // 请求 - 添加角色
@@ -27,12 +31,9 @@ const CrudDialog: React.FC= () => {
   }
 
   // 请求 - 更新角色
-  const onUpdateRole = (record: APIS.IRoleCreateReq) => {
+  const onUpdateRole = (record: APIS.IRoleUpdateReq) => {
     return roleApi
-      .updateById({
-        ...modalData,
-        ...record
-      } as MODEL.IRole)
+      .updateById(record)
       .then(() => {
         setModalVisible(false)
         message.success('更新角色成功')
@@ -44,20 +45,17 @@ const CrudDialog: React.FC= () => {
   }
 
   return(
-    <ModalForm
-      title={modalConfig.title}
+    <ModalForm<MODEL.IRole>
       width="500px"
       formRef={formRef}
       visible={modalVisible}
+      modalProps={modalConfig}
+      title={modalConfig.title}
       onVisibleChange={setModalVisible}
-      modalProps={{
-        destroyOnClose: true,
-        okText: modalConfig.okText
-      }}
-      onFinish={async (record: APIS.IRoleCreateReq) => {
+      onFinish={async (record: APIS.IRoleCreateReq | APIS.IRoleUpdateReq) => {
         return modalType === ModalTypeEnum.CREATE
-          ? onAddRole(record)
-          : onUpdateRole(record)
+          ? onAddRole(record as APIS.IRoleCreateReq)
+          : onUpdateRole(record as APIS.IRoleUpdateReq)
       }}
     >
       <ProFormText

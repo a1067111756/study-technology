@@ -1,8 +1,8 @@
 /* CrudModal统一逻辑封装 */
 import mittBus from "@/utils/mittBus";
-import {useEffect, useMemo, useState, useRef} from "react";
 import {ModalTypeEnum} from "@/services/enum/modal";
-import {ProFormInstance} from "@ant-design/pro-form";
+import {useEffect, useMemo, useState, useRef} from "react";
+import type {ProFormInstance} from "@ant-design/pro-form";
 
 export interface IModalProps {
   createProps?: Record<string, any>;
@@ -27,9 +27,6 @@ export function useCrudModal<T>(options: ICrudPageOptions<T>) {
   // form引用
   const formRef = useRef<ProFormInstance<T>>()
 
-  // form数据
-  const [formData, setFormData] = useState({})
-
   // modal类型
   const [modalType, setModalType] = useState<ModalTypeEnum>(ModalTypeEnum.CREATE)
 
@@ -40,6 +37,9 @@ export function useCrudModal<T>(options: ICrudPageOptions<T>) {
   const modalConfig = useMemo(() => {
     const defaultProps = {
       confirmLoading: false,
+      afterClose: () => {
+        formRef.current && formRef.current.resetFields()
+      }
     };
 
     const strategy = {
@@ -59,7 +59,6 @@ export function useCrudModal<T>(options: ICrudPageOptions<T>) {
       },
       [ModalTypeEnum.DETAIL]: {
         title: '详情',
-        showOkBtn: false,
         ...defaultProps,
         ...(options?.props?.detailProps && options.props.detailProps),
         ...(options?.props?.commonProps && options.props.commonProps),
@@ -118,12 +117,10 @@ export function useCrudModal<T>(options: ICrudPageOptions<T>) {
 
   return {
     formRef,
-    formData,
-    setFormData,
+    modalConfig,
     modalType,
     setModalType,
     modalVisible,
-    setModalVisible,
-    modalConfig
+    setModalVisible
   }
 }

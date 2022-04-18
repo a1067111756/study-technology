@@ -15,12 +15,12 @@
 
   /* 角色相关 */
   type IRole = {
-    id: string;
+    id?: string;
     name: string;
     status: number;
     remark: string;
-    create_time: string;
-    update_time: string;
+    create_time?: string;
+    update_time?: string;
   }
 
   /* 菜单 */

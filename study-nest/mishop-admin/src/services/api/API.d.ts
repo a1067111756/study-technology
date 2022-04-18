@@ -63,6 +63,13 @@ declare namespace APIS {
   }
   type IRoleCreateReq = {
     name: string,
+    status: number,
+    remark?: string
+  }
+  type IRoleUpdateReq = {
+    id: string,
+    name?: string,
+    status?: number,
     remark?: string
   }
 
