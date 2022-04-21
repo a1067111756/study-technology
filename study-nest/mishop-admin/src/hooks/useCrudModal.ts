@@ -1,7 +1,7 @@
 /* CrudModal统一逻辑封装 */
 import mittBus from "@/utils/mittBus";
 import {ModalTypeEnum} from "@/services/enum/modal";
-import {useEffect, useMemo, useState, useRef} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import type {ProFormInstance} from "@ant-design/pro-form";
 
 export interface IModalProps {
@@ -12,7 +12,9 @@ export interface IModalProps {
 }
 
 export interface IModalEvents<T> {
-  onOk?: (type: ModalTypeEnum) => void;
+  onCreate?: (record?: T) => void;
+  onUpdate?: (record?: T) => void;
+  onOk?: (type: ModalTypeEnum, record?: T) => void;
   onOpen?: (type: ModalTypeEnum, record?: T) => void;
   onCancel?: (type: ModalTypeEnum) => void;
 }
@@ -25,7 +27,10 @@ export interface ICrudPageOptions<T> {
 
 export function useCrudModal<T>(options: ICrudPageOptions<T>) {
   // form引用
-  const formRef = useRef<ProFormInstance<T>>()
+  const formRef = useRef<ProFormInstance>()
+
+  // modalData数据
+  const [modalData, setModalData] = useState<T | {}>()
 
   // modal类型
   const [modalType, setModalType] = useState<ModalTypeEnum>(ModalTypeEnum.CREATE)
@@ -33,7 +38,7 @@ export function useCrudModal<T>(options: ICrudPageOptions<T>) {
   // modal显示 / 隐藏
   const [modalVisible, setModalVisible] = useState<boolean>(false)
 
-  // modal配置 - 计算属性
+  // modal配置
   const modalConfig = useMemo(() => {
     const defaultProps = {
       confirmLoading: false,
@@ -69,6 +74,7 @@ export function useCrudModal<T>(options: ICrudPageOptions<T>) {
 
   // 事件 - 创建打开Dialog
   const onCreateOpen = () => {
+    setModalData({})
     setModalType(ModalTypeEnum.CREATE)
     setModalVisible(true)
     setTimeout(() => formRef.current && formRef.current.setFieldsValue(options.formData || {}), 0)
@@ -77,6 +83,7 @@ export function useCrudModal<T>(options: ICrudPageOptions<T>) {
 
   // 事件 - 详情打开Dialog
   const onDetailOpen = (record: T) => {
+    setModalData(record)
     setModalType(ModalTypeEnum.DETAIL)
     setModalVisible(true)
     setTimeout(() => formRef.current && formRef.current.setFieldsValue(record), 0)
@@ -85,6 +92,7 @@ export function useCrudModal<T>(options: ICrudPageOptions<T>) {
 
   // 事件 - 更新打开Dialog
   const onUpdateOpen = (record: T) => {
+    setModalData(record)
     setModalType(ModalTypeEnum.UPDATE)
     setModalVisible(true)
     setTimeout(() => formRef.current && formRef.current.setFieldsValue(record), 0)
@@ -96,6 +104,22 @@ export function useCrudModal<T>(options: ICrudPageOptions<T>) {
     setModalVisible(false)
     options?.events?.onCancel && options.events.onCancel(modalType);
   };
+
+  // 事件 - 确认
+  const onModalOk = (record: T) => {
+    options?.events?.onOk && options.events.onOk(modalType, record);
+
+    if (modalType === ModalTypeEnum.CREATE && options?.events?.onCreate) {
+      options.events.onCreate(record);
+    }
+
+    if (modalType === ModalTypeEnum.UPDATE && options?.events?.onUpdate) {
+      options.events.onUpdate({
+        ...modalData,
+        ...record,
+      });
+    }
+  }
 
   // 生命周期 - 挂载
   useEffect(() => {
@@ -121,6 +145,8 @@ export function useCrudModal<T>(options: ICrudPageOptions<T>) {
     modalType,
     setModalType,
     modalVisible,
-    setModalVisible
+    setModalVisible,
+    onModalOk,
+    onModalCancel
   }
 }
