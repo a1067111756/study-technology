@@ -20,7 +20,7 @@ export async function removeById(id: string) {
 }
 
 // 更新
-export async function updateById(role: MODEL.IRole) {
+export async function updateById(role: APIS.IRoleUpdateReq) {
   return request('/api/role/updateById', {
     method: 'POST',
     data: role

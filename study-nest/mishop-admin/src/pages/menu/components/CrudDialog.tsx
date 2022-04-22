@@ -3,7 +3,7 @@ import React, {useRef} from "react";
 import mittBus from '@/utils/mittBus'
 import {message} from "antd";
 import {useMemo, useState } from "react";
-import {MODEL_TYPE} from "@/services/enum/modal";
+import {ModalTypeEnum} from "@/services/enum/modal";
 import {
   ProFormText,
   ProFormTextArea,
@@ -16,7 +16,7 @@ import * as menuApi from "@/services/api/menu";
 
 const CrudDialog: React.FC= () => {
   // modal类型
-  const [modalType, setModalType] = useState<MODEL_TYPE>(MODEL_TYPE.CREATE)
+  const [modalType, setModalType] = useState<ModalTypeEnum>(ModalTypeEnum.CREATE)
 
   // modal显示 / 隐藏
   const [modalVisible, setModalVisible] = useState<boolean>(false)
@@ -30,9 +30,9 @@ const CrudDialog: React.FC= () => {
   // 计算属性 - modalConfig
   const modalConfig = useMemo(() => {
     const strategy = {
-      [MODEL_TYPE.CREATE]: { title: '新增菜单', okText: '创建' },
-      [MODEL_TYPE.UPDATE]: { title: '更新菜单', okText: '更新' },
-      [MODEL_TYPE.DETAIL]: { title: '菜单详情', okText: '退出' }
+      [ModalTypeEnum.CREATE]: { title: '新增菜单', okText: '创建' },
+      [ModalTypeEnum.UPDATE]: { title: '更新菜单', okText: '更新' },
+      [ModalTypeEnum.DETAIL]: { title: '菜单详情', okText: '退出' }
     }
     return strategy[modalType]
   }, [modalType])
@@ -45,7 +45,7 @@ const CrudDialog: React.FC= () => {
       hideInMenu: 0,
       hideInBreadcrumb: 0
     })
-    setModalType(MODEL_TYPE.CREATE)
+    setModalType(ModalTypeEnum.CREATE)
     setModalVisible(true)
   }
 
@@ -53,7 +53,7 @@ const CrudDialog: React.FC= () => {
   const onDetailOpen = (record: MODEL.IMenu) => {
     modalRef.current!.setFieldsValue(record)
     setModalData(record)
-    setModalType(MODEL_TYPE.DETAIL)
+    setModalType(ModalTypeEnum.DETAIL)
     setModalVisible(true)
   }
 
@@ -61,7 +61,7 @@ const CrudDialog: React.FC= () => {
   const onUpdateOpen = (record: MODEL.IMenu) => {
     modalRef.current!.setFieldsValue(record)
     setModalData(record)
-    setModalType(MODEL_TYPE.UPDATE)
+    setModalType(ModalTypeEnum.UPDATE)
     setModalVisible(true)
   }
 
@@ -136,7 +136,7 @@ const CrudDialog: React.FC= () => {
         onClose: onClose
       }}
       onFinish={async (record: MODEL.IMenu) => {
-        return modalType === 'create'
+        return modalType === ModalTypeEnum.CREATE
           ? onAddMenu(record)
           : onUpdateMenu(record)
       }}

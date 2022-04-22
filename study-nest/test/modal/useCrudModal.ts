@@ -59,9 +59,8 @@ export function useCrudModal<T = any>(modalProps?: IModalProps, modalEvents?: IM
   // 事件 - 打开: 创建
   const onCreateOpen = () => {
     modalType.value = ModalTypeEnum.CREATE;
-    modalVisible.value = true;
-
     modalEvents?.onOpen && modalEvents.onOpen(modalType.value);
+    modalVisible.value = true;
   };
 
   // 事件 - 打开: 更新

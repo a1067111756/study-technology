@@ -3,59 +3,55 @@ import React from "react";
 import mittBus from '@/utils/mittBus'
 import * as roleApi from "@/services/api/role";
 import {message} from "antd";
-import {useCrudModal} from '@/hooks/CrudHook';
+import {useCrudModal} from '@/hooks/useCrudModal';
 import {ModalForm, ProFormText, ProFormTextArea, ProFormRadio} from "@ant-design/pro-form";
 
 const CrudDialog: React.FC= () => {
-  const {modalData, modalType, modalConfig, modalVisible, setModalVisible} = useCrudModal()
-
-  // 请求 - 添加角色
-  const onAddRole = (record: APIS.IRoleCreateReq) => {
-    return roleApi
-      .create(record)
-      .then(() => {
-        setModalVisible(false)
-        message.success('新增角色成功')
-        mittBus.emit('page:main-table:reload')
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-
-  // 请求 - 更新角色
-  const onUpdateRole = (record: APIS.IRoleCreateReq) => {
-    return roleApi
-      .updateById({
-        ...modalData,
-        ...record
-      } as MODEL.IRole)
-      .then(() => {
-        setModalVisible(false)
-        message.success('更新角色成功')
-        mittBus.emit('page:main-table:reload')
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
+  const {formRef, modalConfig, modalVisible, setModalVisible, onModalOk} = useCrudModal<MODEL.IRole>({
+    formData: {
+      name: '',
+      status: 1,
+      remark: ''
+    },
+    events: {
+      // 请求 - 添加角色
+      onCreate: (record: any) => {
+        roleApi
+          .create(record)
+          .then(() => {
+            setModalVisible(false)
+            message.success('新增角色成功')
+            mittBus.emit('page:main-table:reload')
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
+      // 请求 - 更新角色
+      onUpdate: (record: any) => {
+        roleApi
+          .updateById(record)
+          .then(() => {
+            setModalVisible(false)
+            message.success('更新角色成功')
+            mittBus.emit('page:main-table:reload')
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    }
+  })
 
   return(
-    <ModalForm
-      title={modalConfig.title}
+    <ModalForm<MODEL.IRole>
       width="500px"
+      formRef={formRef}
       visible={modalVisible}
+      modalProps={modalConfig}
+      title={modalConfig.title}
       onVisibleChange={setModalVisible}
-      modalProps={{
-        destroyOnClose: true,
-        okText: modalConfig.okText
-      }}
-      onFinish={async (record: APIS.IRoleCreateReq) => {
-        return modalType === 'create'
-          ? onAddRole(record)
-          : onUpdateRole(record)
-      }}
-      initialValues={modalData}
+      onFinish={async (record: MODEL.IRole) => onModalOk(record)}
     >
       <ProFormText
         name="name"

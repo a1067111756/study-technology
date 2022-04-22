@@ -6,4 +6,7 @@ module.exports = {
     REACT_APP_ENV: true,
     localTango: true
   },
+  rules: {
+    '@typescript-eslint/no-unused-expressions': 'off'
+  }
 };
