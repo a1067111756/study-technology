@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>单例模式</title>
+</head>
+<body>
+  <script type="module">
+    import LazySingleton from './dist/LazySingleton.js'
+    import HungrySingleton from './dist/HungrySingleton.js'
+
+    LazySingleton.getInstance().check()
+    HungrySingleton.getInstance().check()
+  </script>
+</body>
+</html>
