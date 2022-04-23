@@ -12,9 +12,9 @@ export interface IModalProps {
 }
 
 export interface IModalEvents<T> {
-  onCreate?: (record?: T) => void;
-  onUpdate?: (record?: T) => void;
-  onOk?: (type: ModalTypeEnum, record?: T) => void;
+  onCreate?: (record: T) => void;
+  onUpdate?: (record: T) => void;
+  onOk?: (type: ModalTypeEnum, record: T) => void;
   onOpen?: (type: ModalTypeEnum, record?: T) => void;
   onCancel?: (type: ModalTypeEnum) => void;
 }
@@ -42,9 +42,7 @@ export function useCrudModal<T>(options: ICrudPageOptions<T>) {
   const modalConfig = useMemo(() => {
     const defaultProps = {
       confirmLoading: false,
-      afterClose: () => {
-        formRef.current && formRef.current.resetFields()
-      }
+      afterClose: () => { formRef.current && formRef.current.resetFields() }
     };
 
     const strategy = {
@@ -64,6 +62,7 @@ export function useCrudModal<T>(options: ICrudPageOptions<T>) {
       },
       [ModalTypeEnum.DETAIL]: {
         title: '详情',
+        okText: '退出',
         ...defaultProps,
         ...(options?.props?.detailProps && options.props.detailProps),
         ...(options?.props?.commonProps && options.props.commonProps),

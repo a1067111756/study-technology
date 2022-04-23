@@ -19,6 +19,7 @@ export class CreateDto {
   @IsEnum([0, 1], { message: 'status字段类型应为0或1的状态枚举' })
   public readonly status?: number;
 
+  // 菜单分配
   // 角色备注
   @IsOptional()
   @Length(0, 100, { message: 'remark字段长度应为0 ~ 100位字符' })

@@ -1,12 +1,15 @@
 /* 新增 / 编辑 / 查看Dialog */
-import React from "react";
+import React, {useState} from "react";
 import mittBus from '@/utils/mittBus'
+import * as menuApi from "@/services/api/menu";
 import * as roleApi from "@/services/api/role";
-import {message} from "antd";
+import {message, Tree} from "antd";
 import {useCrudModal} from '@/hooks/useCrudModal';
-import {ModalForm, ProFormText, ProFormTextArea, ProFormRadio} from "@ant-design/pro-form";
+import ProForm, {ModalForm, ProFormText, ProFormTextArea, ProFormRadio} from "@ant-design/pro-form";
 
 const CrudDialog: React.FC= () => {
+  const [treeData, setTreeData] = useState<MODEL.IMenu[]>([])
+
   const {formRef, modalConfig, modalVisible, setModalVisible, onModalOk} = useCrudModal<MODEL.IRole>({
     formData: {
       name: '',
@@ -14,8 +17,12 @@ const CrudDialog: React.FC= () => {
       remark: ''
     },
     events: {
-      // 请求 - 添加角色
-      onCreate: (record: any) => {
+      // 事件 - 打开窗口
+      onOpen: () => {
+        menuApi.getTree().then((data: MODEL.IMenu[]) => setTreeData(data))
+      },
+      // 事件 - 添加角色
+      onCreate: (record: MODEL.IRole) => {
         roleApi
           .create(record)
           .then(() => {
@@ -27,8 +34,8 @@ const CrudDialog: React.FC= () => {
             console.log(err)
           })
       },
-      // 请求 - 更新角色
-      onUpdate: (record: any) => {
+      // 事件 - 更新角色
+      onUpdate: (record: MODEL.IRole) => {
         roleApi
           .updateById(record)
           .then(() => {
@@ -68,6 +75,21 @@ const CrudDialog: React.FC= () => {
           { type: 'string', min: 2, max: 20, message: "角色名应为2 ~ 20个字符" }
         ]}
       />
+
+      <ProForm.Item label="菜单分配：">
+        <div style={{ border: '1px solid #d9d9d9', padding: '10px', minHeight: '200px', maxHeight: '200px', overflow: 'auto' }}>
+          <Tree
+            checkable
+            selectable={false}
+            treeData={treeData}
+            fieldNames={{
+              key: 'id',
+              title: 'name',
+              children: 'children'
+            }}
+          />
+        </div>
+      </ProForm.Item>
 
       <ProFormRadio.Group
         name="status"

@@ -26,6 +26,7 @@ CREATE TABLE `role` (
   `update_time` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   `remark` varchar(500) DEFAULT NULL,
   `name` varchar(30) NOT NULL,
+  `menuId` varchar(1000) NOT NULL,
   `status` int NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;

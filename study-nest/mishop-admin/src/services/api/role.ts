@@ -2,10 +2,10 @@
 import request from '@/utils/request'
 
 // 创建
-export async function create(roleCreateReq: APIS.IRoleCreateReq) {
+export async function create(role: MODEL.IRole) {
   return request('/api/role/create', {
     method: 'POST',
-    data: roleCreateReq
+    data: role
   })
 }
 
@@ -20,7 +20,7 @@ export async function removeById(id: string) {
 }
 
 // 更新
-export async function updateById(role: APIS.IRoleUpdateReq) {
+export async function updateById(role: MODEL.IRole) {
   return request('/api/role/updateById', {
     method: 'POST',
     data: role

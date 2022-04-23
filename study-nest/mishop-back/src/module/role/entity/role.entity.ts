@@ -24,6 +24,10 @@ export class Role {
   @Column({ length: 500, nullable: true })
   remark: string;
 
+  // 分配菜单
+  @Column('simple-array')
+  menuId: string[];
+
   // 角色创建时间
   @CreateDateColumn()
   create_time: Date;

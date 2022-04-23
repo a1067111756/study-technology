@@ -61,17 +61,6 @@ declare namespace APIS {
     pageSize: number,
     records: MODEL.IRole[]
   }
-  type IRoleCreateReq = {
-    name: string,
-    status: number,
-    remark?: string
-  }
-  type IRoleUpdateReq = {
-    id: string,
-    name?: string,
-    status?: number,
-    remark?: string
-  }
 
   /* 菜单相关 */
   type IMenuCreateReq = {
