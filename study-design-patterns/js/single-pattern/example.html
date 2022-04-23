@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>单例模式</title>
+</head>
+<body>
+<script type="module">
+    import LazySingleton from './LazySingleton.js'
+
+    const role1 = LazySingleton.getInstance('role1')
+    const role2 = LazySingleton.getInstance('role2')
+    console.log(role1 === role2)
+    console.log(role1.name)
+    console.log(role2.name)
+</script>
+</body>
+</html>
