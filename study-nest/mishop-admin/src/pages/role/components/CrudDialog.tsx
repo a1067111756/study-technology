@@ -3,9 +3,9 @@ import React, {useState} from "react";
 import mittBus from '@/utils/mittBus'
 import * as menuApi from "@/services/api/menu";
 import * as roleApi from "@/services/api/role";
-import {message, Tree} from "antd";
+import {message, Tree, Form} from "antd";
 import {useCrudModal} from '@/hooks/useCrudModal';
-import ProForm, {ModalForm, ProFormText, ProFormTextArea, ProFormRadio} from "@ant-design/pro-form";
+import {ModalForm, ProFormText, ProFormTextArea, ProFormRadio} from "@ant-design/pro-form";
 
 const CrudDialog: React.FC= () => {
   const [treeData, setTreeData] = useState<MODEL.IMenu[]>([])
@@ -14,7 +14,8 @@ const CrudDialog: React.FC= () => {
     formData: {
       name: '',
       status: 1,
-      remark: ''
+      remark: '',
+      menuId: []
     },
     events: {
       // 事件 - 打开窗口
@@ -23,7 +24,7 @@ const CrudDialog: React.FC= () => {
       },
       // 事件 - 添加角色
       onCreate: (record: MODEL.IRole) => {
-        roleApi
+        return roleApi
           .create(record)
           .then(() => {
             setModalVisible(false)
@@ -36,7 +37,7 @@ const CrudDialog: React.FC= () => {
       },
       // 事件 - 更新角色
       onUpdate: (record: MODEL.IRole) => {
-        roleApi
+        return roleApi
           .updateById(record)
           .then(() => {
             setModalVisible(false)
@@ -56,6 +57,7 @@ const CrudDialog: React.FC= () => {
       formRef={formRef}
       visible={modalVisible}
       modalProps={modalConfig}
+      submitter={modalConfig['submitter']}
       title={modalConfig.title}
       onVisibleChange={setModalVisible}
       onFinish={async (record: MODEL.IRole) => onModalOk(record)}
@@ -76,20 +78,31 @@ const CrudDialog: React.FC= () => {
         ]}
       />
 
-      <ProForm.Item label="菜单分配：">
-        <div style={{ border: '1px solid #d9d9d9', padding: '10px', minHeight: '200px', maxHeight: '200px', overflow: 'auto' }}>
-          <Tree
-            checkable
-            selectable={false}
-            treeData={treeData}
-            fieldNames={{
-              key: 'id',
-              title: 'name',
-              children: 'children'
-            }}
-          />
-        </div>
-      </ProForm.Item>
+      <Form.Item
+        shouldUpdate
+        label="菜单分配："
+      >
+        {(form: any) => {
+          return (
+            <div style={{ border: '1px solid #d9d9d9', padding: '10px', minHeight: '200px', maxHeight: '200px', overflow: 'auto' }}>
+              <Form.Item name="menuId">
+                <Tree
+                  checkable
+                  selectable={false}
+                  treeData={treeData}
+                  checkedKeys={form.getFieldValue('menuId')}
+                  fieldNames={{
+                    key: 'id',
+                    title: 'name',
+                    children: 'children'
+                  }}
+                  onCheck={checkedKeys => form.setFieldsValue({ menuId: checkedKeys })}
+                />
+              </Form.Item>
+            </div>
+          );
+        }}
+      </Form.Item>
 
       <ProFormRadio.Group
         name="status"

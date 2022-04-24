@@ -41,7 +41,6 @@ export function useCrudModal<T>(options: ICrudPageOptions<T>) {
   // modal配置
   const modalConfig = useMemo(() => {
     const defaultProps = {
-      confirmLoading: false,
       afterClose: () => { formRef.current && formRef.current.resetFields() }
     };
 
@@ -63,11 +62,19 @@ export function useCrudModal<T>(options: ICrudPageOptions<T>) {
       [ModalTypeEnum.DETAIL]: {
         title: '详情',
         okText: '退出',
+        submitter: {
+          submitButtonProps: {
+            style: {
+              display: 'none',
+            },
+          }
+        },
         ...defaultProps,
         ...(options?.props?.detailProps && options.props.detailProps),
         ...(options?.props?.commonProps && options.props.commonProps),
-      },
+      }
     };
+
     return strategy[modalType];
   }, [modalType])
 
@@ -93,9 +100,9 @@ export function useCrudModal<T>(options: ICrudPageOptions<T>) {
   const onUpdateOpen = (record: T) => {
     setModalData(record)
     setModalType(ModalTypeEnum.UPDATE)
-    setModalVisible(true)
     setTimeout(() => formRef.current && formRef.current.setFieldsValue(record), 0)
     options?.events?.onOpen && options.events.onOpen(modalType, record);
+    setModalVisible(true)
   }
 
   // 事件 - 关闭
@@ -106,17 +113,19 @@ export function useCrudModal<T>(options: ICrudPageOptions<T>) {
 
   // 事件 - 确认
   const onModalOk = (record: T) => {
-    options?.events?.onOk && options.events.onOk(modalType, record);
-
     if (modalType === ModalTypeEnum.CREATE && options?.events?.onCreate) {
-      options.events.onCreate(record);
+      return options.events.onCreate(record);
     }
 
     if (modalType === ModalTypeEnum.UPDATE && options?.events?.onUpdate) {
-      options.events.onUpdate({
+      return options.events.onUpdate({
         ...modalData,
         ...record,
-      });
+      })
+    }
+
+    if (options?.events?.onOk) {
+      return options.events.onOk(modalType, record)
     }
   }
 

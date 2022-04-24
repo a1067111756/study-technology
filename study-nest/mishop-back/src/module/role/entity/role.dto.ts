@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsEnum,
   IsNotEmpty,
   IsOptional,
@@ -20,6 +21,10 @@ export class CreateDto {
   public readonly status?: number;
 
   // 菜单分配
+  @IsOptional()
+  @IsArray({ message: 'menuId字段类型应为字符串数组类型' })
+  public readonly menuId?: string[];
+
   // 角色备注
   @IsOptional()
   @Length(0, 100, { message: 'remark字段长度应为0 ~ 100位字符' })
@@ -38,6 +43,11 @@ export class UpdateByIdDto {
   @Length(2, 12, { message: 'name字段长度应为2 ~ 12位字符' })
   @IsString({ message: 'name类型应为string' })
   public readonly name?: string;
+
+  // 菜单分配
+  @IsOptional()
+  @IsArray({ message: 'menuId字段类型应为字符串数组类型' })
+  public readonly menuId?: string[];
 
   // 角色状态
   @IsOptional()

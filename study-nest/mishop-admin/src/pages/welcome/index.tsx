@@ -44,9 +44,18 @@ const Welcome: React.FC = () => {
       {/* 版本更新信息栏 */}
       <section className={styles.versionHistory}>
         <Collapse ghost defaultActiveKey={['1']}>
-          <Collapse.Panel header="1.0.0-RC1 2021-02-13" key="1">
+          <Collapse.Panel header="2021-02-13" key="1">
             <p>1. 完成基本功能，实现前后端统一实现</p>
             <p>2. 新增欢迎页面</p>
+          </Collapse.Panel>
+
+          <Collapse.Panel header="2022-01-20" key="2">
+            <p>1. 完成用户管理、角色管理、菜单管理模块</p>
+            <p>2. 剔除部分无用模块</p>
+          </Collapse.Panel>
+
+          <Collapse.Panel header="2022-04-24" key="3">
+            <p>1. 重构角色管理，与菜单模块进行关联</p>
           </Collapse.Panel>
         </Collapse>
       </section>

@@ -19,6 +19,7 @@
     name: string;
     status: number;
     remark: string;
+    menuId: string[];
     create_time?: string;
     update_time?: string;
   }
