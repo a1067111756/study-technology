@@ -1,141 +1,84 @@
 /* 新增 / 编辑 / 查看Dialog */
+import {Mentions, message} from 'antd';
+import {useCrudModal} from '@/hooks/useCrudModal';
+import {
+  ModalForm,
+  ProFormText,
+  ProFormSelect,
+  ProFormTextArea,
+  ProFormRadio
+} from "@ant-design/pro-form";
 import React from "react";
 import mittBus from '@/utils/mittBus'
-import ProForm, {ProFormInstance} from "@ant-design/pro-form";
-import {Mentions, message} from 'antd';
-import {useMemo, useState, useRef } from "react";
-import {ModalTypeEnum} from "@/services/enum/modal";
-import {ModalForm, ProFormText, ProFormSelect, ProFormSwitch, ProFormTextArea} from "@ant-design/pro-form";
+import ProForm from "@ant-design/pro-form";
 import * as roleApi from "@/services/api/role";
 import * as userApi from "@/services/api/user";
 
 
 const CrudDialog: React.FC= () => {
-  // modal实例
-  const modalRef = useRef<ProFormInstance<any>>();
-
-  // modal类型
-  const [modalType, setModalType] = useState<ModalTypeEnum>(ModalTypeEnum.CREATE)
-
-  // modal显示 / 隐藏
-  const [modalVisible, setModalVisible] = useState<boolean>(false)
-
-  // modal当前数据
-  // const [modalData, setModalData] = useState<MODEL.IUser | {}>({})
-  const modalData = {}
-
-  // 计算属性 - modalConfig
-  const modalConfig = useMemo(() => {
-    const strategy = {
-      [ModalTypeEnum.CREATE]: { title: '新增用户', okText: '创建' },
-      [ModalTypeEnum.UPDATE]: { title: '编辑用户', okText: '更新' },
-      [ModalTypeEnum.DETAIL]: { title: '用户详情', okText: '退出' }
-    }
-    return strategy[modalType]
-  }, [modalType])
-
-  // 事件 - 创建打开Dialog
-  const onCreateOpen = () => {
-    modalRef.current!.setFieldsValue({})
-    setModalType(ModalTypeEnum.CREATE)
-    setModalVisible(true)
-  }
-
-  // 事件 - 详情打开Dialog
-  const onDetailOpen = (record: MODEL.IUser) => {
-    modalRef.current!.setFieldsValue(record)
-    setModalType(ModalTypeEnum.DETAIL)
-    setModalVisible(true)
-  }
-
-  // 事件 - 更新打开Dialog
-  const onUpdateOpen = (record: MODEL.IUser) => {
-    modalRef.current!.setFieldsValue(record)
-    setModalType(ModalTypeEnum.UPDATE)
-    setModalVisible(true)
-  }
-
-  // 事件 - 关闭Dialog
-  const onClose = () => {
-    setModalVisible(false)
-    modalRef.current!.resetFields()
-  }
-
-  // 生命周期 - 挂载
-  React.useEffect(() => {
-    mittBus.on('page:crud-dialog:close', onClose)
-    mittBus.on('page:crud-dialog:create', onCreateOpen)
-    mittBus.on('page:crud-dialog:detail', onDetailOpen)
-    mittBus.on('page:crud-dialog:update', onUpdateOpen)
-  }, [])
-
-  // 生命周期 - 卸载
-  React.useEffect(()=>{
-    return () => {
-      mittBus.off('page:crud-dialog:close', onClose)
-      mittBus.off('page:crud-dialog:create', onCreateOpen)
-      mittBus.off('page:crud-dialog:detail', onDetailOpen)
-      mittBus.off('page:crud-dialog:update', onUpdateOpen)
-    }
-  },[]);
-
-  // 请求 - 添加用户
-  const onAddUser = (record: APIS.IUserCreateReq) => {
-    return userApi
-      .create(record)
-      .then(() => {
-        setModalVisible(false)
-        message.success('新增用户成功')
-        mittBus.emit('page:main-table:reload')
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-
-  // 请求 - 更新用户
-  const onUpdateUser = (record: APIS.IUserCreateReq) => {
-    return userApi
-      .updateById({
-        ...modalData,
-        ...record
-      } as any)
-      .then(() => {
-        setModalVisible(false)
-        message.success('更新角色成功')
-        mittBus.emit('page:main-table:reload')
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-
   // 请求 - 获取角色列表
-  const onGetPageOfRole = () => {
-    return roleApi
-      .getList()
-      .then(data => data.map(item => ({
-        label: item.name,
-        value: item.id
-      })))
-  }
+  const requestRoleList = () => roleApi.getList()
+
+  // hooks
+  const {formRef, modalConfig, modalVisible, setModalVisible, onModalOk} = useCrudModal<MODEL.IUser>({
+    formData: {
+      userName: '',
+      nickName: '',
+      role: '',
+      email: '',
+      phone: '',
+      address: '',
+      status: 1
+    },
+    events: {
+      // 事件 - 添加角色
+      onCreate: (record: MODEL.IUser) => {
+        return userApi
+          .create({
+            ...record,
+            status: Number(record.status)
+          })
+          .then(() => {
+            setModalVisible(false)
+            message.success('新增用户成功')
+            mittBus.emit('page:main-table:reload')
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
+      // 事件 - 更新角色
+      onUpdate: (record: MODEL.IUser) => {
+        return userApi
+          .updateById({
+            ...record,
+            status: Number(record.status)
+          })
+          .then(() => {
+            setModalVisible(false)
+            message.success('更新用户成功')
+            mittBus.emit('page:main-table:reload')
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    }
+  })
 
   return(
-    <ModalForm
+    <ModalForm<MODEL.IUser>
       title={modalConfig.title}
-      width="1000px"
+      width="600px"
       layout="horizontal"
-      formRef={modalRef}
+      formRef={formRef}
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 18 }}
       visible={modalVisible}
+      submitter={modalConfig['submitter']}
       onVisibleChange={setModalVisible}
       modalProps={{okText: modalConfig.okText}}
-      onFinish={async (record: APIS.IUserCreateReq) => {
-        return modalType === ModalTypeEnum.CREATE
-          ? onAddUser(record)
-          : onUpdateUser(record)
-      }}
+      onFinish={async (record: MODEL.IUser) => onModalOk(record)}
     >
       <ProFormText
         name="userName"
@@ -170,7 +113,13 @@ const CrudDialog: React.FC= () => {
         label="所属角色"
         width="xl"
         placeholder="请选择用户所属角色"
-        request={onGetPageOfRole}
+        fieldProps={{
+          fieldNames: {
+            label: 'name',
+            value: 'id'
+          }
+        }}
+        request={requestRoleList}
         rules={[
           {
             required: true,
@@ -180,10 +129,7 @@ const CrudDialog: React.FC= () => {
       />
 
       <ProForm.Item label="邮箱：" name="email">
-        <Mentions
-          placeholder="example@xxx.com"
-          style={{ width: '328px' }}
-        >
+        <Mentions placeholder="example@xxx.com">
           <Mentions.Option value="qq.com">qq.com</Mentions.Option>
           <Mentions.Option value="gmail.com">gmail.com</Mentions.Option>
           <Mentions.Option value="outlook.com">outlook.com</Mentions.Option>
@@ -193,7 +139,7 @@ const CrudDialog: React.FC= () => {
       <ProFormText
         name="phone"
         label="联系电话："
-        width="md"
+        width="xl"
         placeholder="请填写联系电话"
         fieldProps={{
           maxLength: 11,
@@ -212,15 +158,23 @@ const CrudDialog: React.FC= () => {
         }}
       />
 
-      <ProFormSwitch
+      <ProFormRadio.Group
         name="status"
         label="状态："
-        checkedChildren="启用"
-        unCheckedChildren="停用"
-        valuePropName="switch"
+        radioType="button"
         fieldProps={{
-          defaultChecked: true
+          buttonStyle: "solid"
         }}
+        options={[
+          {
+            label: '启用',
+            value: 1,
+          },
+          {
+            label: '停用',
+            value: 0,
+          }
+        ]}
       />
     </ModalForm>
   )

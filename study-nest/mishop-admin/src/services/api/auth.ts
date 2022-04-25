@@ -6,7 +6,12 @@ export async function login(loginReq: APIS.ILoginReq) {
   return request<APIS.ILoginRes>('/api/auth/login', {
     method: 'POST',
     data: loginReq
-  }                  )
+  })
+}
+
+// 登出
+export async function logOut() {
+  return Promise.resolve()
 }
 
 // 注册

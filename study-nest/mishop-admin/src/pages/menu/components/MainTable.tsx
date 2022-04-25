@@ -1,30 +1,24 @@
 /* 表格主内容 */
-import React, {useRef} from "react";
+import React from "react";
 import mittBus from '@/utils/mittBus'
 import ProTable from "@ant-design/pro-table";
 import * as menuApi from "@/services/api/menu";
+import type {ProColumns} from "@ant-design/pro-table";
 import {PlusOutlined} from "@ant-design/icons";
+import {useMainTable} from '@/hooks/useMainTable';
 import {Button, message, Popconfirm, Switch} from "antd";
-import type {ActionType, ProColumns} from "@ant-design/pro-table";
 
 const MainTable: React.FC = () => {
   // table引用
-  const tableRef = useRef<ActionType>();
+  const { tableRef } = useMainTable();
 
-  // 事件 - 刷新table
-  const reloadTable = () => {
-    if (tableRef.current) {
-      tableRef.current.reload()
-    }
-  }
-
-  // 请求 - 删除角色
-  const onDeleteRole = (roleId: string) => {
+  // 请求 - 删除菜单
+  const onRemoveById = (roleId: string) => {
     return menuApi
       .removeById(roleId)
       .then(() => {
         message.success('删除角色成功')
-        reloadTable()
+        mittBus.emit('page:main-table:reload')
       })
       .catch(err => {
         console.log(err)
@@ -40,7 +34,7 @@ const MainTable: React.FC = () => {
       })
       .then(() => {
         message.success('更新成功')
-        reloadTable()
+        mittBus.emit('page:main-table:reload')
       })
       .catch(err => {
         console.log(err)
@@ -56,25 +50,23 @@ const MainTable: React.FC = () => {
     }))
   }
 
-  // 生命周期 - 挂载
-  React.useEffect(() => {
-    mittBus.on('page:main-table:reload', reloadTable)
-  }, [])
-
-  // 生命周期 - 卸载
-  React.useEffect(()=>{
-    return () => {
-      mittBus.off('page:main-table:reload', reloadTable)
-    }
-  },[]);
-
   // 表结构定义
-  const columns: ProColumns<MODEL.IMenu>[] = [
+  const columns: ProColumns[] = [
     {
       title: '菜单名称',
       dataIndex: 'name',
       align: 'center',
       width: 240
+    },
+    {
+      title: '类型',
+      dataIndex: 'type',
+      align: 'center',
+      valueEnum: {
+        0: { text: '目录' },
+        1: { text: '菜单' },
+        2: { text: '按钮' },
+      }
     },
     {
       title: '图标',
@@ -103,8 +95,12 @@ const MainTable: React.FC = () => {
           key={record.id}
           checkedChildren="启用"
           unCheckedChildren="停用"
-          defaultChecked={!!record.status}
-          onChange={(checked) => onUpdateStatus(record, checked)}
+          checked={record.status}
+          loading={!!record.pendingStatus}
+          onChange={(checked: boolean) => {
+            record.pendingStatus = true
+            onUpdateStatus(record, checked).finally(() => record.pendingStatus = false)
+          }}
         />
       ]
     },
@@ -137,8 +133,8 @@ const MainTable: React.FC = () => {
         </a>,
         <Popconfirm
           key="delete"
-          title="确定删除该角色？"
-          onConfirm={() => onDeleteRole(record.id)}
+          title="确定删除该菜单？"
+          onConfirm={() => onRemoveById(record.id)}
         >
           <a target="_blank">删除</a>
         </Popconfirm>
@@ -161,7 +157,7 @@ const MainTable: React.FC = () => {
           icon={<PlusOutlined />}
           onClick={() => mittBus.emit('page:crud-dialog:create')}
         >
-          新增角色
+          新增菜单
         </Button>,
       ]}
     />

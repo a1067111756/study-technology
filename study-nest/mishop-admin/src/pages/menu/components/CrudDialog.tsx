@@ -1,145 +1,92 @@
 /* 新增 / 编辑 / 查看Dialog */
-import React, {useRef} from "react";
+import React from "react";
 import mittBus from '@/utils/mittBus'
 import {message} from "antd";
-import {useMemo, useState } from "react";
-import {ModalTypeEnum} from "@/services/enum/modal";
+import {useState} from "react";
+import {useCrudModal} from '@/hooks/useCrudModal';
 import {
   ProFormText,
   ProFormTextArea,
   ProFormRadio,
   ProFormGroup,
   DrawerForm,
-  ProFormTreeSelect, ProFormInstance
+  ProFormTreeSelect
 } from "@ant-design/pro-form";
 import * as menuApi from "@/services/api/menu";
 
+enum MENU_TYPE {
+  DIR = 0,
+  MENU = 1,
+  BUTTON = 2
+}
+
 const CrudDialog: React.FC= () => {
-  // modal类型
-  const [modalType, setModalType] = useState<ModalTypeEnum>(ModalTypeEnum.CREATE)
-
-  // modal显示 / 隐藏
-  const [modalVisible, setModalVisible] = useState<boolean>(false)
-
-  // modal实例
-  const modalRef = useRef<ProFormInstance<any>>();
-
-  // modal当前数据
-  const [modalData, setModalData] = useState({})
-
-  // 计算属性 - modalConfig
-  const modalConfig = useMemo(() => {
-    const strategy = {
-      [ModalTypeEnum.CREATE]: { title: '新增菜单', okText: '创建' },
-      [ModalTypeEnum.UPDATE]: { title: '更新菜单', okText: '更新' },
-      [ModalTypeEnum.DETAIL]: { title: '菜单详情', okText: '退出' }
-    }
-    return strategy[modalType]
-  }, [modalType])
-
-  // 事件 - 创建打开Dialog
-  const onCreateOpen = () => {
-    modalRef.current!.setFieldsValue({
-      type: 0,
-      status: 1,
-      hideInMenu: 0,
-      hideInBreadcrumb: 0
-    })
-    setModalType(ModalTypeEnum.CREATE)
-    setModalVisible(true)
-  }
-
-  // 事件 - 详情打开Dialog
-  const onDetailOpen = (record: MODEL.IMenu) => {
-    modalRef.current!.setFieldsValue(record)
-    setModalData(record)
-    setModalType(ModalTypeEnum.DETAIL)
-    setModalVisible(true)
-  }
-
-  // 事件 - 更新打开Dialog
-  const onUpdateOpen = (record: MODEL.IMenu) => {
-    modalRef.current!.setFieldsValue(record)
-    setModalData(record)
-    setModalType(ModalTypeEnum.UPDATE)
-    setModalVisible(true)
-  }
-
-  // 事件 - 关闭Dialog
-  const onClose = () => {
-    setModalVisible(false)
-    modalRef.current!.resetFields()
-  }
-
-  // 生命周期 - 挂载
-  React.useEffect(() => {
-    mittBus.on('page:crud-dialog:close', onClose)
-    mittBus.on('page:crud-dialog:create', onCreateOpen)
-    mittBus.on('page:crud-dialog:detail', onDetailOpen)
-    mittBus.on('page:crud-dialog:update', onUpdateOpen)
-  }, [])
-
-  // 生命周期 - 卸载
-  React.useEffect(()=>{
-    return () => {
-      mittBus.off('page:crud-dialog:close', onClose)
-      mittBus.off('page:crud-dialog:create', onCreateOpen)
-      mittBus.off('page:crud-dialog:detail', onDetailOpen)
-      mittBus.off('page:crud-dialog:update', onUpdateOpen)
-    }
-  },[]);
-
-  // 请求 - 添加菜单
-  const onAddMenu = (record: APIS.IMenuCreateReq) => {
-    return menuApi
-      .create(record)
-      .then(() => {
-        setModalVisible(false)
-        message.success('新增菜单成功')
-        mittBus.emit('page:main-table:reload')
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-
-  // 请求 - 更新菜单
-  const onUpdateMenu = (record: MODEL.IMenu) => {
-    return menuApi
-      .updateById({
-        ...modalData,
-        ...record
-      })
-      .then(() => {
-        setModalVisible(false)
-        message.success('更新菜单成功')
-        mittBus.emit('page:main-table:reload')
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
+  // 当前选中的菜单类型
+  const [curMenuType, setCurrentMenu] = useState<number>(MENU_TYPE.DIR)
 
   // 请求 - 获取树形菜单
   const onGetTree = () => {
     return menuApi.getTree().then((data) => [{ id: '-1', name: '根目录',children: data }])
   }
 
+  // hooks
+  const {formRef, modalConfig, modalVisible, setModalVisible, onModalOk} = useCrudModal<MODEL.IMenu>({
+    formData: {
+      type: 0,
+      name: '',
+      local: '',
+      pid: '',
+      icon: '',
+      path: '',
+      component: '',
+      status: 1,
+      hideInMenu: 0,
+      hideInBreadcrumb: 0,
+      remark: ''
+    },
+    events: {
+      // 事件 - 打开窗口
+      onOpen: () => {
+        setCurrentMenu(formRef.current?.getFieldValue('type'))
+      },
+      // 事件 - 添加角色
+      onCreate: (record: MODEL.IMenu) => {
+        return menuApi
+          .create(record)
+          .then(() => {
+            setModalVisible(false)
+            message.success('新增菜单成功')
+            mittBus.emit('page:main-table:reload')
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
+      // 事件 - 更新角色
+      onUpdate: (record: MODEL.IMenu) => {
+        return menuApi
+          .updateById(record)
+          .then(() => {
+            setModalVisible(false)
+            message.success('更新菜单成功')
+            mittBus.emit('page:main-table:reload')
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    }
+  })
+
   return(
-    <DrawerForm
-      title={modalConfig.title}
+    <DrawerForm<MODEL.IMenu>
       width="737px"
-      formRef={modalRef}
+      formRef={formRef}
       visible={modalVisible}
+      title={modalConfig.title}
+      submitter={modalConfig['submitter']}
       onVisibleChange={setModalVisible}
-      drawerProps={{
-        onClose: onClose
-      }}
-      onFinish={async (record: MODEL.IMenu) => {
-        return modalType === ModalTypeEnum.CREATE
-          ? onAddMenu(record)
-          : onUpdateMenu(record)
-      }}
+      onFinish={async (record: MODEL.IMenu) => onModalOk(record)}
     >
       {/* 菜单类型 */}
       <ProFormGroup>
@@ -150,12 +97,7 @@ const CrudDialog: React.FC= () => {
           fieldProps={{
             buttonStyle: "solid",
             defaultValue: 0,
-            onChange: (e) => {
-              setModalData({
-                ...modalData,
-                type: e.target.value
-              })
-            }
+            onChange: (e: any) => setCurrentMenu(e.target.value)
           }}
           options={[
             {
@@ -178,8 +120,8 @@ const CrudDialog: React.FC= () => {
         <ProFormText
           name="name"
           width="md"
-          label="菜单名称："
-          placeholder="请填写菜单名称"
+          label="名称："
+          placeholder="请填写名称"
           fieldProps={{
             maxLength: 10,
             showCount: true,
@@ -216,32 +158,38 @@ const CrudDialog: React.FC= () => {
           ]}
         />
 
-        <ProFormText
-          name="icon"
-          width="md"
-          label="菜单图标："
-          placeholder="请填写菜单图标"
-        />
+        {
+          curMenuType !== MENU_TYPE.BUTTON && <ProFormText
+            name="icon"
+            width="md"
+            label="菜单图标："
+            placeholder="请填写菜单图标"
+          />
+        }
 
-        <ProFormText
-          name="path"
-          width="md"
-          label="路由地址："
-          placeholder="请填写路由地址"
-          rules={[
-            { required: true, message: "必填项" },
-          ]}
-        />
+        {
+          curMenuType !== MENU_TYPE.BUTTON && <ProFormText
+            name="path"
+            width="md"
+            label="路由地址："
+            placeholder="请填写路由地址"
+            rules={[
+              { required: true, message: "必填项" },
+            ]}
+          />
+        }
 
-        {modalData['type'] !== 0 && <ProFormText
-          name="component"
-          width="md"
-          label="组件路径："
-          placeholder="请填写组件路径"
-          rules={[
-            { required: true, message: "必填项" },
-          ]}
-        />}
+        {
+          curMenuType === MENU_TYPE.MENU && <ProFormText
+            name="component"
+            width="md"
+            label="组件路径："
+            placeholder="请填写组件路径"
+            rules={[
+              { required: true, message: "必填项" },
+            ]}
+          />
+        }
 
         <div style={{ width: '328px' }}>
           <ProFormRadio.Group
@@ -264,49 +212,52 @@ const CrudDialog: React.FC= () => {
           />
         </div>
 
+        {
+          curMenuType !== MENU_TYPE.BUTTON && <div style={{ width: '328px' }}>
+            <ProFormRadio.Group
+              name="hideInMenu"
+              label="菜单中隐藏："
+              radioType="button"
+              fieldProps={{
+                buttonStyle: "solid",
+              }}
+              options={[
+                {
+                  label: '显示',
+                  value: 0,
+                },
+                {
+                  label: '隐藏',
+                  value: 1,
+                }
+              ]}
+            />
+          </div>
+        }
 
-        <div style={{ width: '328px' }}>
-          <ProFormRadio.Group
-            name="hideInMenu"
-            label="菜单中隐藏："
-            radioType="button"
-            fieldProps={{
-              buttonStyle: "solid",
-            }}
-            options={[
-              {
-                label: '隐藏',
-                value: 1,
-              },
-              {
-                label: '显示',
-                value: 0,
-              }
-            ]}
-          />
-        </div>
-
-        <div style={{ width: '328px' }}>
-          <ProFormRadio.Group
-            name="hideInBreadcrumb"
-            label="面包屑中隐藏："
-            width="md"
-            radioType="button"
-            fieldProps={{
-              buttonStyle: "solid",
-            }}
-            options={[
-              {
-                label: '隐藏',
-                value: 1,
-              },
-              {
-                label: '显示',
-                value: 0,
-              }
-            ]}
-          />
-        </div>
+        {
+          curMenuType !== MENU_TYPE.BUTTON && <div style={{ width: '328px' }}>
+            <ProFormRadio.Group
+              name="hideInBreadcrumb"
+              label="面包屑中隐藏："
+              width="md"
+              radioType="button"
+              fieldProps={{
+                buttonStyle: "solid",
+              }}
+              options={[
+                {
+                  label: '显示',
+                  value: 0,
+                },
+                {
+                  label: '隐藏',
+                  value: 1,
+                }
+              ]}
+            />
+          </div>
+        }
       </ProFormGroup>
 
       <ProFormTextArea
@@ -317,7 +268,7 @@ const CrudDialog: React.FC= () => {
           maxLength: 100,
           showCount: true,
           allowClear: true,
-          autoSize: { minRows: 5, maxRows: 5 }
+          autoSize: { minRows: 6, maxRows: 6 }
         }}
       />
     </DrawerForm>

@@ -2,10 +2,10 @@
 import request from '@/utils/request'
 
 // 创建
-export async function create(userCreateReq: APIS.IUserCreateReq) {
+export async function create(user: MODEL.IUser) {
   return request('/api/user/create', {
     method: 'POST',
-    data: userCreateReq
+    data: user
   })
 }
 

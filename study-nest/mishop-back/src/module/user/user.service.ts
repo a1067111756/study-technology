@@ -1,12 +1,10 @@
-import { Like, MoreThanOrEqual, Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { User } from './entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto } from './entity/dto/createUser.dto';
-import { UpdateUserDto } from './entity/dto/updateUser.dto';
-import { GetPageReqDto } from './entity/dto/getPageReq.dto';
 import { ToolsService } from 'src/common/service/tools.service';
 import { CommonRequestException } from 'src/common/exception/common-request.exception';
+import * as UserDto from './entity/user.dto';
 
 @Injectable()
 export class UserService {
@@ -17,7 +15,7 @@ export class UserService {
   ) {}
 
   // create
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: UserDto.CreateDto) {
     // 查询用户是否存在
     const matchUser = await this.userRepository.findOne({
       userName: createUserDto.userName,
@@ -33,18 +31,6 @@ export class UserService {
     return this.userRepository.insert(createUserDto);
   }
 
-  // removeByName
-  async removeByName(userName: string) {
-    // 查询用户是否存在
-    const matchUser = await this.userRepository.findOne({ userName: userName });
-    if (!matchUser) {
-      throw new CommonRequestException('20002', '删除用户失败，该用户不存在');
-    }
-
-    // 删除用户
-    return this.userRepository.remove(matchUser);
-  }
-
   // removeById
   async removeById(userId: string) {
     // 查询用户是否存在
@@ -58,7 +44,7 @@ export class UserService {
   }
 
   // updateById
-  async updateById(updateUserDto: UpdateUserDto) {
+  async updateById(updateUserDto: UserDto.UpdateByIdDto) {
     // 查询用户是否存在
     const matchUser = await this.userRepository.findOne({
       id: updateUserDto.id,
@@ -90,16 +76,16 @@ export class UserService {
   }
 
   // getPage
-  async getPage(getPageReqDto: GetPageReqDto) {
-    const { pageNo, pageSize, name, status, create_time } = getPageReqDto;
+  async getPage(getPageReqDto: UserDto.GetPageDto) {
+    const { pageNo, pageSize, userName, status, role } = getPageReqDto;
 
     const records = await this.userRepository.find({
       skip: pageSize * (pageNo - 1),
       take: pageSize,
       where: {
-        ...(name && { name: Like(`%${name}%`) }),
-        ...(status && { status: Like(`%${status}%`) }),
-        ...(create_time && { create_time: MoreThanOrEqual(create_time) }),
+        ...(role && { role: role }),
+        ...(userName && { userName: Like(`%${userName}%`) }),
+        ...(status !== null && status !== undefined && { status: status }),
       },
       order: {
         create_time: 'ASC',

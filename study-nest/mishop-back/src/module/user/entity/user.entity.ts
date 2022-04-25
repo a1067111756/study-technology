@@ -17,7 +17,7 @@ export class User {
   @Column()
   nickName: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
   @Column()

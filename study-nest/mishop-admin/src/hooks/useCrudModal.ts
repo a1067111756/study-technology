@@ -83,8 +83,10 @@ export function useCrudModal<T>(options: ICrudPageOptions<T>) {
     setModalData({})
     setModalType(ModalTypeEnum.CREATE)
     setModalVisible(true)
-    setTimeout(() => formRef.current && formRef.current.setFieldsValue(options.formData || {}), 0)
-    options?.events?.onOpen && options.events.onOpen(modalType)
+    setTimeout(() => {
+      formRef.current && formRef.current.setFieldsValue(options.formData || {})
+      options?.events?.onOpen && options.events.onOpen(modalType)
+    }, 0)
   }
 
   // 事件 - 详情打开Dialog
@@ -92,17 +94,21 @@ export function useCrudModal<T>(options: ICrudPageOptions<T>) {
     setModalData(record)
     setModalType(ModalTypeEnum.DETAIL)
     setModalVisible(true)
-    setTimeout(() => formRef.current && formRef.current.setFieldsValue(record), 0)
-    options?.events?.onOpen && options.events.onOpen(modalType, record);
+    setTimeout(() => {
+      formRef.current && formRef.current.setFieldsValue(record)
+      options?.events?.onOpen && options.events.onOpen(modalType, record);
+    }, 0)
   }
 
   // 事件 - 更新打开Dialog
   const onUpdateOpen = (record: T) => {
     setModalData(record)
     setModalType(ModalTypeEnum.UPDATE)
-    setTimeout(() => formRef.current && formRef.current.setFieldsValue(record), 0)
-    options?.events?.onOpen && options.events.onOpen(modalType, record);
     setModalVisible(true)
+    setTimeout(() => {
+      formRef.current && formRef.current.setFieldsValue(record)
+      options?.events?.onOpen && options.events.onOpen(modalType, record)
+    }, 0)
   }
 
   // 事件 - 关闭

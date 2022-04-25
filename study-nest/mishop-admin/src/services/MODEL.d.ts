@@ -1,15 +1,15 @@
-   declare namespace MODEL {
+declare namespace MODEL {
   /* 用户相关 */
   type IUser = {
-    id: string;
+    id?: string;
     userName: string;
     nickName: string;
-    password: string;
-    avatar: string;
+    password?: string;
+    avatar?: string;
     phone: string;
     address: string
     email: string;
-    role: number;
+    role: string;
     status: number;
   }
 
@@ -27,7 +27,7 @@
   /* 菜单 */
  type IMenu = {
    // 唯一标识
-   id: string;
+   id?: string;
    // 父节点标识
    pid: string;
    // 菜单类型
@@ -51,10 +51,10 @@
    // 是否在面包屑中隐藏
    hideInBreadcrumb: number;
    // 创建时间
-   create_time: string;
+   create_time?: string;
    // 更新时间
-   update_time: string;
+   update_time?: string;
    // 子节点
-   children: IMenu[]
+   children?: IMenu[]
  }
 }

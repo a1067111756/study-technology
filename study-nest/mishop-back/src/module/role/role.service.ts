@@ -84,7 +84,7 @@ export class RoleService {
       take: pageSize,
       where: {
         ...(name && { name: Like(`%${name}%`) }),
-        ...(status !== null && { status: status }),
+        ...(status !== null && status !== undefined && { status: status }),
       },
       order: {
         create_time: 'ASC',

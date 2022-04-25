@@ -1,8 +1,6 @@
 import { UserService } from './user.service';
 import { Body, Controller, Post } from '@nestjs/common';
-import { CreateUserDto } from './entity/dto/createUser.dto';
-import { UpdateUserDto } from './entity/dto/updateUser.dto';
-import { GetPageReqDto } from './entity/dto/getPageReq.dto';
+import * as UserDto from './entity/user.dto';
 
 @Controller('user')
 export class UserController {
@@ -10,32 +8,26 @@ export class UserController {
 
   // create
   @Post('create')
-  async create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: UserDto.CreateDto) {
     return await this.userService.create(createUserDto);
-  }
-
-  // removeByName
-  @Post('removeByName')
-  async removeByName(@Body() name) {
-    return await this.userService.removeByName(name);
   }
 
   // removeById
   @Post('removeById')
-  async removeById(@Body() id) {
-    return await this.userService.removeById(id);
+  async removeById(@Body() body: UserDto.RemoveByIdDto) {
+    return await this.userService.removeById(body.id);
   }
 
   // updateById
   @Post('updateById')
-  async updateById(@Body() updateUserDto: UpdateUserDto) {
+  async updateById(@Body() updateUserDto: UserDto.UpdateByIdDto) {
     return await this.userService.updateById(updateUserDto);
   }
 
   // getById
   @Post('getById')
-  async getById(@Body() id: string) {
-    return await this.userService.getById(id);
+  async getById(@Body() body: UserDto.GetByIdDto) {
+    return await this.userService.getById(body.id);
   }
 
   // getList
@@ -46,7 +38,7 @@ export class UserController {
 
   // getPage
   @Post('getPage')
-  async getPage(@Body() getPageReqDto: GetPageReqDto) {
+  async getPage(@Body() getPageReqDto: UserDto.GetPageDto) {
     return await this.userService.getPage(getPageReqDto);
   }
 }

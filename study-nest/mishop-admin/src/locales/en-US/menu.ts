@@ -49,4 +49,8 @@ export default {
   'menu.editor.flow': 'Flow Editor',
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
+  'menu.system': 'System Manager',
+  'menu.system.user': 'User Manager',
+  'menu.system.role': 'Role Manager',
+  'menu.system.menu': 'Menu Manager'
 };

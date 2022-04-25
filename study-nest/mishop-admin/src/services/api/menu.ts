@@ -2,10 +2,10 @@
 import request from '@/utils/request'
 
 // 创建
-export async function create(menuCreateReq: APIS.IMenuCreateReq) {
+export async function create(menu: MODEL.IMenu) {
   return request('/api/menu/create', {
     method: 'POST',
-    data: menuCreateReq
+    data: menu
   })
 }
 
@@ -18,10 +18,10 @@ export async function removeById(id: string) {
 }
 
 // 更新
-export async function updateById(menuUpdateReq: APIS.IMenuUpdateReq) {
+export async function updateById(menu: MODEL.IMenu) {
   return request('/api/menu/updateById', {
     method: 'POST',
-    data: menuUpdateReq
+    data: menu
   })
 }
 

@@ -7,6 +7,10 @@ import {
 } from 'class-validator';
 
 export class CreateDto {
+  @IsEnum([0, 1, 2], { message: 'type字段类型应为0、1、2的状态枚举' })
+  @IsNotEmpty({ message: 'type字段不能为空' })
+  public readonly type: number;
+
   @IsString({ message: 'pid类型应为string' })
   @IsNotEmpty({ message: 'pid字段不能为空' })
   public readonly pid: string;
@@ -20,6 +24,21 @@ export class CreateDto {
   @Length(0, 30, { message: 'icon字段长度应为0 ~ 30位字符' })
   @IsString({ message: 'icon字段类型应为string' })
   public readonly icon?: string;
+
+  @IsOptional()
+  @Length(0, 30, { message: 'local字段长度应为0 ~ 30位字符' })
+  @IsString({ message: 'local字段类型应为string' })
+  public readonly local?: string;
+
+  @IsOptional()
+  @Length(0, 30, { message: 'path字段长度应为0 ~ 30位字符' })
+  @IsString({ message: 'path字段类型应为string' })
+  public readonly path?: string;
+
+  @IsOptional()
+  @Length(0, 30, { message: 'component字段长度应为0 ~ 30位字符' })
+  @IsString({ message: 'component字段类型应为string' })
+  public readonly component?: string;
 
   @IsOptional()
   @IsEnum([0, 1], { message: 'status字段类型应为0或1的状态枚举' })
@@ -44,19 +63,38 @@ export class UpdateByIdDto {
   @IsNotEmpty({ message: 'id字段不能为空' })
   public readonly id: string;
 
+  @IsOptional()
+  @IsEnum([0, 1, 2], { message: 'type字段类型应为0、1、2的状态枚举' })
+  public readonly type: number;
+
+  @IsOptional()
   @IsString({ message: 'pid类型应为string' })
-  @IsNotEmpty({ message: 'pid字段不能为空' })
   public readonly pid: string;
 
+  @IsOptional()
   @Length(1, 12, { message: 'name字段长度应为1 ~ 12位字符' })
   @IsString({ message: 'name类型应为string' })
-  @IsNotEmpty({ message: 'name字段不能为空' })
   public readonly name: string;
 
   @IsOptional()
   @Length(0, 30, { message: 'icon字段长度应为0 ~ 30位字符' })
   @IsString({ message: 'icon字段类型应为string' })
   public readonly icon?: string;
+
+  @IsOptional()
+  @Length(0, 30, { message: 'local字段长度应为0 ~ 30位字符' })
+  @IsString({ message: 'local字段类型应为string' })
+  public readonly local?: string;
+
+  @IsOptional()
+  @Length(0, 30, { message: 'path字段长度应为0 ~ 30位字符' })
+  @IsString({ message: 'path字段类型应为string' })
+  public readonly path?: string;
+
+  @IsOptional()
+  @Length(0, 30, { message: 'component字段长度应为0 ~ 30位字符' })
+  @IsString({ message: 'component字段类型应为string' })
+  public readonly component?: string;
 
   @IsOptional()
   @IsEnum([0, 1], { message: 'status字段类型应为0或1的状态枚举' })

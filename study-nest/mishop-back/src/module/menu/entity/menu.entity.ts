@@ -2,8 +2,6 @@ import {
   Column,
   Entity,
   Tree,
-  ManyToOne,
-  OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
   PrimaryGeneratedColumn,
@@ -15,6 +13,10 @@ export class Menu {
   // 菜单uuid
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  // 菜单类型
+  @Column()
+  type: number;
 
   // 菜单父节点id
   @Column({ length: 36 })
@@ -33,11 +35,11 @@ export class Menu {
   local: string;
 
   // 路由地址
-  @Column({ length: 100 })
+  @Column({ length: 100, nullable: true })
   path: string;
 
   // 组件路径
-  @Column({ length: 100, default: 'Layout' })
+  @Column({ length: 100, default: 'Layout', nullable: true })
   component: string;
 
   //  菜单状态
@@ -48,7 +50,7 @@ export class Menu {
   @Column({ length: 500, nullable: true })
   remark: string;
 
-  // 在菜单中隐藏这个路由03
+  // 在菜单中隐藏这个路由
   @Column({ default: 0 })
   hideInMenu: number;
 
