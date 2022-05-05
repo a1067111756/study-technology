@@ -7,6 +7,7 @@ import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import defaultSettings from '../config/defaultSettings';
 import localTango from 'local-tango';
+import { getTree } from '@/services/api/menu'
 
 const loginPath = '/auth/login';
 const registerPath = '/auth/register';
@@ -60,18 +61,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     rightContentRender: () => <RightContent />,
     // 底部布局
     footerRender: () => <Footer />,
-    // 兼容
-    disableContentMargin: false,
-    // 页面改变回调
-    onPageChange: () => {
-      const { location } = history;
-      // 如果没有登录，重定向到 login
-      if (!initialState?.currentUser && location.pathname !== loginPath) {
-        // history.push(loginPath);
-      }
-    },
-    // 自定义 403 页面
-    // unAccessible: <div>unAccessible</div>,
     // 主内容布局
     childrenRender: (children, props) => {
       return (
@@ -92,6 +81,29 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         </>
       );
     },
+    // 动态菜单
+    menu: {
+      params: {
+        userId: initialState?.currentUser?.id,
+      },
+      request: async (params, defaultMenuData) => {
+        console.log(params, defaultMenuData);
+        const menuData = await getTree();
+        console.log(menuData);
+        return defaultMenuData;
+      },
+    },
+    // 兼容
+    disableContentMargin: false,
+    // 页面改变回调
+    onPageChange: () => {
+      const { location } = history;
+      // 如果没有登录，重定向到 login
+      if (!initialState?.currentUser && location.pathname !== loginPath) {
+        history.push(loginPath);
+      }
+    },
+    // 全局设置
     ...initialState?.settings,
   };
 };
