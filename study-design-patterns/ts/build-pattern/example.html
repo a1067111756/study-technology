@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>单例模式</title>
+</head>
+<body>
+  <script type="module">
+    import Product from './dist/Product.js'
+    import { BeefHamburgBuilder, HamburgDirector } from './dist/Hamburg.js'
+
+    const product = new Product.Builder()
+      .setWidth(10)
+      .setHeight(20)
+      .setShape('square')
+      .build()
+    product.getInfo()
+
+    const builder = new BeefHamburgBuilder()
+    const hamburg = HamburgDirector.constructor1(builder, '牛肉', 3)
+    hamburg.getInfo()
+  </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>单例模式</title>
+</head>
+<body>
+  <script type="module">
+    import IOFactory from './dist/factory/IOFactory.js'
+    import DbHandler from './dist/product/DbHandler.js'
+    import XMLHandler from './dist/product/XMLHandler.js'
+    import FileHandler from './dist/product/FileHandler.js'
+
+    const fileHandler = IOFactory.getIOHandler(FileHandler)
+    fileHandler.add()
+
+    const xmlHandler = IOFactory.getIOHandler(XMLHandler)
+    xmlHandler.remove()
+
+    const dbHandler = IOFactory.getIOHandler(DbHandler)
+    dbHandler.query()
+
+  </script>
+</body>
+</html>

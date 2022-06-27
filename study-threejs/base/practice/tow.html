@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>用THREE组个小车车</title>
+  <script type="text/javascript" src="../libs/stats.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/three.js/r122/three.min.js"></script>
+  <script type="text/javascript" src="../libs/OrbitControls.js"></script>
+  <style>
+    html, body {
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div id="Stats-output"></div>
+  <div id="webgl"></div> 
+  <script>
+    var trackControls;
+
+    function init () {
+      initStats()
+
+      // 定义场景scene
+      const scene = new THREE.Scene()
+      window.scene = scene
+
+      // 定义摄像机
+      const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000)
+      window.camera = camera
+
+      // 定义渲染器
+      const renderer = new THREE.WebGLRenderer()
+      renderer.setClearColor(new THREE.Color(0x666666)) // 设置场景背景色
+      renderer.setSize(window.innerWidth, window.innerHeight) // 设置场景大小
+      renderer.shadowMap.enabled = true // 开启阴影
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      window.renderer = renderer
+
+      // 添加平面
+      const planeGeometry = new THREE.PlaneGeometry(60, 80, 1, 1)
+      const meshBasicMaterial = new THREE.MeshLambertMaterial({ color: 0x7E8C61 })
+      const plane = new THREE.Mesh(planeGeometry, meshBasicMaterial)
+      plane.receiveShadow = true // 设置阴影
+      plane.rotation.x = -0.5 * Math.PI
+      plane.position.x = 10
+      plane.position.y = -12
+      plane.position.z = -20
+      scene.add(plane)
+
+      // 添加正方体
+      const cubeGeometry = new THREE.BoxGeometry(15, 15, 30)
+      const cubeMaterial = new THREE.MeshLambertMaterial({ color: 0x7D7D7D })
+      const cube = new THREE.Mesh(cubeGeometry, cubeMaterial)
+      cube.castShadow = true
+      cube.position.x = 20
+      cube.position.y = 0
+      cube.position.z = -10
+      scene.add(cube)
+
+      // 添加圆环体
+      const torusGeometry = new THREE.TorusGeometry( 3, 1, 16, 50 );
+      const torusMaterial = new THREE.MeshLambertMaterial( { color: 0x666666 } )
+      const torus1 = new THREE.Mesh(torusGeometry, torusMaterial)
+      const torus2 = new THREE.Mesh(torusGeometry, torusMaterial)
+      const torus3 = new THREE.Mesh(torusGeometry, torusMaterial)
+      const torus4 = new THREE.Mesh(torusGeometry, torusMaterial)
+      torus1.position.set(12.3, -8, -20)
+      torus2.position.set(12.3, -8, 0)
+      torus3.position.set(27.5, -8, 0)
+      torus4.position.set(27.5, -8, -20)
+
+      torus1.castShadow = true
+      torus2.castShadow = true
+      torus3.castShadow = true
+      torus4.castShadow = true
+
+      torus1.rotateY(Math.PI / 2)
+      torus2.rotateY(Math.PI / 2)
+      torus3.rotateY(Math.PI / 2)
+      torus4.rotateY(Math.PI / 2)
+
+      scene.add(torus1)
+      scene.add(torus2)
+      scene.add(torus3)
+      scene.add(torus4)
+
+      // 设置摄像机位置
+      camera.position.x = -50
+      camera.position.y = 30
+      camera.position.z = 60
+      camera.lookAt(scene.position)
+      scene.add(camera)
+
+      const directionalLight = new THREE.DirectionalLight(0xFFFFFF)
+      directionalLight.position.set(-20, 25, -30)
+      directionalLight.shadowCameraNear = 2;
+      directionalLight.shadowCameraFar = 200;
+      directionalLight.shadowCameraLeft = -50;
+      directionalLight.shadowCameraRight = 50;
+      directionalLight.shadowCameraTop = 50;
+      directionalLight.shadowCameraBottom = -50;
+      directionalLight.shadowMapWidth = 2048
+      directionalLight.shadowMapHeight = 2048
+      directionalLight.target = cube
+      directionalLight.intensity = 1.8
+      directionalLight.castShadow = true
+      scene.add(directionalLight)
+
+      // 控制器
+      trackControls = new THREE.OrbitControls(camera, renderer.domElement)
+
+      document
+        .getElementById('webgl')
+        .appendChild(renderer.domElement)
+      
+      render()
+    }
+
+
+    function render () {
+      const scene = window.scene
+      const renderer = window.renderer
+      const camera = window.camera
+
+      // 帧率监测
+      window.stats.update()
+      
+      trackControls.update()
+
+      requestAnimationFrame(render)
+      renderer.render(scene, camera)     
+    }
+
+    function initStats() {
+      const stats = new Stats()
+      stats.setMode(0)
+      stats.domElement.style.position = 'absolute'
+      stats.domElement.style.left = '0px'
+      stats.domElement.style.top = '0px'
+      document.getElementById("Stats-output").appendChild(stats.domElement)
+      window.stats = stats
+    }
+
+    window.onload = init
+  </script> 
+</body>
+</html>
