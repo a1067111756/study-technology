@@ -1,10 +1,9 @@
-import { Space } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
 import React from 'react';
-import { useModel, SelectLang } from 'umi';
+import styles from './index.less';
 import Avatar from './AvatarDropdown';
 import HeaderSearch from '../HeaderSearch';
-import styles from './index.less';
+import { Space } from 'antd';
+import { useModel, SelectLang } from 'umi';
 
 export type SiderTheme = 'light' | 'dark';
 
@@ -23,10 +22,11 @@ const GlobalHeaderRight: React.FC = () => {
   }
   return (
     <Space className={className}>
+      {/* 搜索栏 */}
       <HeaderSearch
         className={`${styles.action} ${styles.search}`}
-        placeholder="站内搜索"
-        defaultValue="umi ui"
+        placeholder="搜索你想要的?"
+        defaultValue=""
         options={[
           { label: <a href="https://umijs.org/zh/guide/umi-ui.html">umi ui</a>, value: 'umi ui' },
           {
@@ -46,15 +46,11 @@ const GlobalHeaderRight: React.FC = () => {
         //   console.log('input', value);
         // }}
       />
-      <span
-        className={styles.action}
-        onClick={() => {
-          window.open('https://pro.ant.design/docs/getting-started');
-        }}
-      >
-        <QuestionCircleOutlined />
-      </span>
-      <Avatar />
+
+      {/* 头像栏 */}
+      <Avatar menu  />
+
+      {/* 国际化语言 */}
       <SelectLang className={styles.action} />
     </Space>
   );

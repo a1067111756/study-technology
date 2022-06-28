@@ -21,7 +21,12 @@ export class AuthService {
     const { username, password } = loginDto;
 
     // 查找账号是否存在
-    const matchUser = await this.userRepository.findOne({ userName: username });
+    const matchUser = await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.userName = :userName', { userName: username })
+      .addSelect('user.password')
+      .getOne();
+
     if (!matchUser) {
       throw new CommonRequestException('00010', '账号不存在');
     }
