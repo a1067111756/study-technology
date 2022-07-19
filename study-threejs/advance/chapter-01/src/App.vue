@@ -4,6 +4,7 @@
 
 <script setup lang="ts">
   import * as THREE from 'three'
+  import * as dat from 'dat.gui'
   import TWEEN from '@tweenjs/tween.js'
   import { onMounted } from 'vue'
   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
@@ -24,6 +25,13 @@
     // 将渲染器绑定到dom
     document.getElementById('main-container')!.appendChild(renderer.domElement)
 
+    /* 辅助工具 */
+    // 坐标轴
+    const axesHelper = new THREE.AxesHelper(5)
+    scene.add(axesHelper)
+    // 用户图形配置工具
+    const gui = new dat.GUI()
+
     /* 物体对象 */
     // 创建物体
     const geometry = new THREE.BoxGeometry(1, 1, 1)
@@ -32,6 +40,7 @@
     // 物体绑定材质
     const cube = new THREE.Mesh(geometry, material)
     scene.add(cube)
+
     // 物体动画
     const moveTween = new TWEEN.Tween(cube.position)
         .to({ x: 5 }, 5000)
@@ -47,15 +56,28 @@
     cubeTweenGroup.add(moveTween)
     cubeTweenGroup.add(rotationTween)
 
+    // 可视化配置
+    gui
+      .add(cube.position, 'x')
+      .max(5)
+      .min(0)
+      .step(1)
+      .name('x轴移动距离')
+
+    const colorParams = {
+      color: '#00ff00'
+    }
+    gui
+      .addColor(colorParams, 'color')
+      .name('颜色')
+      .onChange((value: THREE.Color) => {
+        cube.material.color.set(value)
+      })
+
     /* 轨道控制器 */
     const controls = new OrbitControls(camera, renderer.domElement)
     // 设置控制器阻尼, 必须在动画循环中调用update
     controls.enableDamping = true
-
-    /* 辅助工具 */
-    // 坐标轴
-    const axesHelper = new THREE.AxesHelper(5)
-    scene.add(axesHelper)
 
     // 执行渲染
     function render () {
