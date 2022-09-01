@@ -1,3 +1,4 @@
+/* 随机粒子构建雪花效果 */
 <template>
   <div id="main-container"></div>
 </template>
@@ -8,12 +9,47 @@
   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
   const initThreeScene = () => {
+    const createPoints = (texturePng, count = 5000) => {
+      // 通过顶点构建图形
+      const randomGeometry = new THREE.BufferGeometry()
+      const positions = new Float32Array(count * 3)
+      for (let i = 0; i < count * 3; i++) {
+        positions[i] = (Math.random() - 0.5) * 100
+      }
+      randomGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+
+      // 设置材质
+      const pointMaterial = new THREE.PointsMaterial({
+        // 颜色
+        color: 0xffffff,
+        // 点大小
+        size: 0.5,
+        // 相机深度衰减，透视摄像机才有效, true效果是随距离大小发生衰减。false效果是大小都保持一致
+        sizeAttenuation: true
+      })
+
+      // 设置贴图
+      const textureLoader = new THREE.TextureLoader()
+      const texture = textureLoader.load(`src/assets/${texturePng}`)
+      pointMaterial.map = texture
+      pointMaterial.alphaMap = texture
+      pointMaterial.transparent = true
+      pointMaterial.depthWrite = false // 材质是否对深度缓冲区有任何影响
+      pointMaterial.blending = THREE.AdditiveBlending // 混合模式
+
+      // 生成对象并添加到场景
+      const points = new THREE.Points(randomGeometry, pointMaterial)
+      scene.add(points)
+
+      return points
+    }
+
     /* 场景 */
     const scene = new THREE.Scene()
 
     /* 相机 */
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-    camera.position.set(10, 5, 10)
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 30)
+    camera.position.set(0, 0, 50)
     scene.add(camera)
 
     /* 渲染器 */
@@ -24,29 +60,14 @@
     document.getElementById('main-container')!.appendChild(renderer.domElement)
 
     /* 物体对象 */
-    // 创建圆球
-    const sphereGeometry = new THREE.SphereBufferGeometry(5, 30, 30)
-    const sphereMaterial = new THREE.PointsMaterial({
-      // 颜色
-      color: 0xff0000,
-      // 点大小
-      size: 2,
-      // 相机深度衰减，透视摄像机才有效, true效果是随距离大小发生衰减。false效果是大小都保持一致
-      sizeAttenuation: false
-    })
-
-    const points = new THREE.Points(sphereGeometry, sphereMaterial)
-    scene.add(points)
+    // 创建随机顶点
+    const points1 = createPoints('1.png', 5000)
+    const points2 = createPoints('14.png', 3000)
 
     /* 光源 */
     // 环境光
     const light = new THREE.AmbientLight(0xffffff, 1)
     scene.add(light)
-
-    /* 辅助工具 */
-    // 坐标轴
-    const axesHelper = new THREE.AxesHelper(5)
-    scene.add(axesHelper)
 
     /* 轨道控制器 */
     const controls = new OrbitControls(camera, renderer.domElement)
@@ -55,6 +76,12 @@
 
     // 执行渲染
     function render () {
+      // 让粒子对象旋转
+      points1.rotation.x = points1.rotation.x + 0.01
+      points1.rotation.y = points1.rotation.y + 0.01
+
+      points2.rotation.x = points2.rotation.x + 0.005
+
       requestAnimationFrame(render)
       controls.update()
       renderer.render(scene, camera)

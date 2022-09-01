@@ -1,3 +1,4 @@
+/* 随机粒子构建图形实现星空效果 */
 <template>
   <div id="main-container"></div>
 </template>
