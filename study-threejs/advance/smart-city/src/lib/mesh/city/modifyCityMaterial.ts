@@ -125,6 +125,42 @@ function addLineScanColor (shader: THREE.Shader, mesh: THREE.Mesh) {
     })
 }
 
+// 方法 - 添加从下向上扫描效果
+function addToTopScanColor (shader: THREE.Shader, mesh: THREE.Mesh) {
+    // 扩散的时间
+    shader.uniforms.uToTopTime = {
+        value: 0
+    }
+    // 设置扩散条带的宽度
+    shader.uniforms.uToTopWidth = {
+        value: 40
+    }
+
+    // 修改片元着色器 - 实现扩散效果（原理 - 反抛物线函数）
+    shader.fragmentShader = shader.fragmentShader.replace('#include <common>', `
+        #include <common>
+        uniform float uToTopTime;
+        uniform float uToTopWidth;
+    `)
+
+    shader.fragmentShader = shader.fragmentShader.replace('//#replace_fragment_shader_flag#', `
+        // 扩散函数  -x^2 + c
+        float toTopHeight = -(vPosition.y - uToTopTime) * (vPosition.y - uToTopTime) + uToTopWidth;
+        // 显示y轴大于0的部分
+        if (toTopHeight > 0.0) {
+            gl_FragColor = mix(gl_FragColor, vec4(0.8,0.8,1.0,1), toTopHeight / uToTopWidth);
+        }
+        //#replace_fragment_shader_flag#
+    `)
+
+    gsap.to(shader.uniforms.uToTopTime, {
+        value: 300,
+        duration: 3,
+        ease: 'none',
+        repeat: -1
+    })
+}
+
 // 默认导出
 export default function modifyCityMaterial (mesh: THREE.Mesh) {
     // 在编译阶段获取着色器
@@ -145,7 +181,10 @@ export default function modifyCityMaterial (mesh: THREE.Mesh) {
         // 添加建筑圆形扩散扫描效果
         addDiffusionColor(shader, mesh)
 
-        // 添加建筑横向扩散扫描效果
-        addLineScanColor(shader, mesh)
+        // 添加建筑横向扫描效果
+        // addLineScanColor(shader, mesh)
+
+        // 添加建筑从下向上扫描效果
+        addToTopScanColor(shader, mesh)
     };
 }
