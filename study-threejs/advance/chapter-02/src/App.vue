@@ -6,7 +6,6 @@
   import * as THREE from 'three'
   import { onMounted } from 'vue'
   import hdrUrl from './assets/env/002.hdr?url'
-  import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader'
   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
   const initThreeScene = () => {
@@ -27,8 +26,8 @@
 
     /* 辅助工具 */
     // 坐标轴
-    const axesHelper = new THREE.AxesHelper(5)
-    scene.add(axesHelper)
+    // const axesHelper = new THREE.AxesHelper(5)
+    // scene.add(axesHelper)
 
     /* 物体对象 */
     // 创建物体 - 置换贴图需要设置顶点数量才能出现效果
@@ -41,17 +40,23 @@
     // 材质双面显示
     material.side = THREE.DoubleSide
 
-    new RGBELoader().loadAsync(hdrUrl).then(texture => {
-      texture.mapping = THREE.EquirectangularReflectionMapping
-      // 场景添加背景
-      scene.background = texture
-      // 场景添加全局物体的环境贴图，如果物体自身没有环境贴图则使用该设置
-      scene.environment = texture
-    })
+    const cubeTexture = new THREE.CubeTextureLoader().setPath( 'src/assets/test/' ).load([
+      'px.tif',
+      'nx.tif',
+      'py.tif',
+      'ny.tif',
+      'pz.tif',
+      'nz.tif'
+    ])
+
+    // 场景添加背景
+    scene.background = cubeTexture
+    // 场景添加全局物体的环境贴图，如果物体自身没有环境贴图则使用该设置
+    scene.environment = cubeTexture
 
     // 物体绑定材质
-    const cube = new THREE.Mesh(geometry, material)
-    scene.add(cube)
+    // const cube = new THREE.Mesh(geometry, material)
+    // scene.add(cube)
 
     /* 光源 */
     // 环境光

@@ -4,27 +4,29 @@ import camera from './camera'
 import renderer from './renderer'
 import controls from './controls'
 import axesHelper from './axesHelper'
+import statsHelper from './statsHelper'
 import loadCity from './mesh/city'
 
 // 方法 - 执行渲染
 function render () {
     requestAnimationFrame(render)
     controls.update()
+    statsHelper.update()
     renderer.render(scene, camera)
 }
 
-const init = () => {
+const init = (eventData: any) => {
     // 添加相机
     scene.add(camera)
 
     // 添加辅助工具
-    scene.add(axesHelper)
+    // scene.add(axesHelper)
 
     // 将渲染器绑定到dom
     document.getElementById('canvas')!.appendChild(renderer.domElement)
 
     // 加载对象
-    loadCity()
+    loadCity(eventData)
 
     // 执行页面渲染
     render()
